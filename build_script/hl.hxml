@@ -1,0 +1,6 @@
+--library heaps
+--library hlsdl
+--library json2object
+--hl build/hl/game.hl
+--main Main
+--class-path src

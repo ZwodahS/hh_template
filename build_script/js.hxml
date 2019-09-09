@@ -1,0 +1,4 @@
+--library heaps
+--js build/js/game.js
+--main Main
+--class-path src
