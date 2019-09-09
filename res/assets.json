@@ -1,0 +1,11 @@
+{
+    "character": {
+        "frames": [
+            {
+                "src": "font32",
+                "key": "@.png",
+                "color": [255, 255, 255, 255]
+            }
+        ]
+    }
+}
