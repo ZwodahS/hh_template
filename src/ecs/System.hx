@@ -1,6 +1,7 @@
 package ecs;
 
-import ecs.*;
+import ecs.Entity;
+import ecs.Mailbox;
 
 /**
   Abstract System class
@@ -17,8 +18,33 @@ class System {
     **/
     var entities: Map<Int, Entity>;
 
+    /**
+      The mailbox used to communicate between systems
+    **/
+    public var mailbox(default, set): Mailbox;
+
+    /**
+      setter for mailbox
+    **/
+    public function set_mailbox(mailbox: Mailbox): Mailbox {
+        this.mailbox = mailbox;
+        if (this.mailbox != null) {
+            onMailboxSet();
+        } else {
+            onMailboxRemoved();
+        }
+        return this.mailbox;
+    }
+
+    /**
+      2 function to be called when mailbox is set or removed
+    **/
+    function onMailboxSet() {}
+    function onMailboxRemoved() {}
+
     public function new(type: String) {
         this.type = type;
+        this.mailbox = null;
     }
 
     /**

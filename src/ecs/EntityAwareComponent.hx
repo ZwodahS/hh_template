@@ -1,6 +1,6 @@
 package ecs;
 
-import ecs.*;
+import ecs.Entity;
 
 interface EntityAwareComponent {
 

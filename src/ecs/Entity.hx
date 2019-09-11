@@ -1,6 +1,7 @@
 package ecs;
 
-import ecs.*;
+import ecs.Component;
+import ecs.EntityAwareComponent;
 
 /**
   An entity of the world.

@@ -1,6 +1,9 @@
 package ecs;
 
-import ecs.*;
+import ecs.Entity;
+import ecs.Component;
+import ecs.System;
+import ecs.Mailbox;
 
 /**
   Base World class
@@ -8,6 +11,7 @@ import ecs.*;
 class World {
     private var entities: Map<Int, Entity>;
     private var systems: List<System>;
+    public var mailbox(default, null): Mailbox;
 
     public function new() {
         this.entities = new Map<Int, Entity>();
@@ -19,6 +23,7 @@ class World {
     **/
     public function addSystem(system: System) {
         this.systems.add(system);
+        system.mailbox = this.mailbox;
     }
 
     /**
@@ -26,6 +31,7 @@ class World {
     **/
     public function removeSystem(system: System): Bool {
         return this.systems.remove(system);
+        system.mailbox = null;
     }
 
     /**
