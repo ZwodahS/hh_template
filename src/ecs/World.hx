@@ -38,7 +38,7 @@ class World {
       addEntity adds an entity to this world.
       The entity will be added to all systems if addToSystems if true
     **/
-    public function addEntity(ent: Entity, addToSystems=false) {
+    public function addEntity(ent: Entity, addToSystems=true) {
         var existing = this.entities[ent.id];
         if (existing != null) {
             // if existing, do nothing

@@ -11,9 +11,38 @@ class Component {
       If name of component is not provided, this will be used as the default name
       when adding the component.
     **/
-    public var type(default, null): String;
+    public var type(get, null): String;
 
-    public function new(type: String) {
-        this.type = type;
+    // this only initialise when it is being used.
+    var listeners: Map<Int, (String, Component) -> Void>;
+    var listenerCounter: Int = 0;
+
+    public function new() {
     }
+
+    public function addListener(func: (String, Component) -> Void): Int {
+        if (this.listenerCounter == 0) {
+            this.listeners = new Map<Int, (String, Component) -> Void>();
+        }
+        var counter = this.listenerCounter++;
+        this.listeners[counter] = func;
+        return counter;
+    }
+
+    public function removeListener(id: Int) {
+        this.listeners.remove(id);
+    }
+
+    function changed() {
+        if (this.listeners != null) {
+            for (k => v in this.listeners) {
+                v(this.type, this);
+            }
+        }
+    }
+
+    public function get_type(): String {
+        return "undefined";
+    }
+
 }

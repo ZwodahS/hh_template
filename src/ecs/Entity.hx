@@ -18,6 +18,7 @@ class Entity {
 
     private function new(id: Int) {
         this.id = id;
+        this.components = new Map<String, Component>();
     }
 
     /**
@@ -53,6 +54,12 @@ class Entity {
         }
 
         // TODO: dispatch events
+    }
+
+    public function addComponents(components: Array<Component>) {
+        for (component in components) {
+            this.addComponent(component, component.type);
+        }
     }
     /**
       removeComponent remove a component with the given name from the entity

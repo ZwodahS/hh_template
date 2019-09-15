@@ -45,13 +45,18 @@ class System {
     public function new(type: String) {
         this.type = type;
         this.mailbox = null;
+        this.entities = new Map<Int, Entity>();
     }
 
     /**
       addEntity adds an entity into the system
     **/
     public function addEntity(ent: Entity) {
-        this.entities[ent.id] = ent;
+        var existing = this.entities.get(ent.id);
+        if (existing == null) {
+            this.entities[ent.id] = ent;
+            this.onEntityAdded(ent);
+        }
     }
 
     /**
@@ -78,6 +83,7 @@ class System {
             return existing;
         }
         this.entities.remove(id);
+        this.onEntityRemoved(existing);
         return existing;
     }
 
@@ -87,4 +93,6 @@ class System {
     public function update(dt: Float) {
     }
 
+    function onEntityAdded(ent: Entity) {}
+    function onEntityRemoved(ent: Entity) {}
 }
