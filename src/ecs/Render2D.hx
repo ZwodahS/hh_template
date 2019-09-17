@@ -2,6 +2,7 @@ package ecs;
 
 import ecs.Component;
 import ecs.System;
+import ecs.World;
 import ecs.Entity;
 import ecs.Mailbox;
 import ecs.EntityAwareComponent;
@@ -53,7 +54,7 @@ class RenderComponent extends Component implements EntityAwareComponent{
             spaceComponent = new SpaceComponent();
             ent.addComponent(spaceComponent);
         } else {
-            var s = Std.downcast(spaceComponent, SpaceComponent);
+            var s = cast(spaceComponent, SpaceComponent);
             this.drawable.x = s.x;
             this.drawable.y = s.y;
         }
@@ -98,11 +99,28 @@ class RenderSystem extends System{
         this.layers = new h2d.Layers(camera);
     }
 
+    override public function init(world: World, mailbox: Mailbox) {
+        super.init(world, mailbox);
+
+        // set up camera event
+        this.mailbox.listen(CameraMoveMessage.TYPE_STRING, function(message: Message) {
+            var camMoveMessage: CameraMoveMessage = cast(message, CameraMoveMessage);
+
+            if (camMoveMessage.moveType == MoveType.Incremental) {
+                this.camera.viewX += camMoveMessage.x;
+                this.camera.viewY += camMoveMessage.y;
+            } else if (camMoveMessage.moveType == MoveType.Center) {
+                this.camera.viewX = camMoveMessage.x;
+                this.camera.viewY = camMoveMessage.y;
+            }
+        });
+    }
+
     /**
       When entity is added to the render system
     **/
     override function onEntityAdded(ent: Entity) {
-        var renderComp = Std.downcast(
+        var renderComp = cast(
                 ent.getComponent(ecs.Render2D.RenderComponent.TYPE_STRING),
                 ecs.Render2D.RenderComponent
         );
@@ -113,3 +131,24 @@ class RenderSystem extends System{
     }
 }
 
+enum MoveType {
+    Incremental;
+    Center;
+}
+/**
+  Camera Event
+**/
+class CameraMoveMessage extends Message {
+    public static final TYPE_STRING = "ecs.Render2D.CameraMoveMessage";
+
+    public var x(default, null): Float;
+    public var y(default, null): Float;
+    public var moveType(default, null): MoveType;
+
+    public function new(x: Float = 0, y: Float = 0, moveType: MoveType = Incremental) {
+        super(TYPE_STRING);
+        this.x = x;
+        this.y = y;
+        this.moveType = moveType;
+    }
+}

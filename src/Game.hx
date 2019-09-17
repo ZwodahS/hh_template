@@ -48,7 +48,7 @@ class Game extends hxd.App {
     function onEvent(event: hxd.Event) {
         switch(event.kind) {
             case EKeyDown:
-                var space = Std.downcast(
+                var space = cast(
                     this.character.getComponent(ecs.Space.SpaceComponent.TYPE_STRING),
                     ecs.Space.SpaceComponent
                 );

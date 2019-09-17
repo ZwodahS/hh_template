@@ -2,6 +2,7 @@ package ecs;
 
 import ecs.Entity;
 import ecs.Mailbox;
+import ecs.World;
 
 /**
   Abstract System class
@@ -22,6 +23,8 @@ class System {
       The mailbox used to communicate between systems
     **/
     public var mailbox(default, set): Mailbox;
+
+    var world: World;
 
     /**
       setter for mailbox
@@ -46,6 +49,14 @@ class System {
         this.type = type;
         this.mailbox = null;
         this.entities = new Map<Int, Entity>();
+    }
+
+    /**
+      init function is called when the system is added to the system
+    **/
+    public function init(world: World, mailbox: Mailbox) {
+        this.world = world;
+        this.mailbox = mailbox;
     }
 
     /**

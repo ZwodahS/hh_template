@@ -16,6 +16,7 @@ class World {
     public function new() {
         this.entities = new Map<Int, Entity>();
         this.systems = new List<System>();
+        this.mailbox = new Mailbox();
     }
 
     /**
@@ -23,7 +24,7 @@ class World {
     **/
     public function addSystem(system: System) {
         this.systems.add(system);
-        system.mailbox = this.mailbox;
+        system.init(this, this.mailbox);
     }
 
     /**
