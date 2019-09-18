@@ -59,11 +59,13 @@ class RenderComponent extends Component implements EntityAwareComponent{
             this.drawable.y = s.y;
         }
 
-        this.listenerId = spaceComponent.addListener(function(name: String, component: Component) {
-            var casted = cast(component, SpaceComponent);
-            this.drawable.x = casted.x;
-            this.drawable.y = casted.y;
-        });
+        this.listenerId = spaceComponent.addListener(
+            function(component: Component) {
+                var casted = cast(component, SpaceComponent);
+                this.drawable.x = casted.x;
+                this.drawable.y = casted.y;
+            }
+        );
     }
 
     public function onComponentRemoved(ent: Entity) {
