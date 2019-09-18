@@ -51,6 +51,7 @@ class World {
                 sys.addEntity(ent);
             }
         }
+        ent.mailbox = this.mailbox;
     }
 
     /**
@@ -72,6 +73,7 @@ class World {
         for (sys in this.systems) {
             sys.removeEntity(existing);
         }
+        existing.mailbox = null;
     }
 
     /**

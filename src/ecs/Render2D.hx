@@ -116,21 +116,45 @@ class RenderSystem extends System{
                 this.camera.viewY = camMoveMessage.y;
             }
         });
+
+        this.mailbox.listen(ComponentAddedEvent.TYPE_STRING, function(message: Message) {
+            var compAddMessage = cast(message, ComponentAddedEvent);
+            this.registerEntity(compAddMessage.entity, compAddMessage.component);
+        });
+
+        this.mailbox.listen(ComponentRemovedEvent.TYPE_STRING, function(message: Message) {
+            var compAddMessage = cast(message, ComponentRemovedEvent);
+            this.unregisterEntity(compAddMessage.entity, compAddMessage.component);
+        });
+    }
+
+    function registerEntity(ent: Entity, comp: Component) {
+        if (comp != null && comp.type == RenderComponent.TYPE_STRING) {
+            var renderComp = cast(
+                comp,
+                ecs.Render2D.RenderComponent
+            );
+            this.layers.add(renderComp.drawable, renderComp.layer);
+        }
+    }
+
+    function unregisterEntity(ent: Entity, comp: Component) {
+        if (comp != null && comp.type == RenderComponent.TYPE_STRING) {
+            var renderComp = cast(
+                comp,
+                ecs.Render2D.RenderComponent
+            );
+            this.layers.removeChild(renderComp.drawable);
+        }
     }
 
     /**
       When entity is added to the render system
     **/
-    override function onEntityAdded(ent: Entity) {
-        var renderComp = cast(
-                ent.getComponent(ecs.Render2D.RenderComponent.TYPE_STRING),
-                ecs.Render2D.RenderComponent
-        );
-        if (renderComp == null) {
-            return;
-        }
-        this.layers.add(renderComp.drawable, renderComp.layer);
+    override public function addEntity(ent: Entity) {
+        this.registerEntity(ent, ent.getComponent(ecs.Render2D.RenderComponent.TYPE_STRING));
     }
+
 }
 
 enum MoveType {
@@ -148,9 +172,13 @@ class CameraMoveMessage extends Message {
     public var moveType(default, null): MoveType;
 
     public function new(x: Float = 0, y: Float = 0, moveType: MoveType = Incremental) {
-        super(TYPE_STRING);
+        super();
         this.x = x;
         this.y = y;
         this.moveType = moveType;
+    }
+
+    override public function get_type(): String {
+        return CameraMoveMessage.TYPE_STRING;
     }
 }

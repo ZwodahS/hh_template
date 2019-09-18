@@ -2,9 +2,11 @@ package ecs;
 
 class Message {
 
-    public var type(default, null): String;
+    public var type(get, never): String;
 
-    public function new(type: String) {
-        this.type = type;
+    public function new() {}
+
+    public function get_type(): String {
+        return "undefined";
     }
 }
