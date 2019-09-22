@@ -37,9 +37,16 @@ class RenderComponent extends Component implements EntityAwareComponent{
     **/
     var listenerId: Int;
 
-    public function new(drawable: h2d.Drawable, layer: Int = 0) {
+    var offset: Array<Float>;
+
+    public function new(drawable: h2d.Drawable, layer: Int = 0, offset: Array<Float> = null) {
         super();
         this.drawable = drawable;
+        if (offset != null) {
+            this.offset = [ offset[0], offset[1] ];
+        } else {
+            this.offset = [ 0, 0 ];
+        }
     }
 
     /**
@@ -55,15 +62,15 @@ class RenderComponent extends Component implements EntityAwareComponent{
             ent.addComponent(spaceComponent);
         } else {
             var s = cast(spaceComponent, SpaceComponent);
-            this.drawable.x = s.x;
-            this.drawable.y = s.y;
+            this.drawable.x = s.x + this.offset[0];
+            this.drawable.y = s.y + this.offset[1];
         }
 
         this.listenerId = spaceComponent.addListener(
             function(component: Component) {
                 var casted = cast(component, SpaceComponent);
-                this.drawable.x = casted.x;
-                this.drawable.y = casted.y;
+                this.drawable.x = casted.x + this.offset[0];
+                this.drawable.y = casted.y + this.offset[1];
             }
         );
     }
