@@ -1,20 +1,23 @@
 {
+    "tile": {
+        "rect": {
+            "width": 32,
+            "height": 32,
+            "color": [255, 0, 0, 255]
+        }
+    },
     "character": {
-        "frames": [
-            {
-                "src": "font32",
-                "key": "@.png",
-                "color": [255, 255, 255, 255]
-            }
-        ]
+        "frame": {
+            "src": "font32",
+            "key": "@.png",
+            "color": [255, 255, 255, 255]
+        }
     },
     "wall": {
-        "frames": [
-            {
-                "src": "font32",
-                "key": "#.png",
-                "color": [255, 255, 255, 255]
-            }
-        ]
+        "frame": {
+            "src": "font32",
+            "key": "#.png",
+            "color": [255, 255, 255, 255]
+        }
     }
 }
