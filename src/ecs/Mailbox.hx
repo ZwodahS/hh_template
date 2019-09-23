@@ -5,17 +5,28 @@ import ecs.Message;
 /**
   Mailbox the main method for sending messages to other object listening to the mail.
 **/
+
+typedef Listener = {
+    var id: Int;
+    var messageType: String;
+    var callback: Message -> Void;
+}
+
 class Mailbox {
 
-    var listeners: Map<String, List<Message->Void>>;
+    var counter: Int = 0;
+
+    var listeners: Map<Int, Listener>;
+    var listenersMap: Map<String, List<Listener>>;
 
     var queuedMessage: List<Message>;
     var dispatchStack: List<Message>;
 
     public function new() {
-        listeners = new Map<String, List<Message->Void>>();
-        dispatchStack = new List<Message>();
-        queuedMessage = new List<Message>();
+        this.listeners = new Map<Int, Listener>();
+        this.listenersMap = new Map<String, List<Listener>>();
+        this.dispatchStack = new List<Message>();
+        this.queuedMessage = new List<Message>();
     }
 
     /**
@@ -54,10 +65,10 @@ class Mailbox {
     **/
     function _dispatchMessage(message: Message) {
         this.dispatchStack.push(message);
-        var listeners = this.listeners.get(message.type);
+        var listeners = this.listenersMap.get(message.type);
         if (listeners != null) {
             for (listener in listeners) {
-                listener(message);
+                listener.callback(message);
             }
         }
         this.dispatchStack.pop();
@@ -66,14 +77,35 @@ class Mailbox {
     /**
       listen to a message and provide a callback for handling the message
     **/
-    public function listen(name: String, callback: Message->Void) {
-        var functionList = this.listeners.get(name);
-        if (functionList == null) {
-            functionList = new List<Message->Void>();
-            this.listeners[name] = functionList;
+    public function listen(messageType: String, callback: Message->Void): Int {
+        var listener = {
+            id: this.counter++,
+            messageType: messageType,
+            callback: callback,
         }
-        functionList.add(callback);
-        // todo: return a listener id, and provide a function to remove the listener by id
+        var functionList = this.listenersMap.get(messageType);
+        if (functionList == null) {
+            functionList = new List<Listener>();
+            this.listenersMap[messageType] = functionList;
+        }
+        functionList.add(listener);
+        this.listeners[listener.id] = listener;
+        return listener.id;
+    }
+    /**
+      remove a listener from the mailbox
+    **/
+    public function remove(id: Int) {
+        var listener = this.listeners.get(id);
+        if (listener == null) {
+            return;
+        }
+
+        // should never be null
+        var functionList = this.listenersMap.get(listener.messageType);
+
+        functionList.remove(listener);
+        this.listeners.remove(id);
     }
 }
 
