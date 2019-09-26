@@ -23,16 +23,10 @@ package common;
     The h2d.Tile is also stored here, but is not loaded via the jsonloader
 **/
 typedef TileConf = {
-    var size: {
-        var width: Int;
-        var height: Int;
-    }
-    var rect: {
-        var x1: Int;
-        var y1: Int;
-        var x2: Int;
-        var y2: Int;
-    };
+    var x: Int;
+    var y: Int;
+    var w: Int;
+    var h: Int;
     var image: h2d.Tile;
 }
 
@@ -126,7 +120,7 @@ class Assets {
         // open the image file
         var image = hxd.Res.load(filename+".png").toTile();
         for (k => v in data) {
-            v.image = image.sub(v.rect.x1, v.rect.y1, v.size.width, v.size.height);
+            v.image = image.sub(v.x, v.y, v.w, v.h);
         }
 
         return data;

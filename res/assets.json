@@ -9,14 +9,14 @@
     "character": {
         "frame": {
             "src": "font32",
-            "key": "@.png",
+            "key": "@",
             "color": [255, 255, 255, 255]
         }
     },
     "wall": {
         "frame": {
             "src": "font32",
-            "key": "#.png",
+            "key": "#",
             "color": [255, 255, 255, 255]
         }
     }
