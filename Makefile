@@ -1,9 +1,10 @@
 
 all:
-	@echo "make [js|hl]"
+	@echo "make [js|hl|test]"
 
 js:
 	haxe build_script/js.hxml
+	cp build_script/index.html build/js/.
 
 hl:
 	haxe build_script/hl.hxml
@@ -11,5 +12,3 @@ hl:
 test:
 	haxe build_script/test.hxml
 
-graphics:
-	pack_assets.py assets/font32 res/font32
