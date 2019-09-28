@@ -1,8 +1,5 @@
 package ecs;
 
-import ecs.Component;
-import ecs.Entity;
-import ecs.EntityAwareComponent;
 import ecs.Space.SpaceComponent;
 
 /**
@@ -19,9 +16,8 @@ import ecs.Space.SpaceComponent;
 **/
 
 
-class GridComponent extends Component implements EntityAwareComponent {
+class GridComponent extends Component {
     public static final TYPE_STRING = "GridComponent";
-    public static final GRID_SIZE = 16;
 
     public var x(default, set): Int;
     public var y(default, set): Int;
@@ -55,32 +51,6 @@ class GridComponent extends Component implements EntityAwareComponent {
         this.y = xy[1];
         this.changed();
         return [this.x, this.y];
-    }
-
-    public function onComponentAdded(ent: Entity) {
-        // The main idea here is to link up the space component to the render component
-        // such that the changes is reflected in the position of the drawable
-
-        var spaceComponent = ent.getComponent(SpaceComponent.TYPE_STRING);
-        var casted: SpaceComponent = null;
-        if (spaceComponent == null) {
-            casted = new SpaceComponent();
-            ent.addComponent(casted);
-        }
-        casted = cast(spaceComponent, SpaceComponent);
-        casted.x = this.x * GRID_SIZE;
-        casted.y = this.y * GRID_SIZE;
-
-        this.listenerId = this.addListener(
-            function(component: Component) {
-                // use the closure to capture the spaceComponent
-                casted.x = this.x * GRID_SIZE;
-                casted.y = this.y * GRID_SIZE;
-            }
-        );
-    }
-
-    public function onComponentRemoved(ent: Entity) {
     }
 
     override function get_type(): String {
