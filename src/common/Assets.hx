@@ -1,6 +1,8 @@
 
 package common;
 
+import haxe.ds.Vector;
+
 /**
     TileConf is the format for loading tiles.
 
@@ -64,8 +66,23 @@ class Asset2D {
         this.tiles = tiles;
     }
 
-    public function getBitmap(): h2d.Bitmap{
-        return this.tiles[0].getBitmap();
+    public function getBitmap(pos: Int = 0): h2d.Bitmap{
+        if (pos < 0 || pos >= this.tiles.length) {
+            pos = 0;
+        }
+        return this.tiles[pos].getBitmap();
+    }
+
+    public function getBitmaps(start: Int = 0, end: Int = -1): Vector<h2d.Bitmap> {
+        if (end == -1) {
+            end = this.tiles.length;
+        }
+        var out = new Vector<h2d.Bitmap>(end - start);
+        var ind = 0;
+        for (i in start...end) {
+            out[ind++] = this.tiles[i].getBitmap();
+        }
+        return out;
     }
 }
 
@@ -84,7 +101,7 @@ typedef Rect = {
 typedef Data = {
     var rect: Rect;
     var frame: Frame;
-    var frames: List<Frame>;
+    var frames: Array<Frame>;
 }
 
 
@@ -131,6 +148,18 @@ class Assets {
         return map[key].image;
     }
 
+    inline function makeTile(frame: Frame): Tile {
+        var color: h3d.Vector;
+        if (frame.color != null) {
+            color = new h3d.Vector(
+                frame.color[0]/255, frame.color[1]/255, frame.color[2]/255, frame.color[3]/255
+            );
+        } else {
+            color = new h3d.Vector(1.0, 1.0, 1.0, 1.0);
+        }
+        return new Tile(this.getTile(frame.src, frame.key), color);
+    }
+
     public static function parseAssets(assetPath: String): Assets {
         var _assets = new Assets();
         var jsonText = hxd.Res.load(assetPath).toText();
@@ -140,19 +169,10 @@ class Assets {
             var data: Data = Reflect.field(parsed, key);
             var tiles = new Array<Tile>();
             if (data.frame != null) {
-                var color = new h3d.Vector(
-                    data.frame.color[0]/255,
-                    data.frame.color[1]/255,
-                    data.frame.color[2]/255,
-                    data.frame.color[3]/255
-                );
-                tiles.push(new Tile(_assets.getTile(data.frame.src, data.frame.key), color));
+                tiles.push(_assets.makeTile(data.frame));
             } else if (data.frames != null) {
                 for (frame in data.frames) {
-                    var color = new h3d.Vector(
-                            frame.color[0]/255, frame.color[1]/255, frame.color[2]/255, frame.color[3]/255
-                    );
-                    tiles.push(new Tile(_assets.getTile(frame.src, frame.key), color));
+                    tiles.push(_assets.makeTile(frame));
                 }
             } else if (data.rect != null) {
                 var color = new h3d.Vector(
