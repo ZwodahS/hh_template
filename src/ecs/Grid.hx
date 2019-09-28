@@ -7,27 +7,21 @@ import ecs.Space.SpaceComponent;
 
 **/
 
-/**
-    note: it is possible that we can just set the position of the render component.
-    However, if that is the case, the render component position will be quite rigid.
-    The way we can think about this is that
-
-    SpaceComponent
-**/
-
-
 class GridComponent extends Component {
     public static final TYPE_STRING = "GridComponent";
 
     public var x(default, set): Int;
     public var y(default, set): Int;
+    public var z(default, set): Int;
 
-    var listenerId: Int;
+    public var xy(get, set): Array<Int>;
+    public var xyz(get, set): Array<Int>;
 
-    public function new(x: Int = 0, y: Int = 0) {
+    public function new(x: Int = 0, y: Int = 0, z: Int = 0) {
         super();
         this.x = x;
         this.y = y;
+        this.z = z;
     }
 
     public function set_x(x: Int): Int {
@@ -42,6 +36,12 @@ class GridComponent extends Component {
         return this.y;
     }
 
+    public function set_z(z: Int): Int {
+        this.z = z;
+        this.changed();
+        return this.z;
+    }
+
     public function get_xy(): Array<Int> {
         return [this.x, this.y];
     }
@@ -51,6 +51,18 @@ class GridComponent extends Component {
         this.y = xy[1];
         this.changed();
         return [this.x, this.y];
+    }
+
+    public function get_xyz(): Array<Int> {
+        return [this.x, this.y, this.z];
+    }
+
+    public function set_xyz(xyz: Array<Int>): Array<Int> {
+        this.x = xyz[0];
+        this.y = xyz[1];
+        this.z = xyz[2];
+        this.changed();
+        return [this.x, this.y, this.z];
     }
 
     override function get_type(): String {
