@@ -1,5 +1,6 @@
 package ecs;
 
+import common.Coord;
 import ecs.Entity;
 import ecs.Component;
 import ecs.System;
@@ -73,6 +74,37 @@ class SimpleAnimation extends Animation{
     override public function onExit() {
         if (this._onExit != null) {
             this._onExit();
+        }
+    }
+}
+
+class MoveAnimation extends Animation {
+
+    var endCoord: Array<Float>;
+    var updateCoord: Array<Float>;
+    var timeLeft: Float;
+    var spaceComponent: ecs.Space.SpaceComponent;
+
+    public function new(spaceComponent: ecs.Space.SpaceComponent, start: Array<Float>, end: Array<Float>, delta: Float) {
+        super();
+        this.endCoord = end;
+        this.spaceComponent = spaceComponent;
+        this.updateCoord = [
+            (end[0] - start[0]) / delta,
+            (end[1] - start[1]) / delta,
+            (end[2] - start[2]) / delta
+        ];
+        this.timeLeft = delta;
+    }
+
+    override public function update(dt: Float): Bool {
+        this.timeLeft -= dt;
+        if (this.timeLeft <= 0) {
+            this.spaceComponent.xyz = this.endCoord;
+            return true;
+        } else {
+            this.spaceComponent.add(this.updateCoord.map(function(v: Float) { return v * dt; }));
+            return false;
         }
     }
 }

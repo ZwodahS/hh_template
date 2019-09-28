@@ -37,6 +37,7 @@ class GameScene implements Scene {
     }
 
     public function update(dt: Float) {
+        world.update(dt);
     }
 
     public function render(engine: h3d.Engine) {
