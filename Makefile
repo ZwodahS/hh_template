@@ -12,3 +12,5 @@ hl:
 test:
 	haxe build_script/test.hxml
 
+debug:
+	haxe build_script/test.hxml --debug
