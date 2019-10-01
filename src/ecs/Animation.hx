@@ -1,6 +1,5 @@
 package ecs;
 
-import common.Coord;
 import ecs.Entity;
 import ecs.Component;
 import ecs.System;
@@ -16,69 +15,66 @@ import ecs.Mailbox;
   2. provide the 3 needed function for the animation, in particular the update function.
 **/
 
-/**
-  Animation is root animation object
-**/
-class Animation {
-    public var entered(default, set): Bool = false;
-    /**
-      main update function of animation.
-      return true if this is the end of the animation, false otherwise.
-    **/
-    public function update(Float): Bool { return true; }
-    public function onEnter(): Void {}
-    public function onExit(): Void {}
-
-    public function new() {
-    }
-
-    public function set_entered(b: Bool): Bool {
-        // does not alow this to be set back to false once it has been set to true.
-        if (!this.entered) {
-            this.entered = b;
-        }
-        return this.entered;
-    }
+interface Animation {
+    public function update(dt: Float): Bool;
 }
 
-/**
-  SimpleAnimation is the generic Animation object with the 3 function
-**/
-class SimpleAnimation extends Animation{
+private class WrappedAnimation implements Animation{
 
     var _update: (Float) -> Bool;
-    var _onEnter: () -> Void;
-    var _onExit: () -> Void;
-
-    public function new(update: (Float) -> Bool, onEnter: () -> Void, onExit: () -> Void) {
-        super();
+    public function new(update: (Float) -> Bool) {
         this._update = update;
-        this._onEnter = onEnter;
-        this._onExit = onExit;
     }
 
-    override public function update(dt: Float): Bool {
-        if (this._update != null) {
-            return this._update(dt);
+    public function update(dt: Float): Bool {
+        return this._update(dt);
+    }
+}
+
+private class InternalAnimation {
+
+    public var entered: Bool = false;
+    var animation: Animation;
+    var _onStart: () -> Void;
+    var _onDone: () -> Void;
+
+    public function new(animation: Animation, onStart: () -> Void = null, onDone: () -> Void = null) {
+        this.animation = animation;
+        this._onStart = onStart;
+        this._onDone = onDone;
+    }
+
+    public function update(dt: Float): Bool {
+        return this.animation.update(dt);
+    }
+
+    public function onStart() {
+        if (this._onStart != null) {
+            this._onStart();
         }
-        // if _update is not set, we will return true to end this animation
-        return true;
     }
 
-    override public function onEnter() {
-        if (this._onEnter != null) {
-            this._onEnter();
-        }
-    }
-
-    override public function onExit() {
-        if (this._onExit != null) {
-            this._onExit();
+    public function onDone() {
+        if (this._onDone != null) {
+            this._onDone();
         }
     }
 }
 
-class MoveAnimation extends Animation {
+class DelayAnimation implements Animation {
+
+    var timeLeft: Float = 0;
+
+    public function new(delay: Float) {
+        this.timeLeft = delay;
+    }
+
+    public function update(dt: Float): Bool {
+        return (timeLeft -= dt) <= 0;
+    }
+}
+
+class MoveAnimation implements Animation {
 
     var endCoord: Array<Float>;
     var updateCoord: Array<Float>;
@@ -86,7 +82,6 @@ class MoveAnimation extends Animation {
     var spaceComponent: ecs.Space.SpaceComponent;
 
     public function new(spaceComponent: ecs.Space.SpaceComponent, start: Array<Float>, end: Array<Float>, delta: Float) {
-        super();
         this.endCoord = end;
         this.spaceComponent = spaceComponent;
         this.updateCoord = [
@@ -97,7 +92,7 @@ class MoveAnimation extends Animation {
         this.timeLeft = delta;
     }
 
-    override public function update(dt: Float): Bool {
+    public function update(dt: Float): Bool {
         this.timeLeft -= dt;
         if (this.timeLeft <= 0) {
             this.spaceComponent.xyz = this.endCoord;
@@ -111,11 +106,11 @@ class MoveAnimation extends Animation {
 
 class AnimationSystem extends System {
 
-    var animations: List<Animation>;
+    var animations: List<InternalAnimation>;
 
     public function new() {
         super("ecs.Animation.AnimationSystem");
-        this.animations = new List<Animation>();
+        this.animations = new List<InternalAnimation>();
     }
 
     override public function init(world: World, mailbox: Mailbox) {
@@ -123,26 +118,20 @@ class AnimationSystem extends System {
 
         this.mailbox.listen(AnimationMessage.TYPE_STRING, function(message: Message) {
             var animationMessage = cast(message, AnimationMessage);
-
-            if (animationMessage.animation == null) {
-                // if animation object is not provided, create the simple Animation object
-                this.animations.add(new SimpleAnimation(
-                    animationMessage.update,
-                    animationMessage.onEnter,
-                    animationMessage.onExit
-                ));
-            } else {
-                // if the animation object is provided, then we will use the animation object
-                this.animations.add(animationMessage.animation);
+            var animation = animationMessage.animation;
+            if (animation == null) {
+                animation = new WrappedAnimation(animationMessage.update);
             }
+
+            this.animations.add(new InternalAnimation(animation, animationMessage.onStart, animationMessage.onDone));
         });
     }
 
     override public function update(dt: Float) {
-        var toExit = new List<Animation>();
+        var toExit = new List<InternalAnimation>();
         for (anim in this.animations) {
             if (!anim.entered) {
-                anim.onEnter();
+                anim.onStart();
                 if (anim.update(dt)) {
                     toExit.add(anim);
                 }
@@ -150,7 +139,7 @@ class AnimationSystem extends System {
         }
         for (e in toExit) {
             this.animations.remove(e);
-            e.onExit();
+            e.onDone();
         }
     }
 
@@ -161,20 +150,30 @@ class AnimationMessage extends Message {
 
     public var animation: Animation;
     public var update: (Float) -> Bool;
-    public var onEnter: () -> Void;
-    public var onExit: () -> Void;
+    public var onStart: () -> Void;
+    public var onDone: () -> Void;
 
     public function new(
             animation: Animation = null,
             update: Float -> Bool = null,
-            onEnter: () -> Void = null,
-            onExit: () -> Void = null
+            onStart: () -> Void = null,
+            onDone: () -> Void = null
     ) {
         super();
         this.animation = animation;
         this.update = update;
-        this.onEnter = onEnter;
-        this.onExit = onExit;
+        this.onStart = onStart;
+        this.onDone = onDone;
+    }
+
+    public static function fromFunction(
+                update: Float -> Bool, onStart: () -> Void = null, onDone: () -> Void = null) {
+        return new AnimationMessage(null, update, onStart, onDone);
+    }
+
+    public static function fromAnimation(
+                animation: Animation, onStart: () -> Void = null, onDone: () -> Void = null) {
+        return new AnimationMessage(animation, null, onStart, onDone);
     }
 
     override public function get_type(): String {

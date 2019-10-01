@@ -65,6 +65,13 @@ class GridComponent extends Component {
         return [this.x, this.y, this.z];
     }
 
+    public function add(x: Int = 0, y: Int = 0, z: Int = 0) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        this.changed();
+    }
+
     override function get_type(): String {
         return GridComponent.TYPE_STRING;
     }
