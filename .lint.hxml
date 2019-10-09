@@ -1,3 +1,4 @@
 --class-path src
+--library hxrandom
 --library heaps
 --main Main

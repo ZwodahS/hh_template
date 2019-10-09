@@ -77,4 +77,8 @@ abstract Point2i(Array<Int>) from Array<Int> to Array<Int> {
         return new Point3f(this[0], this[1], 0);
     }
 
+    public function distance(p: Point2i): Int {
+        return hxd.Math.iabs(this[0] - p.x) + hxd.Math.iabs(this[1] - p.y);
+    }
+
 }

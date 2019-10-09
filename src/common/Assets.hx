@@ -50,6 +50,11 @@ class Tile {
         bm.color = this.color;
         return bm;
     }
+
+    public function copy(): Tile {
+        var t = new Tile(this.tile, this.color);
+        return t;
+    }
 }
 
 /**
@@ -81,6 +86,14 @@ class Asset2D {
         var ind = 0;
         for (i in start...end) {
             out[ind++] = this.tiles[i].getBitmap();
+        }
+        return out;
+    }
+
+    public function getTiles(): Array<h2d.Tile> {
+        var out = new Array<h2d.Tile>();
+        for (i in 0...this.tiles.length) {
+            out.push(this.tiles[i].tile);
         }
         return out;
     }

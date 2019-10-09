@@ -1,4 +1,5 @@
 --library heaps
+--library hxrandom
 --js build/js/game.js
 --main Main
 --class-path src
