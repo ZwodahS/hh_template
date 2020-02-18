@@ -4,3 +4,4 @@
 --hl game.hl
 --main Main
 --class-path src
+--class-path lib
