@@ -5,3 +5,4 @@
 --main Main
 --class-path src
 --class-path lib
+-D debug

@@ -6,6 +6,8 @@ class Game extends hxd.App {
     var currentScene: common.Scene;
     var framerate: h2d.Text;
 
+    var console: h2d.Console;
+
     override function init() {
         // resize window if necessary
         var window = hxd.Window.getInstance();
@@ -27,6 +29,26 @@ class Game extends hxd.App {
         framerate.x = hxd.Window.getInstance().width - 10;
         this.s2d.add(this.framerate, 0);
 
+        #if debug
+        this.setupConsole();
+        #end
+    }
+
+    function setupConsole() {
+        this.console = new h2d.Console(hxd.res.DefaultFont.get(), this.s2d);
+        this.console.addCommand("getWindowSize", "get the window size", [], function() {
+            var window = hxd.Window.getInstance();
+            this.console.log('${window.width}: ${window.height}');
+        });
+
+        this.console.addCommand("printString", "print a string",
+            [
+                { "name": "string", "t": h2d.Console.ConsoleArg.AString },
+            ],
+            function(string) {
+                this.console.log(string);
+            }
+        );
     }
 
     override function update(dt:Float) {
