@@ -22,7 +22,7 @@ class Game extends hxd.App {
         hxd.Window.getInstance().addEventTarget(onEvent);
 
         // set up the framerate text and draw
-        var font : h2d.Font = hxd.res.DefaultFont.get();
+        var font : h2d.Font = hxd.res.DefaultFont.get().clone();
         font.resizeTo(24);
         this.framerate = new h2d.Text(font);
         framerate.textAlign = Right;
@@ -35,7 +35,11 @@ class Game extends hxd.App {
     }
 
     function setupConsole() {
-        this.console = new h2d.Console(hxd.res.DefaultFont.get(), this.s2d);
+        var font = hxd.res.DefaultFont.get().clone();
+        font.resizeTo(12);
+
+        this.console = new h2d.Console(font, this.s2d);
+
         this.console.addCommand("getWindowSize", "get the window size", [], function() {
             var window = hxd.Window.getInstance();
             this.console.log('${window.width}: ${window.height}');
