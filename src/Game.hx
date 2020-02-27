@@ -53,6 +53,12 @@ class Game extends hxd.App {
                 this.console.log(string);
             }
         );
+
+        this.console.addCommand("framerate", "toggle framerate", [], function() {
+            this.framerate.visible = !this.framerate.visible;
+        });
+        this.console.addAlias("fr", "framerate");
+
     }
 
     override function update(dt:Float) {
