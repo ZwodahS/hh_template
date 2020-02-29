@@ -9,7 +9,7 @@ class GameScene implements common.Scene {
     var backgroundLayer: h2d.Layers;
     var foregroundLayer: h2d.Layers;
 
-    public function new(assets: common.Assets) {
+    public function new(assets: common.Assets, console: h2d.Console) {
         this.scene = new h2d.Scene();
         this.assets = assets;
         this.init();

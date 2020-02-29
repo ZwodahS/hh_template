@@ -11,12 +11,16 @@ class Game extends hxd.App {
     override function init() {
         // resize window if necessary
         var window = hxd.Window.getInstance();
+
+        #if debug
+        this.setupConsole();
+        #end
         // window.resize(1600, 900);
 
         hxd.Res.initEmbed();
 
         var assetsMap = common.Assets.parseAssets("assets.json");
-        this.currentScene = new GameScene(assetsMap);
+        this.currentScene = new GameScene(assetsMap, this.console);
 
         // add event handler
         hxd.Window.getInstance().addEventTarget(onEvent);
@@ -28,10 +32,8 @@ class Game extends hxd.App {
         framerate.textAlign = Right;
         framerate.x = hxd.Window.getInstance().width - 10;
         this.s2d.add(this.framerate, 0);
+        framerate.visible = false;
 
-        #if debug
-        this.setupConsole();
-        #end
     }
 
     function setupConsole() {
