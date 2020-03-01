@@ -14,3 +14,6 @@ test:
 
 debug:
 	haxe build_script/test.hxml --debug
+
+itch:
+	cd build/js; zip ../../itch.zip *

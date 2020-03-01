@@ -1,6 +1,3 @@
-[submodule "lib/ecs"]
-	path = lib/ecs
-	url = git@gitlab.com:zwodahs/hh_ecs
 [submodule "lib/common"]
 	path = lib/common
 	url = git@gitlab.com:zwodahs/hh_common
