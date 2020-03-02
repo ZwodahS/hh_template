@@ -54,6 +54,17 @@ class GameScene implements common.Scene {
             this.animator.moveBy(obj4, [64, 64], 32);
         });
 
+        // allow us to scale while anchor to center
+        var obj5 = new h2d.Layers();
+        var obj6 = new h2d.Bitmap(h2d.Tile.fromColor(0x00FF00, 32, 32));
+        obj6.x = -16;
+        obj6.y = -16;
+        obj5.add(obj6, 0);
+        obj5.x = 160;
+        obj5.y = 160;
+        this.backgroundLayer.add(obj5, 0);
+        this.animator.scaleTo(obj6, [2.0, 2.0], 0.25);
+
     }
 
     function init() {}
