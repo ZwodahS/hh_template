@@ -38,12 +38,21 @@ class GameScene implements common.Scene {
         var obj3 = new h2d.Bitmap(h2d.Tile.fromColor(0xFF0000, 32, 32));
         obj3.x = 64; obj3.y = 64;
         this.backgroundLayer.add(obj3, 0);
-        this.animator.moveBy(obj3, [96, 0], 32);
+        this.animator.moveBy(obj3, [96, 0], 32, function() {
+            this.animator.alphaTo(obj3, 0, 0.5);
+        });
 
         var obj4 = new h2d.Bitmap(h2d.Tile.fromColor(0x00FF00, 32, 32));
         obj4.x = 64; obj4.y = 64;
         this.backgroundLayer.add(obj4, 0);
         this.animator.moveBy(obj4, [0, 96], 32, function() {obj4.y = 64;});
+
+        var obj4 = new h2d.Bitmap(h2d.Tile.fromColor(0x00FF00, 32, 32));
+        obj4.x = 128; obj4.y = 128;
+        this.backgroundLayer.add(obj4, 0);
+        this.animator.scaleTo(obj4, [2.0, 2.0], 0.25, function() {
+            this.animator.moveBy(obj4, [64, 64], 32);
+        });
 
     }
 
