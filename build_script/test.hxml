@@ -1,8 +1,4 @@
---library heaps
---library hlsdl
---library hxrandom
 --hl game.hl
---main Main
---class-path src
---class-path lib
+--library hlsdl
 -D debug
+-D windowSize=384x384

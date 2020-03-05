@@ -1,3 +1,3 @@
---hl build/hl/game.hl
 --library hlsdl
+--hl build/c/game.c
 -D windowSize=384x384
