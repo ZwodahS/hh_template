@@ -4,36 +4,35 @@ import gamescene.GameScene;
 class Game extends hxd.App {
 
     var currentScene: common.Scene;
-    var framerate: h2d.Text;
 
+    var framerate: h2d.Text;
     var console: h2d.Console;
 
     override function init() {
-        // resize window if necessary
-        var window = hxd.Window.getInstance();
-
-        #if debug
+#if debug
         this.setupConsole();
-        #end
-        // window.resize(1600, 900);
-
+        this.setupFramerate();
+#end
         hxd.Res.initEmbed();
 
         var assetsMap = common.Assets.parseAssets("assets.json");
         this.currentScene = new GameScene(assetsMap, this.console);
 
         // add event handler
-        hxd.Window.getInstance().addEventTarget(onEvent);
+        hxd.Window.getInstance().addEventTarget(this.onEvent);
+    }
 
-        // set up the framerate text and draw
+#if debug
+    function setupFramerate() {
         var font : h2d.Font = hxd.res.DefaultFont.get().clone();
         font.resizeTo(24);
+
         this.framerate = new h2d.Text(font);
         framerate.textAlign = Right;
         framerate.x = hxd.Window.getInstance().width - 10;
+
         this.s2d.add(this.framerate, 0);
         framerate.visible = false;
-
     }
 
     function setupConsole() {
@@ -62,10 +61,14 @@ class Game extends hxd.App {
         this.console.addAlias("fr", "framerate");
 
     }
+#end
 
     override function update(dt:Float) {
         this.currentScene.update(dt);
+#if debug
         this.framerate.text = '${common.MathUtils.round(1/dt, 1)}';
+#end
+
     }
 
     override function render(engine: h3d.Engine) {
