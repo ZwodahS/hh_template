@@ -1,5 +1,5 @@
 
-import gamescene.GameScene;
+import examples.AnimationScene;
 
 class Game extends hxd.App {
 
@@ -16,7 +16,7 @@ class Game extends hxd.App {
         hxd.Res.initEmbed();
 
         var assetsMap = common.Assets.parseAssets("assets.json");
-        this.currentScene = new GameScene(assetsMap, this.console);
+        this.currentScene = new examples.AnimationScene(assetsMap, this.console);
 
         // add event handler
         hxd.Window.getInstance().addEventTarget(this.onEvent);

@@ -1,9 +1,9 @@
 
-package gamescene;
+package examples;
 
 import common.h2d.Animation.Animator;
 
-class GameScene implements common.Scene {
+class AnimationScene implements common.Scene {
 
     var assets: common.Assets;
 
