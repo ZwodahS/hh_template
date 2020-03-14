@@ -1,6 +1,4 @@
 
-import examples.AnimationScene;
-
 class Game extends hxd.App {
 
     var currentScene: common.Scene;

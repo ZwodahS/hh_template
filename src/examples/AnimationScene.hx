@@ -13,6 +13,8 @@ class AnimationScene implements common.Scene {
 
     var animator: common.h2d.Animation.Animator;
 
+    var obj7: h2d.Drawable;
+
     public function new(assets: common.Assets, console: h2d.Console) {
         this.scene = new h2d.Scene();
         this.assets = assets;
@@ -65,6 +67,11 @@ class AnimationScene implements common.Scene {
         this.backgroundLayer.add(obj5, 0);
         this.animator.scaleTo(obj6, [2.0, 2.0], 0.25);
 
+        this.obj7 = new h2d.Bitmap(h2d.Tile.fromColor(0xFF9999, 32, 32));
+        obj7.y = 200;
+        this.backgroundLayer.add(obj7, 0);
+        this.animator.move(obj7, 3, [32, 0]);
+
     }
 
     function init() {}
@@ -78,6 +85,9 @@ class AnimationScene implements common.Scene {
     }
 
     public function onEvent(event: hxd.Event) {
+        if (event.kind == hxd.Event.EventKind.EKeyDown) {
+            this.obj7.x -= 60;
+        }
     }
 
 }
