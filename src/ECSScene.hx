@@ -17,4 +17,11 @@ class ECSScene implements common.Scene {
     public function update(dt: Float) {
         this.world.update(dt);
     }
+
+    public function render(engine: h3d.Engine) {
+        this.scene.render(engine);
+    }
+
+    public function onEvent(event: hxd.Event) {
+    }
 }
