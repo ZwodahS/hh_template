@@ -1,5 +1,5 @@
 
-class BasicScene implements common.Scene {
+class BasicScene extends common.Scene {
 
     var scene: h2d.Scene;
 
@@ -7,13 +7,13 @@ class BasicScene implements common.Scene {
         this.scene = new h2d.Scene();
     }
 
-    public function update(dt: Float) {
+    override public function update(dt: Float) {
     }
 
-    public function render(engine: h3d.Engine) {
+    override public function render(engine: h3d.Engine) {
         this.scene.render(engine);
     }
 
-    public function onEvent(event: hxd.Event) {
+    override public function onEvent(event: hxd.Event) {
     }
 }

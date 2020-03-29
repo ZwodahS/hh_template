@@ -4,24 +4,25 @@ import common.ecs.System;
 import common.ecs.Entity;
 import common.ecs.Component;
 
-class ECSScene implements common.Scene {
+class ECSScene extends common.Scene {
 
     var scene: h2d.Scene;
 
     var world: World;
+
     public function new() {
         this.scene = new h2d.Scene();
         this.world = new World();
     }
 
-    public function update(dt: Float) {
+    override public function update(dt: Float) {
         this.world.update(dt);
     }
 
-    public function render(engine: h3d.Engine) {
+    override public function render(engine: h3d.Engine) {
         this.scene.render(engine);
     }
 
-    public function onEvent(event: hxd.Event) {
+    override public function onEvent(event: hxd.Event) {
     }
 }
