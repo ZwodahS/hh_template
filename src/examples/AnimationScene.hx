@@ -3,7 +3,7 @@ package examples;
 
 import common.h2d.Animation.Animator;
 
-class AnimationScene implements common.Scene {
+class AnimationScene extends common.Scene {
 
     var assets: common.Assets;
 
@@ -76,15 +76,15 @@ class AnimationScene implements common.Scene {
 
     function init() {}
 
-    public function update(dt: Float) {
+    override public function update(dt: Float) {
         animator.update(dt);
     }
 
-    public function render(engine: h3d.Engine) {
+    override public function render(engine: h3d.Engine) {
         this.scene.render(engine);
     }
 
-    public function onEvent(event: hxd.Event) {
+    override public function onEvent(event: hxd.Event) {
         if (event.kind == hxd.Event.EventKind.EKeyDown) {
             this.obj7.x -= 60;
         }
