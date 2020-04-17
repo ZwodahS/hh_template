@@ -6,8 +6,6 @@ class Game extends hxd.App {
     var framerate: h2d.Text;
     var console: h2d.Console;
 
-    var assetsMap: common.Assets;
-
     override function init() {
 #if debug
         this.setupConsole();
@@ -15,8 +13,8 @@ class Game extends hxd.App {
 #end
         hxd.Res.initEmbed();
 
-        this.assetsMap = common.Assets.parseAssets("assets.json");
-        this.switchScene(new examples.AnimationScene(assetsMap, this.console));
+        var assetsMap = common.Assets.parseAssets("assets.json");
+        this.switchScene(new BasicScene());
 
         // add event handler
         hxd.Window.getInstance().addEventTarget(this.onEvent);
@@ -59,14 +57,6 @@ class Game extends hxd.App {
             this.framerate.visible = !this.framerate.visible;
         });
         this.console.addAlias("fr", "framerate");
-
-        this.console.addCommand("animationScene", "Change to animation scene", [], function() {
-            this.switchScene(new examples.AnimationScene(this.assetsMap, this.console));
-        });
-
-        this.console.addCommand("dragScene", "Change to drag scene", [], function() {
-            this.switchScene(new examples.DragScene(this.console));
-        });
 
     }
 #end
