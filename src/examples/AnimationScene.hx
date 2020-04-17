@@ -15,8 +15,8 @@ class AnimationScene extends common.Scene {
 
     var obj7: h2d.Drawable;
 
-    public function new(assets: common.Assets, console: h2d.Console) {
-        this.scene = new h2d.Scene();
+    public function new(scene: h2d.Scene, assets: common.Assets, console: h2d.Console) {
+        this.scene = scene;
         this.assets = assets;
         this.init();
 
@@ -81,7 +81,6 @@ class AnimationScene extends common.Scene {
     }
 
     override public function render(engine: h3d.Engine) {
-        this.scene.render(engine);
     }
 
     override public function onEvent(event: hxd.Event) {
@@ -89,5 +88,8 @@ class AnimationScene extends common.Scene {
             this.obj7.x -= 60;
         }
     }
-
+    override public function destroy() {
+        this.scene.removeChild(foregroundLayer);
+        this.scene.removeChild(backgroundLayer);
+    }
 }

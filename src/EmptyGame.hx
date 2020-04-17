@@ -11,10 +11,9 @@ class Game extends hxd.App {
         this.setupConsole();
         this.setupFramerate();
 #end
-        hxd.Res.initEmbed();
 
         var assetsMap = common.Assets.parseAssets("assets.json");
-        this.switchScene(new BasicScene());
+        this.switchScene(new BasicScene(this.s2d));
 
         // add event handler
         hxd.Window.getInstance().addEventTarget(this.onEvent);
@@ -37,7 +36,8 @@ class Game extends hxd.App {
         var font = hxd.res.DefaultFont.get().clone();
         font.resizeTo(12);
 
-        this.console = new h2d.Console(font, this.s2d);
+        this.console = new h2d.Console(font);
+        this.s2d.add(this.console, 10);
 
         this.console.addCommand("getWindowSize", "get the window size", [], function() {
             var window = hxd.Window.getInstance();

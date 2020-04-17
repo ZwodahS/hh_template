@@ -13,10 +13,10 @@ class Game extends hxd.App {
         this.setupConsole();
         this.setupFramerate();
 #end
-        hxd.Res.initEmbed();
 
         this.assetsMap = common.Assets.parseAssets("assets.json");
-        this.switchScene(new examples.AnimationScene(assetsMap, this.console));
+        this.switchScene(new examples.AnimationScene(this.s2d, assetsMap, this.console));
+        this.switchScene(new examples.DomkitScene(this.s2d, this.console));
 
         // add event handler
         hxd.Window.getInstance().addEventTarget(this.onEvent);
@@ -61,11 +61,15 @@ class Game extends hxd.App {
         this.console.addAlias("fr", "framerate");
 
         this.console.addCommand("animationScene", "Change to animation scene", [], function() {
-            this.switchScene(new examples.AnimationScene(this.assetsMap, this.console));
+            this.switchScene(new examples.AnimationScene(this.s2d, this.assetsMap, this.console));
         });
 
         this.console.addCommand("dragScene", "Change to drag scene", [], function() {
-            this.switchScene(new examples.DragScene(this.console));
+            this.switchScene(new examples.DragScene(this.s2d, this.console));
+        });
+
+        this.console.addCommand("domScene", "Change to dom scene", [], function() {
+            this.switchScene(new examples.DomkitScene(this.s2d, this.console));
         });
 
     }
@@ -80,7 +84,6 @@ class Game extends hxd.App {
     }
 
     override function render(engine: h3d.Engine) {
-        this.currentScene.render(engine);
         this.s2d.render(engine);
     }
 

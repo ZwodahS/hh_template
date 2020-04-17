@@ -1,5 +1,6 @@
 --library heaps-dev
 --library hxrandom
+--library domkit
 --main Main
 --class-path src
 --class-path lib

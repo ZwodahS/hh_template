@@ -9,11 +9,10 @@ class DragScene extends common.Scene {
     var camera: h2d.Camera;
     var layer: h2d.Layers;
 
-
     var entities: List<h2d.Drawable>;
 
-    public function new(console: h2d.Console) {
-        this.scene = new h2d.Scene();
+    public function new(scene: h2d.Scene, console: h2d.Console) {
+        this.scene = scene;
         this.camera = new h2d.Camera(this.scene);
         this.layer = new h2d.Layers(this.camera);
 
@@ -80,5 +79,8 @@ class DragScene extends common.Scene {
                 this.mouseMoved(event);
             default:
         }
+    }
+    override public function destroy() {
+        this.scene.removeChild(this.camera);
     }
 }
