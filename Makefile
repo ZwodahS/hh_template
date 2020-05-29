@@ -1,4 +1,8 @@
 
+assets:
+	./raw/convert_from_asejson.py ./raw/cards.ase.json ./res/cards.json
+	cp ./raw/*.png ./res/.
+
 test:
 	haxe build_script/common.hxml build_script/test.hxml
 
