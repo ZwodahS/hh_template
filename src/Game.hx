@@ -1,6 +1,9 @@
 
 class Game extends hxd.App {
 
+    var GameWidth: Int = 800;
+    var GameHeight: Int = 600;
+
     var currentScene: common.Scene;
 
     var framerate: h2d.Text;
@@ -13,6 +16,7 @@ class Game extends hxd.App {
         this.setupConsole();
         this.setupFramerate();
 #end
+        this.s2d.scaleMode = Stretch(this.GameWidth, this.GameHeight);
 
         this.assetsMap = common.Assets.parseAssets("assets.json");
         this.switchScene(new examples.AnimationScene(this.s2d, assetsMap, this.console));
@@ -29,7 +33,7 @@ class Game extends hxd.App {
 
         this.framerate = new h2d.Text(font);
         framerate.textAlign = Right;
-        framerate.x = hxd.Window.getInstance().width - 10;
+        framerate.x = this.GameWidth - 10;
 
         this.s2d.add(this.framerate, 0);
         framerate.visible = false;
