@@ -1,24 +1,25 @@
 
-assets:
-	./raw/convert_from_asejson.py ./raw/cards.ase.json ./res/cards.json
-	cp ./raw/*.png ./res/.
-
-test:
+test: assets
 	haxe build_script/common.hxml build_script/test.hxml
+
+assets:
+	cp ./raw/*.png ./res/.
 
 help:
 	@echo "make [js|hl|test|c]"
 
-js:
+js: assets
 	haxe build_script/common.hxml build_script/js.hxml
 	cp build_script/index.html build/js/.
 
-hl:
+hl: assets
 	haxe build_script/common.hxml build_script/hl.hxml
 
-c:
-	rm -f ./game
+c: assets
 	haxe build_script/common.hxml build_script/c.hxml
+
+gcc: c
+	rm -f ./game
 	gcc -O3 -o game -I build/c/ build/c/game.c -lhl /usr/local/lib/*.hdll
 
 itch:
