@@ -1,8 +1,6 @@
-
 class Game extends hxd.App {
-
-    var screenWidth: Int = 800;
-    var screenHeight: Int = 600;
+    var gameWidth: Int = 800;
+    var gameHeight: Int = 600;
 
     var currentScene: common.Scene;
 
@@ -16,7 +14,7 @@ class Game extends hxd.App {
         this.setupConsole();
         this.setupFramerate();
 #end
-        this.s2d.scaleMode = Stretch(this.screenWidth, this.screenHeight);
+        this.s2d.scaleMode = Stretch(this.gameWidth, this.gameHeight);
 
         this.assetsMap = common.Assets.parseAssets("assets.json");
         this.switchScene(new examples.AnimationScene(this.s2d, assetsMap, this.console));
@@ -28,12 +26,12 @@ class Game extends hxd.App {
 
 #if debug
     function setupFramerate() {
-        var font : h2d.Font = hxd.res.DefaultFont.get().clone();
+        var font: h2d.Font = hxd.res.DefaultFont.get().clone();
         font.resizeTo(24);
 
         this.framerate = new h2d.Text(font);
         framerate.textAlign = Right;
-        framerate.x = this.GameWidth - 10;
+        framerate.x = this.gameWidth - 10;
 
         this.s2d.add(this.framerate, 0);
         framerate.visible = false;
@@ -51,13 +49,9 @@ class Game extends hxd.App {
         });
 
         this.console.addCommand("printString", "print a string",
-            [
-                { "name": "string", "t": h2d.Console.ConsoleArg.AString },
-            ],
-            function(string) {
+            [{"name": "string", "t": h2d.Console.ConsoleArg.AString},], function(string) {
                 this.console.log(string);
-            }
-        );
+        });
 
         this.console.addCommand("framerate", "toggle framerate", [], function() {
             this.framerate.visible = !this.framerate.visible;
@@ -75,16 +69,14 @@ class Game extends hxd.App {
         this.console.addCommand("domScene", "Change to dom scene", [], function() {
             this.switchScene(new examples.DomkitScene(this.s2d, this.console));
         });
-
     }
 #end
 
-    override function update(dt:Float) {
+    override function update(dt: Float) {
         this.currentScene.update(dt);
 #if debug
-        this.framerate.text = '${common.MathUtils.round(1/dt, 1)}';
+        this.framerate.text = '${common.MathUtils.round(1 / dt, 1)}';
 #end
-
     }
 
     override function render(engine: h3d.Engine) {
@@ -102,5 +94,4 @@ class Game extends hxd.App {
             oldScene.destroy();
         }
     }
-
 }

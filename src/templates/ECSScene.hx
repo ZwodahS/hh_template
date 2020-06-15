@@ -1,11 +1,9 @@
-
 import common.ecs.World;
 import common.ecs.System;
 import common.ecs.Entity;
 import common.ecs.Component;
 
 class ECSScene extends common.Scene {
-
     var scene: h2d.Scene;
 
     var world: World;
@@ -23,6 +21,5 @@ class ECSScene extends common.Scene {
         this.scene.render(engine);
     }
 
-    override public function onEvent(event: hxd.Event) {
-    }
+    override public function onEvent(event: hxd.Event) {}
 }

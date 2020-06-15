@@ -2,6 +2,9 @@
 test: assets
 	haxe build_script/common.hxml build_script/test.hxml
 
+lint:
+	haxelib run formatter -s src
+
 assets:
 	cp ./raw/*.png ./res/.
 

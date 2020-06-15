@@ -1,6 +1,4 @@
-
 class Game extends hxd.App {
-
     var GameWidth: Int = 800;
     var GameHeight: Int = 600;
 
@@ -20,12 +18,12 @@ class Game extends hxd.App {
         this.switchScene(new BasicScene(this.s2d));
 
         // add event handler
-        hxd.Window.getInstance().addEventTarget(this.onEvent);
+        this.s2d.addEventListener(this.onEvent);
     }
 
 #if debug
     function setupFramerate() {
-        var font : h2d.Font = hxd.res.DefaultFont.get().clone();
+        var font: h2d.Font = hxd.res.DefaultFont.get().clone();
         font.resizeTo(24);
 
         this.framerate = new h2d.Text(font);
@@ -49,28 +47,27 @@ class Game extends hxd.App {
         });
 
         this.console.addCommand("printString", "print a string",
-            [
-                { "name": "string", "t": h2d.Console.ConsoleArg.AString },
-            ],
-            function(string) {
+            [{"name": "string", "t": h2d.Console.ConsoleArg.AString},], function(string) {
                 this.console.log(string);
-            }
-        );
+        });
 
         this.console.addCommand("framerate", "toggle framerate", [], function() {
             this.framerate.visible = !this.framerate.visible;
         });
         this.console.addAlias("fr", "framerate");
-
     }
 #end
 
-    override function update(dt:Float) {
+    override function update(dt: Float) {
         this.currentScene.update(dt);
 #if debug
-        this.framerate.text = '${common.MathUtils.round(1/dt, 1)}';
+        this.framerate.text = '${common.MathUtils.round(1 / dt, 1)}';
 #end
+    }
 
+    override function onResize() {
+        // Do any resizing of the "world" if necessary
+        if (this.currentScene != null) this.currentScene.resize(this.GameWidth, this.GameHeight);
     }
 
     override function render(engine: h3d.Engine) {
@@ -89,5 +86,4 @@ class Game extends hxd.App {
             oldScene.destroy();
         }
     }
-
 }
