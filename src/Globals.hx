@@ -10,4 +10,7 @@
 class Globals {
     public static var console: h2d.Console;
     public static var assets: common.Assets;
+
+    public static var gameWidth: Int = 800;
+    public static var gameHeight: Int = 600;
 }

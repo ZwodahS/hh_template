@@ -1,27 +1,23 @@
-class Game extends hxd.App {
-    var gameWidth: Int = 800;
-    var gameHeight: Int = 600;
 
+class Game extends hxd.App {
     var currentScene: common.Scene;
 
     var framerate: h2d.Text;
     var console: h2d.Console;
-
-    var assetsMap: common.Assets;
 
     override function init() {
 #if debug
         this.setupConsole();
         this.setupFramerate();
 #end
-        this.s2d.scaleMode = Stretch(this.gameWidth, this.gameHeight);
+        this.s2d.scaleMode = Stretch(Globals.gameWidth, Globals.gameHeight);
 
-        this.assetsMap = common.Assets.parseAssets("assets.json");
-        this.switchScene(new examples.AnimationScene(this.s2d, assetsMap, this.console));
-        this.switchScene(new examples.DomkitScene(this.s2d, this.console));
+        Globals.assets = common.Assets.parseAssets("assets.json");
+
+        this.switchScene(new BasicScene(this.s2d));
 
         // add event handler
-        hxd.Window.getInstance().addEventTarget(this.onEvent);
+        this.s2d.addEventListener(this.onEvent);
     }
 
 #if debug
@@ -31,7 +27,7 @@ class Game extends hxd.App {
 
         this.framerate = new h2d.Text(font);
         framerate.textAlign = Right;
-        framerate.x = this.gameWidth - 10;
+        framerate.x = hxd.Window.getInstance().width - 10;
 
         this.s2d.add(this.framerate, 0);
         framerate.visible = false;
@@ -41,34 +37,24 @@ class Game extends hxd.App {
         var font = hxd.res.DefaultFont.get().clone();
         font.resizeTo(12);
 
-        this.console = new h2d.Console(font, this.s2d);
+        Globals.console = new h2d.Console(font);
+        this.s2d.add(Globals.console, 10);
 
-        this.console.addCommand("getWindowSize", "get the window size", [], function() {
+        Globals.console.addCommand("getWindowSize", "get the window size", [], function() {
             var window = hxd.Window.getInstance();
-            this.console.log('${window.width}: ${window.height}');
+            Globals.console.log('Window Size: ${window.width},${window.height}');
+            Globals.console.log('World Size :${Globals.gameWidth},${Globals.gameHeight}');
         });
 
-        this.console.addCommand("printString", "print a string",
+        Globals.console.addCommand("printString", "print a string",
             [{"name": "string", "t": h2d.Console.ConsoleArg.AString},], function(string) {
-                this.console.log(string);
+                Globals.console.log(string);
         });
 
-        this.console.addCommand("framerate", "toggle framerate", [], function() {
+        Globals.console.addCommand("framerate", "toggle framerate", [], function() {
             this.framerate.visible = !this.framerate.visible;
         });
-        this.console.addAlias("fr", "framerate");
-
-        this.console.addCommand("animationScene", "Change to animation scene", [], function() {
-            this.switchScene(new examples.AnimationScene(this.s2d, this.assetsMap, this.console));
-        });
-
-        this.console.addCommand("dragScene", "Change to drag scene", [], function() {
-            this.switchScene(new examples.DragScene(this.s2d, this.console));
-        });
-
-        this.console.addCommand("domScene", "Change to dom scene", [], function() {
-            this.switchScene(new examples.DomkitScene(this.s2d, this.console));
-        });
+        Globals.console.addAlias("fr", "framerate");
     }
 #end
 
@@ -79,7 +65,13 @@ class Game extends hxd.App {
 #end
     }
 
+    override function onResize() {
+        // Do any resizing of the "world" if necessary
+        if (this.currentScene != null) this.currentScene.resize(Globals.gameWidth, Globals.gameHeight);
+    }
+
     override function render(engine: h3d.Engine) {
+        this.currentScene.render(engine);
         this.s2d.render(engine);
     }
 
