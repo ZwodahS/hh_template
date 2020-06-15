@@ -1,13 +1,8 @@
 class BasicScene extends common.Scene {
     var scene: h2d.Scene;
 
-    var wall: h2d.Object;
-
     public function new(scene: h2d.Scene) {
         this.scene = scene;
-
-        // this.wall = Globals.assets.get("wall").getBitmap();
-        // this.scene.add(this.wall, 0);
     }
 
     override public function update(dt: Float) {}

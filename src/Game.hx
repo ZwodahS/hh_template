@@ -1,4 +1,3 @@
-
 class Game extends hxd.App {
     var currentScene: common.Scene;
 
@@ -13,7 +12,6 @@ class Game extends hxd.App {
         this.s2d.scaleMode = Stretch(Globals.gameWidth, Globals.gameHeight);
 
         Globals.assets = common.Assets.parseAssets("assets.json");
-
         this.switchScene(new BasicScene(this.s2d));
 
         // add event handler
@@ -59,7 +57,7 @@ class Game extends hxd.App {
 #end
 
     override function update(dt: Float) {
-        this.currentScene.update(dt);
+        if (this.currentScene != null) this.currentScene.update(dt);
 #if debug
         this.framerate.text = '${common.MathUtils.round(1 / dt, 1)}';
 #end
@@ -71,12 +69,11 @@ class Game extends hxd.App {
     }
 
     override function render(engine: h3d.Engine) {
-        this.currentScene.render(engine);
         this.s2d.render(engine);
     }
 
     function onEvent(event: hxd.Event) {
-        this.currentScene.onEvent(event);
+        if (this.currentScene != null) this.currentScene.onEvent(event);
     }
 
     function switchScene(scene: common.Scene) {
