@@ -23,7 +23,11 @@ for frame in frames:
     processed_frames[frame["filename"]] = frame["frame"]
     processed_frames[frame["filename"]]["r"] = 1 if frame["rotated"] else 0
 
-with open(sys.argv[2], "w") as f:
-    print(json.dumps(processed_frames, indent=2), file=f)
+output = {
+    "gridtype": "dynamic",
+    "frames": processed_frames,
+}
 
+with open(sys.argv[2], "w") as f:
+    print(json.dumps(output, indent=2), file=f)
 
