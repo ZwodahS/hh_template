@@ -3,13 +3,10 @@ import common.ecs.System;
 import common.ecs.Entity;
 import common.ecs.Component;
 
-class ECSScene extends common.Scene {
-    var scene: h2d.Scene;
-
+class ECSScreen extends common.Screen {
     var world: World;
 
     public function new() {
-        this.scene = new h2d.Scene();
         this.world = new World();
     }
 

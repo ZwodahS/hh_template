@@ -1,8 +1,7 @@
-class BasicScene extends common.Scene {
-    var scene: h2d.Scene;
+class BasicScreen extends common.Screen {
 
-    public function new(scene: h2d.Scene) {
-        this.scene = scene;
+    public function new() {
+        super();
     }
 
     override public function update(dt: Float) {}
