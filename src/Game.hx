@@ -1,6 +1,4 @@
-
 class Game extends common.Game {
-
     override function init() {
         super.init();
 #if debug
@@ -11,7 +9,5 @@ class Game extends common.Game {
         this.switchScreen(new BasicScreen());
     }
 
-    override function update(dt: Float) {
-    }
-
+    override function update(dt: Float) {}
 }

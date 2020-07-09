@@ -1,6 +1,4 @@
-
 class BasicScreen extends common.Screen {
-
     public function new() {
         super();
     }
