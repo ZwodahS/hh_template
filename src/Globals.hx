@@ -6,6 +6,7 @@
     Global variable are evil, but sometimes necessary.
 
     For Constants, see Constants.hx
+    For functions, see Utils.hx
 **/
 class Globals {
     public static var console: h2d.Console;
