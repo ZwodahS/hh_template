@@ -1,7 +1,4 @@
 {
-    "includes": [
-        "hero.json"
-    ],
     "graphics": {
         "tile": {
             "rect": {

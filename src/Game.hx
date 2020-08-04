@@ -6,8 +6,6 @@ class Game extends common.Game {
 #end
         this.s2d.scaleMode = Stretch(Globals.gameWidth, Globals.gameHeight);
         Globals.assets = common.Assets.parseAssets("assets.json");
-        this.switchScreen(new BasicScreen());
+        this.switchScreen(new examples.AnimationScene());
     }
-
-    override function update(dt: Float) {}
 }
