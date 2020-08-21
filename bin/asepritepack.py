@@ -8,17 +8,6 @@ import rectpack
 """
 This is currently a work in progress
 """
-
-def ensure_no_dupe(loaded):
-    keys = set()
-    for k, v in loaded.items():
-        conf = v["conf"]
-        for frame in conf["meta"]["frameTags"]:
-            if frame["name"] in keys:
-                print("duplicated: {}".format(frame["name"]))
-                sys.exit(0)
-            keys.add(frame["name"])
-
 if __name__ == "__main__":
     doc="""
     Each argument should be a png:json pair.
@@ -48,6 +37,7 @@ if __name__ == "__main__":
             sys.exit(1)
         mappings[j] = p
 
+    # load all the files provided and load the images
     loaded = {}
     for k, v in mappings.items():
         loaded[k] = {}
@@ -58,42 +48,85 @@ if __name__ == "__main__":
 
         loaded[k]['img'] = Image.open(v)
 
-    ensure_no_dupe(loaded)
+    # for each of the files provided load all the frameTags
+    loadedFrameTags = {}
+    for k, v in loaded.items():
+        conf = v["conf"]
+        for frame in conf["meta"]["frameTags"]:
+            # check for duplicate
+            if frame["name"] in loadedFrameTags:
+                print("duplicated: {}".format(frame["name"]))
+                sys.exit(0)
+            loadedFrameTags[frame["name"]] = { "conf": conf, "img": v["img"], "frame": frame }
 
+    # HACK: need to change once we need to pack into multiple images
     size = (1024, 1024)
     packed_image = Image.new('RGBA', size, 0x00000000)
 
-
+    # prepare the packer
     packer = rectpack.newPacker(rotation=False)
     packer.add_bin(size[0], size[1])
-    # for now we put them together, rather than splitting each individual sprite
-    for k, v in loaded.items():
-        img = v['img']
-        packer.add_rect(img.size[0], img.size[1], k)
 
+    # for each of the loadedFrameTags, add each of the frame into the packer
+    for name, frameTag in loadedFrameTags.items():
+        conf = frameTag["conf"]
+        for frame in range(frameTag["frame"]["from"], frameTag["frame"]["to"] + 1):
+            f = conf["frames"][frame]
+            packer.add_rect(f["spriteSourceSize"]["w"], f["spriteSourceSize"]["h"], (name, frame))
+
+    # pack
     packer.pack()
+
+    # unpack all the rect and store them in the original conf so we can pack them properly
+    # We need all the frames to be together due to the "from" and "to" of frameTags
+    for rect in packer.rect_list():
+        rid = rect[5]
+        name, frame_no = rid
+        frameTag = loadedFrameTags[name]
+        # set update the frames data for the rect to paste into
+        frameTag["conf"]["frames"][frame_no]["rect"] = rect
+
+    # prepare the final output frames and frameTags
     frames = []
     frameTags = []
-    curr = 0
-    for rect in packer.rect_list():
-        k = rect[5]
-        v = loaded[k]
-        img = v['img']
-        packed_image.paste(v['img'], (rect[1], rect[2], rect[1] + rect[3], rect[2] + rect[4]))
-        offset = [rect[1], rect[2]]
-        v["offset"] = offset
-        for frame in v["conf"]["frames"]:
-            frame["frame"]["x"] += offset[0]
-            frame["frame"]["y"] += offset[1]
-            frames.append(frame)
+    for frameName, frameTag in loadedFrameTags.items():
+        oldFrameTag = frameTag["frame"]
+        conf = frameTag["conf"]
+        img = frameTag["img"]
+        frameFrom = len(frames)
 
-        for frameTag in v["conf"]["meta"]["frameTags"]:
-            frameTag["from"] += curr
-            frameTag["to"] += curr
-            frameTags.append(frameTag)
+        # iterate each of the frame of the frameTag and paste the sub image to the right location
+        for frameNo in range(frameTag["frame"]["from"], frameTag["frame"]["to"] + 1):
+            f = conf["frames"][frameNo]
+            r = f["frame"]
+            sourceRect = (r["x"], r["y"], r["x"] + r["w"], r["y"] + r["h"])
+            targetRect = f["rect"]
 
-        curr += len(v["conf"]["frames"])
+            # once we have multiple bin, then we will need to not default to packed_image
+            packed_image.paste(
+                frameTag['img'].crop(sourceRect),
+                (targetRect[1], targetRect[2], targetRect[1] + targetRect[3], targetRect[2] + targetRect[4])
+            )
 
+            # add the frames
+            frames.append({
+                "filename": f["filename"],
+                "frame": { "x": targetRect[1], "y": targetRect[2], "w": targetRect[3], "h": targetRect[4] },
+                "rotated": f["rotated"],
+                "trimmed": f["trimmed"],
+                "spriteSourceSize": { "x": 0, "y": 0, "w": targetRect[3], "h": targetRect[4] },
+                "sourceSize": { "w": size[0], "h": size[1] },
+                "duration": f["duration"],
+            })
+
+        frameTo = len(frames) - 1
+
+        # update the frametags
+        frameTags.append({
+            "name": frameName, "from": frameFrom, "to": frameTo, "direction": oldFrameTag["direction"]
+        })
+
+    # output the same format as aseprite
     outputjson = {
         "frames": frames,
         "meta": {
@@ -104,7 +137,8 @@ if __name__ == "__main__":
             "frameTags": frameTags
         }
     }
-
-    packed_image.save(outputfile[0])
     with open(outputfile[1], "w") as f:
         print(json.dumps(outputjson, indent=2), file=f)
+
+    # output the new image
+    packed_image.save(outputfile[0])
