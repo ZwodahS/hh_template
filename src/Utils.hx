@@ -5,9 +5,4 @@
     For constants, see Constants.hx
 
 **/
-class Utils {
-    public static function colorFontWrap(text: String, color: Int): String {
-        return
-            '<font color="#${StringTools.hex(color & 0xFFFFFF, 6)}">${StringTools.htmlEscape(text)}</font>';
-    }
-}
+class Utils {}
