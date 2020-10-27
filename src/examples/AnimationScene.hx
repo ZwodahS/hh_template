@@ -22,7 +22,7 @@ class AnimationScene extends common.Screen {
 
         this.animator = new common.animations.Animator();
 
-        var obj1 = new h2d.Bitmap(h2d.Tile.fromColor(0xFF0000, 32, 32));
+        var obj1 = Assets.packed.assets['0'].getBitmap();
         obj1.x = 32;
         obj1.y = 32;
         this.backgroundLayer.add(obj1, 0);

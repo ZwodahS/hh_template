@@ -5,7 +5,9 @@ class Game extends common.Game {
         Globals.console = this.console;
 #end
         this.s2d.scaleMode = Stretch(Globals.gameWidth, Globals.gameHeight);
-        Globals.assets = common.Assets.parseAssets("assets.json");
+
+        Assets.packed = common.Assets.loadAseSpritesheetConfig('packed.json');
+
         this.switchScreen(new examples.AnimationScene());
     }
 }
