@@ -1,2 +1,2 @@
 #!/bin/bash
-cp githooks/pre-commit .git/hooks/.
+ln -s githooks/pre-commit .git/hooks/.
