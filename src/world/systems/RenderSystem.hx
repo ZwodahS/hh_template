@@ -2,7 +2,7 @@ package world.systems;
 
 import world.Entity;
 
-class RenderSystem extends common.ecs.System<Entity> {
+class RenderSystem extends common.ecs.System {
     public var drawLayer(default, null): h2d.Layers;
 
     public function new() {

@@ -2,7 +2,7 @@ package world;
 
 import world.systems.*;
 
-class World extends common.ecs.World<Entity> {
+class World extends common.ecs.World {
     public var renderSystem: RenderSystem;
 
     public function new() {
