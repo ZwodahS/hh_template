@@ -55,7 +55,7 @@ class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 
 }
 
-class DomkitScene extends common.Scene {
+class DomkitScene extends zf.Scene {
 
     var scene: h2d.Scene;
     var camera: h2d.Camera;

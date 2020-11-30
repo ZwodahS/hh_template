@@ -1,4 +1,4 @@
-class BasicScreen extends common.Screen {
+class BasicScreen extends zf.Screen {
     public function new() {
         super();
     }

@@ -1,3 +1,0 @@
-[submodule "lib/common"]
-	path = lib/common
-	url = git@gitlab.com:zwodahs/hh_common

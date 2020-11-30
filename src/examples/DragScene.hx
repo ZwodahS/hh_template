@@ -1,8 +1,8 @@
 package examples;
 
-import common.Point2f;
+import zf.Point2f;
 
-class DragScene extends common.Scene {
+class DragScene extends zf.Scene {
     var scene: h2d.Scene;
     var camera: h2d.Camera;
     var layer: h2d.Layers;

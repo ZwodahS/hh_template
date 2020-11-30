@@ -2,7 +2,7 @@ package world;
 
 import world.systems.*;
 
-class World extends common.ecs.World {
+class World extends zf.ecs.World {
     public var renderSystem: RenderSystem;
 
     public function new() {

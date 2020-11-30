@@ -1,9 +1,9 @@
-import common.ecs.World;
-import common.ecs.System;
-import common.ecs.Entity;
-import common.ecs.Component;
+import zf.ecs.World;
+import zf.ecs.System;
+import zf.ecs.Entity;
+import zf.ecs.Component;
 
-class ECSScreen extends common.Screen {
+class ECSScreen extends zf.Screen {
     var world: World;
 
     public function new() {

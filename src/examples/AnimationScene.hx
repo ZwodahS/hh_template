@@ -1,14 +1,14 @@
 package examples;
 
-import common.animations.Animator;
-import common.h2d.Animation;
+import zf.animations.Animator;
+import zf.h2d.Animation;
 
-class AnimationScene extends common.Screen {
+class AnimationScene extends zf.Screen {
 
     var backgroundLayer: h2d.Layers;
     var foregroundLayer: h2d.Layers;
 
-    var animator: common.animations.Animator;
+    var animator: zf.animations.Animator;
 
     var obj7: h2d.Drawable;
 
@@ -20,7 +20,7 @@ class AnimationScene extends common.Screen {
         this.add(backgroundLayer, 0);
         this.add(foregroundLayer, 1);
 
-        this.animator = new common.animations.Animator();
+        this.animator = new zf.animations.Animator();
 
         var obj1 = Assets.packed.assets['0'].getBitmap();
         obj1.x = 32;

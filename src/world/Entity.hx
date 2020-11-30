@@ -1,3 +1,3 @@
 package world;
 
-class Entity extends common.ecs.Entity {}
+class Entity extends zf.ecs.Entity {}
