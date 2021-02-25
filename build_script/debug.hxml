@@ -1,4 +1,3 @@
---hl game.hl
 --library hlsdl
 -D debug
 -D windowSize=800x600

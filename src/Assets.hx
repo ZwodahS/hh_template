@@ -1,12 +1,9 @@
 /**
-    Assets is used to store loaded assets
+	Assets is used to store loaded assets
 **/
 
-import zf.Assets.Asset2D;
+import zf.Assets.LoadedSpritesheet;
 
 class Assets {
-    public static var packed: {
-        tile: h2d.Tile,
-        assets: Map<String, Asset2D>,
-    };
+	public static var packed: LoadedSpritesheet;
 }
