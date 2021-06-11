@@ -6,7 +6,6 @@ import zf.Debug;
 import zf.Direction;
 import zf.Point2i;
 import zf.Point2f;
-import zf.AlignmentUtils;
 import zf.Wrapped;
 import zf.ds.Vector2D;
 
