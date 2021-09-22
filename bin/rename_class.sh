@@ -5,6 +5,7 @@
 
 if [ -z "$1" -o -z "$2" ]; then
     echo "$(basename $0) [old name] [new name]";
+    exit 0;
 fi
 
 find . -name '*.hx' -exec sed -i '.bak' "s/$1/$2/g" {} \;
