@@ -22,7 +22,7 @@ class AnimationScene extends zf.Screen {
 
         this.animator = new zf.animations.Animator();
 
-        var obj1 = Assets.packed.assets['0'].getBitmap();
+        var obj1 = Assets.packed.assets.get('0').getBitmap();
         obj1.x = 32;
         obj1.y = 32;
         this.backgroundLayer.add(obj1, 0);
