@@ -22,7 +22,11 @@ class Game extends zf.Game {
 		Assets.fontZP10x10 = hxd.Res.load('zp10x10_medium_12.fnt').to(hxd.res.BitmapFont);
 		Assets.defaultFont = Assets.fontZP10x10.toFont().clone();
 
-		this.switchScreen(new examples.AnimationScene());
+		var ss = new SplashScreen();
+		ss.onFinish = function() {
+			this.switchScreen(new examples.AnimationScene());
+		}
+		this.switchScreen(ss);
 
 		this.version = new h2d.HtmlText(Assets.defaultFont);
 		var versionText = '${Constants.Version}';
