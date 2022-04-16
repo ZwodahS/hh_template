@@ -3,10 +3,7 @@ class Game extends zf.Game {
 	var bg: h2d.Bitmap;
 
 	override function new() {
-		super();
-		this.boundedSize = [400, 300];
-		this.gameWidth = 400;
-		this.gameHeight = 300;
+		super([640, 360], true, true);
 	}
 
 	override function init() {
@@ -24,7 +21,7 @@ class Game extends zf.Game {
 
 		var ss = new SplashScreen();
 		ss.onFinish = function() {
-			this.switchScreen(new examples.AnimationScene());
+			this.switchScreen(new BasicScreen());
 		}
 		this.switchScreen(ss);
 

@@ -1,2 +1,2 @@
 --library hlsdl
--D windowSize=400x300
+-D windowSize=640x360
