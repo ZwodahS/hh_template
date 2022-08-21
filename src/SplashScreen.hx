@@ -14,8 +14,7 @@ class SplashScreen extends zf.Screen {
 
 	public function new() {
 		super();
-		this.bg = new h2d.Bitmap(h2d.Tile.fromColor(0xFF203037, Globals.game.gameWidth,
-			Globals.game.gameHeight));
+		this.bg = new h2d.Bitmap(h2d.Tile.fromColor(0xFF203037, Globals.game.gameWidth, Globals.game.gameHeight));
 		this.addChild(bg);
 		this.updater = new Updater();
 		final tile = hxd.Res.load("sproutingpotato.png").toTile();

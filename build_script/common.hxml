@@ -1,5 +1,6 @@
---library heaps-dev
+--library heaps
 --library hxrandom
+--library compiletime
 --library zf
 -D heaps_emit_tile_buffering
 --class-path src

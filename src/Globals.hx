@@ -9,7 +9,14 @@
 	For functions, see Utils.hx
 **/
 class Globals {
+	/**
+		Console
+	**/
 	public static var console: h2d.Console;
 
 	public static var game: Game;
+
+	public static var uiBuilder: zf.ui.builder.Builder;
+
+	public static var rules: Rules;
 }

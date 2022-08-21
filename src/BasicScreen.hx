@@ -1,6 +1,7 @@
 class BasicScreen extends zf.Screen {
 	public function new() {
 		super();
+		var s = new Entity();
 	}
 
 	override public function update(dt: Float) {}

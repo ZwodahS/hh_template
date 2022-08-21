@@ -14,6 +14,8 @@ class Game extends zf.Game {
 #end
 		this.s2d.scaleMode = Stretch(this.gameWidth, this.gameHeight);
 
+		Assets.load();
+		Globals.uiBuilder = new zf.ui.builder.Builder();
 		Assets.packed = zf.Assets.loadAseSpritesheetConfig('packed.json');
 
 		Assets.fontZP10x10 = hxd.Res.load('zp10x10_medium_12.fnt').to(hxd.res.BitmapFont);

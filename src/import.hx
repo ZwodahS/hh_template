@@ -15,6 +15,8 @@ import zf.up.animations.*;
 // overrides
 import zf.h2d.Interactive; // override the Interactive from h2d.Interactive
 import zf.h2d.ScaleGrid;
+import zf.ResourceManager;
+import zf.StringTable;
 
 // extensions
 using zf.ds.ArrayExtensions;
@@ -26,5 +28,7 @@ using zf.MathExtensions;
 using zf.h2d.ObjectExtensions;
 using zf.h2d.col.BoundsExtensions;
 using zf.up.animations.WrappedObject;
+
+import world.*;
 
 import zf.MessageDispatcher;
