@@ -19,4 +19,8 @@ class Globals {
 	public static var uiBuilder: zf.ui.builder.Builder;
 
 	public static var rules: Rules;
+
+#if steamapi
+	public static var isSteamInit: Bool = false;
+#end
 }

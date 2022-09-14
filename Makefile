@@ -19,6 +19,7 @@ endif
 # Configure this for each games
 ## Generic configuration
 GAME=GameName # @configure
+GAMENAME=GameName # @configure, for index.html and Info.plist
 MACAPP=${GAME}.app
 FOLDERNAME=GameName # @configure
 ## Deployment configuration

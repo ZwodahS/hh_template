@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>run.sh</string>
 	<key>CFBundleName</key>
-	<string>Game Name</string>
+	<string>__GAMENAME__</string>
 	<key>CFBundleGetInfoString</key>
     <string>Made with Haxe/Heaps</string>
 	<key>CFBundleIconFile</key>

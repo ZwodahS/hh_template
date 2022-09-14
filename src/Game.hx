@@ -3,7 +3,7 @@ class Game extends zf.Game {
 	var bg: h2d.Bitmap;
 
 	override function new() {
-		super([640, 360], true, true);
+		super([320, 180], true, true);
 	}
 
 	override function init() {
@@ -12,31 +12,46 @@ class Game extends zf.Game {
 #if debug
 		Globals.console = this.console;
 #end
-		this.s2d.scaleMode = Stretch(this.gameWidth, this.gameHeight);
+
+		// @fixme this is a weird fix. On pak + mac, the main loop lacks something that blocks the main loop
+		// from exiting, hence by adding this, we allow the sound to run
+		@:privateAccess haxe.MainLoop.add(() -> {});
 
 		Assets.load();
+		Strings.strings = new StringTable();
 		Globals.uiBuilder = new zf.ui.builder.Builder();
-		Assets.packed = zf.Assets.loadAseSpritesheetConfig('packed.json');
 
-		Assets.fontZP10x10 = hxd.Res.load('zp10x10_medium_12.fnt').to(hxd.res.BitmapFont);
-		Assets.defaultFont = Assets.fontZP10x10.toFont().clone();
+		CompileTime.importPackage("ui.components");
+		final classes = CompileTime.getAllClasses("ui.components", true, zf.ui.builder.Component);
+		for (c in classes) {
+			Globals.uiBuilder.registerComponent(Type.createInstance(c, []));
+		}
 
 		var ss = new SplashScreen();
 		ss.onFinish = function() {
-			this.switchScreen(new BasicScreen());
+			this.switchScreen(new MenuScreen());
 		}
 		this.switchScreen(ss);
 
 		this.version = new h2d.HtmlText(Assets.defaultFont);
-		var versionText = '${Constants.Version}';
+		var versionText = '${Constants.Version}.${Constants.GitBuild.substr(0, 8)}';
 		this.version.text = versionText;
-		this.version.x = 4;
 		this.s2d.add(this.version, 200);
+		updateVersionPosition();
 
 		onResize();
 	}
 
 	static function main() {
+#if steamapi
+		// init steam
+		Globals.isSteamInit = steam.Api.init(Constants.SteamAppId);
+#end
+
+#if (!debug && hl)
+		hl.UI.closeConsole();
+#end
+
 		try {
 #if (js && pak)
 			var b = new hxd.net.BinaryLoader("res.pak");
@@ -80,11 +95,8 @@ class Game extends zf.Game {
 		}
 	}
 
-	override function onResize() {
-		super.onResize();
-		this.version.y = this.gameHeight - 2 - this.version.textHeight;
-		if (this.bg != null) this.bg.remove();
-		this.bg = new h2d.Bitmap(h2d.Tile.fromColor(Constants.ColorBg, this.gameWidth, this.gameHeight));
-		this.s2d.add(this.bg, 0);
+	function updateVersionPosition() {
+		this.version.setX(this.gameWidth, AnchorRight, 2);
+		this.version.setY(this.gameHeight, AnchorBottom, 2);
 	}
 }
