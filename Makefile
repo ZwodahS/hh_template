@@ -16,28 +16,27 @@ ifndef HASHLINKPATH
 HASHLINKPATH=$(shell which hl | xargs dirname)
 endif
 ########################################################################################################################
-# Generic configuration
+# Configure this for each games
+## Generic configuration
 GAME=GameName # @configure
 MACAPP=${GAME}.app
 FOLDERNAME=GameName # @configure
-########################################################################################################################
-# Deployment configuration
-## Itch configuration
+## Deployment configuration
+### Itch configuration
 ITCH_URL=zwodahs/????? # @configure
 PRIVATE_ITCH_URL=zwodahs/???? # @configure
-## Steam Configuration
+### Steam Configuration
 STEAM_APP_ID= # @configure
 STEAM_WINDOWS_DEPOT_ID= # @configure
 STEAM_MAC_DEPOT_ID= # @configure
 STEAM_LINUX_DEPOT_ID= # @configure
-## Steam Demo Configuration
+### Steam Demo Configuration
 STEAM_DEMO_APP_ID= # @configure
 STEAM_DEMO_WINDOWS_DEPOT_ID= # @configure
 STEAM_DEMO_MAC_DEPOT_ID= # @configure
 STEAM_DEMO_LINUX_DEPOT_ID= # @configure
 ########################################################################################################################
-# Compilation & Build configuration
-# There is probably no need to change these
+# Compilation & Build configuration - Do not change this section
 ## Set compile flags
 COMPILE_FLAGS=
 ifeq (${RELEASE},1)
@@ -46,9 +45,10 @@ else
 COMPILE_FLAGS += -D debug -D loggingLevel=30
 endif
 
-## Demo Flag
-ifeq (${DEMO},1)
-COMPILE_FLAGS += -D demo
+# If SteamSDK is enabled.
+STEAMAPI_CFLAGS=
+ifeq ($(STEAMAPI),1)
+STEAMAPI_CFLAGS=-D steamapi --library hlsteam
 endif
 
 ## Set Build path
@@ -80,22 +80,22 @@ STEAM_DEMO_LINUX_BUILD_PATH=build/steam-demo/content/linux
 STEAM_DEMO_BUILD_FILE=app_build_${STEAM_DEMO_APP_ID}.vdf
 ########################################################################################################################
 # Binary flags for local compile flags during debugging
-BINARY_FLAGS=
-ifeq ($(OS),Windows_NT)
-BINARY_FLAGS += --library hldx
-else ifeq ($(OS),Darwin)
-BINARY_FLAGS += --library hlsdl
-endif
+BINARY_FLAGS= --library hlsdl
 ########################################################################################################################
+#
+# Local build
 game.hl: buildinfo strings assets
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Game
 
+# Local build with pak
 pakgame: buildinfo strings assets pak
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} ${BINARY_FLAGS} -D pak --hl game.hl --main Game
 
+# combine the string utility
 stringutil:
 	${HAXEPATH}/haxe --class-path tools --library zf --hl bin/combinestrings --main CombineStringTable
 
+# print build information
 buildinfo:
 	@echo "OS                    : ${OS}"
 	@echo "HAXE VERSION          : $(shell ${HAXEPATH}/haxe --version) from ${HAXEPATH}"
@@ -105,6 +105,7 @@ buildinfo:
 	@echo "Build Version         : ${BUILDSTRING}"
 	@echo ""
 
+# help menu
 help:
 	@echo "---- Distribution commands ----"
 	@echo "  steam - build both steam-windows and steam-mac"
@@ -127,9 +128,19 @@ help:
 	@echo "-- Demo ---"
 	@echo "  steam-demo-windows - build demo for steam windows with the steam build script"
 	@echo "  steam-demo-mac - build demo for steam mac with the steam build script"
+	@echo "-- Others ---"
+	@echo "stringutil string utility"
 
+# build js
 js: buildinfo strings assets pak
 	${HAXEPATH}/haxe build_script/common.hxml --js ${JS_BUILD_PATH}/game.js -D pak ${COMPILE_FLAGS} --main Game
+	cp build_script/index.html ${JS_BUILD_PATH}/.
+	cp build/res.pak ${JS_BUILD_PATH}/.
+	cp res/favicon.png ${JS_BUILD_PATH}/favicon.ico
+	cp -r build_script/licenses ${JS_BUILD_PATH}/licenses
+
+demo-js: buildinfo strings assets pak
+	${HAXEPATH}/haxe build_script/common.hxml --js ${JS_BUILD_PATH}/game.js -D pak -D demo ${COMPILE_FLAGS} --main Game
 	cp build_script/index.html ${JS_BUILD_PATH}/.
 	cp build/res.pak ${JS_BUILD_PATH}/.
 	cp res/favicon.png ${JS_BUILD_PATH}/favicon.ico
@@ -175,16 +186,11 @@ windows: buildinfo strings assets pak
 	rm -rf ${WINDOWS_BUILD_PATH}
 	mkdir -p ${WINDOWS_BUILD_PATH}
 	mkdir -p ${WINDOWS_APP_PATH}
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D pak --hl ${WINDOWS_APP_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows-sdl -D pak --hl ${WINDOWS_APP_PATH}/hlboot.dat --main Game
 	cp build/res.pak ${WINDOWS_APP_PATH}/.
-	cp build_script/windows/hl.exe ${WINDOWS_APP_PATH}/${GAME}.exe
-	cp build_script/windows/fmt.hdll ${WINDOWS_APP_PATH}/.
-	cp build_script/windows/openal.hdll ${WINDOWS_APP_PATH}/.
-	cp build_script/windows/directx.hdll ${WINDOWS_APP_PATH}/.
-	cp build_script/windows/ui.hdll ${WINDOWS_APP_PATH}/.
-	cp build_script/windows/libhl.dll ${WINDOWS_APP_PATH}/.
-	cp build_script/windows/msvcr120.dll ${WINDOWS_APP_PATH}/.
-	cp build_script/windows/OpenAL32.dll ${WINDOWS_APP_PATH}/.
+	cp build_script/windows-sdl/hl.exe ${WINDOWS_APP_PATH}/${GAME}.exe
+	cp build_script/windows-sdl/*.hdll ${WINDOWS_APP_PATH}/.
+	cp build_script/windows-sdl/*.dll ${WINDOWS_APP_PATH}/.
 	cp -r build_script/licenses ${WINDOWS_APP_PATH}/licenses
 
 #### steam ####
@@ -226,16 +232,12 @@ steam-pre-build: strings assets pak
 	mkdir -p ${STEAM_BUILD_PATH}/build
 
 steam-windows:
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
 	cp build/res.pak ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/hl.exe ${STEAM_WINDOWS_BUILD_PATH}/${GAME}.exe
-	cp build_script/windows/fmt.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/openal.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/directx.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/ui.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/libhl.dll ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/msvcr120.dll ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/OpenAL32.dll ${STEAM_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows-sdl/hl.exe ${STEAM_WINDOWS_BUILD_PATH}/${GAME}.exe
+	cp build_script/windows-sdl/*.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows-sdl/*.dll ${STEAM_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows-steam/* ${STEAM_WINDOWS_BUILD_PATH}/.
 	cp -r build_script/licenses ${STEAM_WINDOWS_BUILD_PATH}/licenses
 
 steam-mac:
@@ -245,6 +247,7 @@ steam-mac:
 	cp build_script/mac/*.hdll ${STEAM_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.dylib ${STEAM_MAC_BUILD_PATH}/.
 	cp build/res.pak ${STEAM_MAC_BUILD_PATH}/.
+	cp build_script/mac-steam/* ${STEAM_MAC_BUILD_PATH}/.
 	cp -r build_script/licenses ${STEAM_MAC_BUILD_PATH}/licenses
 
 steam-linux:
@@ -255,6 +258,7 @@ steam-linux:
 	cp build_script/linux/*.so* ${STEAM_LINUX_BUILD_PATH}/.
 	cp build_script/linux/run.sh ${STEAM_LINUX_BUILD_PATH}/.
 	cp build/res.pak ${STEAM_LINUX_BUILD_PATH}/.
+	cp build_script/linux-steam/* ${STEAM_LINUX_BUILD_PATH}/.
 	cp -r build_script/licenses ${STEAM_LINUX_BUILD_PATH}/licenses
 
 #### demo ####
@@ -301,14 +305,9 @@ steam-demo-pre-build: strings assets pak
 steam-demo-windows:
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
 	cp build/res.pak ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/hl.exe ${STEAM_DEMO_WINDOWS_BUILD_PATH}/${GAME}Demo.exe
-	cp build_script/windows/fmt.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/openal.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/directx.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/ui.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/libhl.dll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/msvcr120.dll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows/OpenAL32.dll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows-sdl/hl.exe ${STEAM_DEMO_WINDOWS_BUILD_PATH}/${GAME}Demo.exe
+	cp build_script/windows-sdl/*.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows-sdl/*.dll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
 	cp -r build_script/licenses ${STEAM_DEMO_WINDOWS_BUILD_PATH}/licenses
 
 steam-demo-mac:

@@ -1,3 +1,2 @@
 --library hlsdl
---hl build/c/game.c
--D windowSize=400x300
+-D windowSize=1280x720

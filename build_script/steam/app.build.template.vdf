@@ -1,0 +1,13 @@
+"AppBuild"
+{
+	"AppID" "__APP_ID__" // Your AppID
+	"Desc" "__VERSION__" // internal description for this build
+	"ContentRoot" "./content/" // content root folder relative to this script file
+	"BuildOutput" "./build/" // put build cache and log files on different drive for better performance
+	"Depots"
+	{
+		"__MAC_DEPOT_ID__" "depot_mac.vdf"
+		"__WINDOWS_DEPOT_ID__" "depot_windows.vdf"
+        "__LINUX_DEPOT_ID__" "depot_linux.vdf"
+	}
+}
