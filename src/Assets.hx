@@ -12,10 +12,7 @@ class Assets {
 
 	public static var res: ResourceManager;
 
-	public static var strings: StringTable;
-
 	public static function load() {
 		Assets.res = new ResourceManager();
-		Assets.strings = new StringTable();
 	}
 }
