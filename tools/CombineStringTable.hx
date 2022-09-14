@@ -65,7 +65,12 @@ class CombineStringTable {
 			} else {
 				var content = sys.io.File.getContent(fullpath);
 				if (path.endsWith('.xml')) {
-					parseXML(content, consts, strings);
+					try {
+						parseXML(content, consts, strings);
+					} catch (e) {
+						trace('Fail to parse XML: ${path}');
+						throw e;
+					}
 				}
 			}
 		}
@@ -80,9 +85,11 @@ class CombineStringTable {
 				case "group":
 					final id = element.get("id");
 					if (id != null) {
-						var newStrings: DynamicAccess<Dynamic> = {};
-						s.set(id, newStrings);
-						s = newStrings;
+						if (s.get(id) == null) {
+							var newStrings: DynamicAccess<Dynamic> = {};
+							s.set(id, newStrings);
+						}
+						s = s.get(id);
 					}
 					for (child in element.elements()) {
 						parse(child, c, s);
@@ -91,7 +98,7 @@ class CombineStringTable {
 					final id = element.get("id");
 					if (id == null) return;
 					final access = new haxe.xml.Access(element);
-					final str = trimXMLText(access.innerHTML);
+					final str = trimXMLText(access.innerData);
 					s.set(id, str);
 				case "const":
 					final id = element.get("id");
