@@ -358,12 +358,12 @@ asset_pngs = $(shell ls raw/*.png)
 assets: assetsmove ${GRAPHICS_PATH}/packed.json
 
 assetsmove:
-	-mv assets/ase/*.json raw/. 2> /dev/null
-	-mv assets/ase/*.png raw/. 2> /dev/null
+	-mv assets/game/*.json raw/. 2> /dev/null
+	-mv assets/game/*.png raw/. 2> /dev/null
 
 ${GRAPHICS_PATH}/packed.json: ${asset_jsons} ${asset_pngs}
 	./bin/asepritepack.py ${GRAPHICS_PATH}/packed.png:${GRAPHICS_PATH}/packed.json \
-		raw/font32.png:raw/font32.json
+		raw/spritesheet.png:raw/spritesheet.json
 ########################################################################################################################
 # Build for Distributions
 # @note: we can also build windows on mac, since it is run in VM

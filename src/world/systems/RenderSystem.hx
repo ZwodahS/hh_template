@@ -28,16 +28,17 @@ class RenderSystem extends System {
 	/**
 		WindowRenderSystem, a sub system for rendering windows
 	**/
-	public final windowRenderSystem: WindowRenderSystem;
+	public final windowRenderSystem: zf.ui.WindowRenderSystem;
 
 	/**
 		Tooltip Helper to attach tooltip to any h2d.Object.
 
 		For game entity, it is better to use tooltip component.
 	**/
-	public final tooltipHelper: TooltipHelper;
+	public final tooltipHelper: zf.ui.TooltipHelper;
 
 	public function new() {
+		super();
 		this.animator = new zf.up.Updater();
 
 		// ---- Setup all the various layers ---- //
@@ -51,11 +52,11 @@ class RenderSystem extends System {
 		windowBounds.yMin = 15;
 		windowBounds.xMax = Globals.game.gameWidth - 15;
 		windowBounds.yMax = Globals.game.gameHeight - 15;
-		this.windowRenderSystem = new WindowRenderSystem(windowBounds, this.windowLayers);
+		this.windowRenderSystem = new zf.ui.WindowRenderSystem(windowBounds, this.windowLayers);
 		this.windowRenderSystem.defaultRenderDirection = [Down, Right, Left, Up];
 		this.windowRenderSystem.defaultSpacing = 5;
 
-		this.tooltipHelper = new TooltipHelper(this.windowRenderSystem);
+		this.tooltipHelper = new zf.ui.TooltipHelper(this.windowRenderSystem);
 	}
 
 	override public function reset() {

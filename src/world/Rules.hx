@@ -1,3 +1,5 @@
 package world;
 
-class Rules {}
+class Rules {
+	public function new() {}
+}

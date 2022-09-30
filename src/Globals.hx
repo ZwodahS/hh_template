@@ -22,6 +22,9 @@ class Globals {
 
 	public static var settings: Settings;
 
+	public static var savefile: zf.userdata.Savefile;
+	public static var currentProfile: Profile;
+
 #if steamapi
 	public static var isSteamInit: Bool = false;
 #end

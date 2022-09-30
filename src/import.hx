@@ -7,6 +7,7 @@ import zf.Direction;
 import zf.Point2i;
 import zf.Point2f;
 import zf.Recti;
+import zf.Rectf;
 import zf.Color;
 import zf.Identifiable;
 // update loop and animations
@@ -29,6 +30,9 @@ using zf.h2d.ObjectExtensions;
 using zf.h2d.col.BoundsExtensions;
 using zf.up.animations.WrappedObject;
 
-import world.*;
+import world.World;
+import world.Rules;
+
+import userdata.Profile;
 
 import zf.MessageDispatcher;

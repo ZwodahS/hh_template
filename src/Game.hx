@@ -1,6 +1,5 @@
 class Game extends zf.Game {
 	var version: h2d.HtmlText;
-	var bg: h2d.Bitmap;
 
 	override function new() {
 		super([320, 180], true, true);
@@ -21,7 +20,6 @@ class Game extends zf.Game {
 		Assets.load();
 		Strings.strings = new StringTable();
 		Globals.uiBuilder = new zf.ui.builder.Builder();
-		Globals.settings = new Settings();
 
 		CompileTime.importPackage("ui.components");
 		final classes = CompileTime.getAllClasses("ui.components", true, zf.ui.builder.Component);
@@ -33,7 +31,20 @@ class Game extends zf.Game {
 		this.version.text = '${Constants.Version}.${Constants.GitBuild.substr(0, 8)}';
 		this.s2d.add(this.version, 200);
 		updateVersionPosition();
+
 		this.toggleFullScreen(Globals.settings.fullScreen);
+
+		try {
+			// in case the rules loading failed
+			Globals.rules = new Rules();
+
+			// in case user data fails to load
+			Globals.currentProfile = new userdata.Profile(Globals.savefile.userProfiles.getProfile("save-1"));
+			Globals.currentProfile.load();
+		} catch (e) {
+			onException(e, haxe.CallStack.exceptionStack());
+			return;
+		}
 
 		var args = [];
 #if sys
@@ -51,6 +62,24 @@ class Game extends zf.Game {
 #if (!debug && hl)
 		hl.UI.closeConsole();
 #end
+
+		Globals.savefile = new zf.userdata.Savefile("Game", "userdata");
+		Globals.savefile.init();
+
+		Globals.settings = new Settings();
+		if (Globals.savefile.userdata.exists('settings.json')) {
+			final result = Globals.savefile.userdata.loadFromPath('settings.json');
+			final data = switch (result) {
+				case SuccessContent(d): d;
+				default: null;
+			};
+			if (data == null) {
+				Logger.warn("fail to load settings", "[Init]");
+			} else {
+				final sf = haxe.Json.parse(data);
+				Globals.settings = Settings.fromStruct(sf);
+			}
+		}
 
 		try {
 #if (js && pak)
