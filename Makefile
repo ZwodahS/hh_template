@@ -1,6 +1,6 @@
 ########################################################################################################################
 # Constants - NO NEED TO CHANGE THIS
-VERSION=$(shell cat src/Constants.hx | grep Version | cut -d '=' -f 2 | sed 's/[; "]//g')
+VERSION=$(shell cat src/Constants.hx | grep Version | cut -d '(' -f 2 | sed 's/[\); "]//g')
 GIT_HASH=$(shell git rev-parse HEAD)
 BUILDSTRING=${VERSION}-${GIT_HASH}
 

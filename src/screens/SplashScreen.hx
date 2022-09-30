@@ -1,3 +1,5 @@
+package screens;
+
 using zf.h2d.ObjectExtensions;
 using zf.up.animations.WrappedObject;
 
@@ -32,6 +34,12 @@ class SplashScreen extends zf.Screen {
 	override public function update(dt: Float) {
 		this.updater.update(dt);
 	}
+
+	override public function onScreenEntered() {
+		onStart();
+	};
+
+	dynamic public function onStart() {}
 
 	dynamic public function onFinish() {}
 }

@@ -20,6 +20,8 @@ class Globals {
 
 	public static var rules: Rules;
 
+	public static var settings: Settings;
+
 #if steamapi
 	public static var isSteamInit: Bool = false;
 #end

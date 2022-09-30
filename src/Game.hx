@@ -9,6 +9,7 @@ class Game extends zf.Game {
 	override function init() {
 		Globals.game = this;
 		super.init();
+
 #if debug
 		Globals.console = this.console;
 #end
@@ -20,6 +21,7 @@ class Game extends zf.Game {
 		Assets.load();
 		Strings.strings = new StringTable();
 		Globals.uiBuilder = new zf.ui.builder.Builder();
+		Globals.settings = new Settings();
 
 		CompileTime.importPackage("ui.components");
 		final classes = CompileTime.getAllClasses("ui.components", true, zf.ui.builder.Component);
@@ -27,19 +29,17 @@ class Game extends zf.Game {
 			Globals.uiBuilder.registerComponent(Type.createInstance(c, []));
 		}
 
-		var ss = new SplashScreen();
-		ss.onFinish = function() {
-			this.switchScreen(new MenuScreen());
-		}
-		this.switchScreen(ss);
-
 		this.version = new h2d.HtmlText(Assets.defaultFont);
-		var versionText = '${Constants.Version}.${Constants.GitBuild.substr(0, 8)}';
-		this.version.text = versionText;
+		this.version.text = '${Constants.Version}.${Constants.GitBuild.substr(0, 8)}';
 		this.s2d.add(this.version, 200);
 		updateVersionPosition();
+		this.toggleFullScreen(Globals.settings.fullScreen);
 
-		onResize();
+		var args = [];
+#if sys
+		args = Sys.args();
+#end
+		parseAndRun(args);
 	}
 
 	static function main() {
@@ -93,6 +93,21 @@ class Game extends zf.Game {
 			} catch (e) {}
 #end
 		}
+	}
+
+	function parseAndRun(args: Array<String>) {
+		if (args.length != 0) {
+			switch (args[0]) {
+				// handle command line args if any
+				default:
+			}
+		}
+
+		final screen = new screens.SplashScreen();
+		screen.onFinish = function() {
+			this.switchScreen(new screens.MenuScreen());
+		}
+		this.switchScreen(screen);
 	}
 
 	function updateVersionPosition() {

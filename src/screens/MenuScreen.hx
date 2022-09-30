@@ -1,3 +1,5 @@
+package screens;
+
 class MenuScreen extends zf.Screen {
 	public function new() {
 		super();

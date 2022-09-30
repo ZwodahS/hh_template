@@ -6,7 +6,7 @@
 	For the function counterpart, see Utils.hx
 **/
 class Constants {
-	public static final Version: String = "0.0.1";
+	public static final Version: zf.Version = zf.Version.fromString("0.0.1");
 	public static final GitBuild: String = '${zf.Build.getGitCommitHash()}';
 
 	public static final ColorBg = 0x14182e;
