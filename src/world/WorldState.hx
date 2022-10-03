@@ -16,8 +16,11 @@ class WorldState {
 		return this.intCounter.getNextInt();
 	}
 
+	public var entities: zf.engine2.Entities<Entity>;
+
 	public function new(seed: Int = 0) {
 		this.intCounter = new zf.IntCounter.SimpleIntCounter();
 		this.r = new hxd.Rand(seed);
+		this.entities = new zf.engine2.Entities<Entity>();
 	}
 }

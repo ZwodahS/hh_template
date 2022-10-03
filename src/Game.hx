@@ -124,6 +124,38 @@ class Game extends zf.Game {
 		}
 	}
 
+	override function onException(e: haxe.Exception, s: Array<haxe.CallStack.StackItem>) {
+		if (Std.isOfType(e, zf.exceptions.AssertionFail)) {
+			throw e;
+		}
+		writeException(e, s);
+#if !js
+		hxd.System.exit();
+#end
+	}
+
+	static function writeException(e: haxe.Exception, stackItems: Array<haxe.CallStack.StackItem>) {
+		Logger.exception(e);
+#if !js
+		var logs = [];
+		logs.push('--------------------------------');
+		logs.push('Build: ${Constants.Version}-${Constants.GitBuild}');
+		for (s in stackItems) {
+			logs.push(Utils.stackItemToString(s));
+		}
+		logs.push('--------------------------------');
+		logs.push(e.details());
+		logs.push('--------------------------------');
+		logs.push('');
+		try {
+			final fileout = sys.io.File.append('crash.log', false);
+			fileout.writeString(logs.join("\n"));
+			fileout.flush();
+			fileout.close();
+		} catch (e) {}
+#end
+	}
+
 	function parseAndRun(args: Array<String>) {
 		if (args.length != 0) {
 			switch (args[0]) {

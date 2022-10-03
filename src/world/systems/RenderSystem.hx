@@ -19,6 +19,18 @@ class RenderSystem extends System {
 	public final windowLayers: h2d.Layers;
 
 	/**
+		World rendering
+	**/
+	public final worldLayers: h2d.Layers;
+
+	/**
+		Debug layers.
+	**/
+	public final worldDebugLayers: h2d.Layers;
+
+	public static final LDebug = 100;
+
+	/**
 		A non blocking animator.
 
 		Use this for animation that is non-blocking
@@ -44,7 +56,10 @@ class RenderSystem extends System {
 		// ---- Setup all the various layers ---- //
 		this.drawLayers = new h2d.Layers();
 		this.drawLayers.add(this.bgLayers = new h2d.Layers(), 0);
+		this.drawLayers.add(this.worldLayers = new h2d.Layers(), 50);
 		this.drawLayers.add(this.windowLayers = new h2d.Layers(), 100);
+
+		this.worldLayers.add(this.worldDebugLayers = new h2d.Layers(), LDebug);
 
 		// ---- Setup WindowRenderSystem ---- //
 		final windowBounds = new h2d.col.Bounds();
@@ -59,8 +74,38 @@ class RenderSystem extends System {
 		this.tooltipHelper = new zf.ui.TooltipHelper(this.windowRenderSystem);
 	}
 
+	override public function init(world: zf.engine2.World) {
+		super.init(world);
+
+		// @:listen RenderSystem MOnWorldStateSet 50
+		dispatcher.listen(MOnWorldStateSet.MessageType, (message: zf.Message) -> {
+			for (entity in this.world.worldState.entities) {
+				onEntityAdded(entity);
+			}
+		}, 50);
+	}
+
 	override public function reset() {
 		this.animator.clear();
 		this.windowLayers.removeChildren();
+		this.worldLayers.removeChildren();
+	}
+
+	override public function update(dt: Float) {
+		super.update(dt);
+		this.animator.update(dt);
+	}
+
+	override public function onEntityAdded(e: zf.engine2.Entity) {
+		final entity: Entity = cast e;
+		if (entity.render == null) return;
+		entity.render.sync();
+		this.worldLayers.add(entity.render.object, 0);
+	}
+
+	override public function onEntityRemoved(e: zf.engine2.Entity) {
+		final entity: Entity = cast e;
+		if (entity.render == null) return;
+		this.worldLayers.removeChild(entity.render.object);
 	}
 }
