@@ -12,7 +12,7 @@ class Globals {
 	/**
 		Console
 	**/
-	public static var console: h2d.Console;
+	public static var console: zf.Console;
 
 	public static var game: Game;
 
