@@ -77,7 +77,7 @@ class EchoSystem extends System {
 			this.debugDraw.draw(this.echoWorld);
 			for (e in this.world.worldState.entities) {
 				// entities that are added to the simulation are already drawn.
-				if (e.echo == null || e.echo.addToSimulation == true) continue;
+				if (e.echo == null || e.echo.simulate == true) continue;
 				// draw the shapes that are not in the simulation
 				for (shape in e.echo.body.shapes) debugDraw.draw_shape(shape);
 			}

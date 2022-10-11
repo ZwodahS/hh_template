@@ -17,25 +17,26 @@ HASHLINKPATH=$(shell which hl | xargs dirname)
 endif
 ########################################################################################################################
 # Configure this for each games
+# make sure that there is no space before '#'
 ## Generic configuration
-GAME=GameName # @configure
-GAMENAME=GameName # @configure, for index.html and Info.plist
+GAME=GameName# @configure
+GAMENAME=GameName# @configure, for index.html and Info.plist
 MACAPP=${GAME}.app
-FOLDERNAME=GameName # @configure
+FOLDERNAME=GameName# @configure
 ## Deployment configuration
 ### Itch configuration
-ITCH_URL=zwodahs/????? # @configure
-PRIVATE_ITCH_URL=zwodahs/???? # @configure
+ITCH_URL=zwodahs/?????# @configure
+PRIVATE_ITCH_URL=zwodahs/????# @configure
 ### Steam Configuration
-STEAM_APP_ID= # @configure
-STEAM_WINDOWS_DEPOT_ID= # @configure
-STEAM_MAC_DEPOT_ID= # @configure
-STEAM_LINUX_DEPOT_ID= # @configure
+STEAM_APP_ID=# @configure
+STEAM_WINDOWS_DEPOT_ID=# @configure
+STEAM_MAC_DEPOT_ID=# @configure
+STEAM_LINUX_DEPOT_ID=# @configure
 ### Steam Demo Configuration
-STEAM_DEMO_APP_ID= # @configure
-STEAM_DEMO_WINDOWS_DEPOT_ID= # @configure
-STEAM_DEMO_MAC_DEPOT_ID= # @configure
-STEAM_DEMO_LINUX_DEPOT_ID= # @configure
+STEAM_DEMO_APP_ID=# @configure
+STEAM_DEMO_WINDOWS_DEPOT_ID=# @configure
+STEAM_DEMO_MAC_DEPOT_ID=# @configure
+STEAM_DEMO_LINUX_DEPOT_ID=# @configure
 ########################################################################################################################
 # Compilation & Build configuration - Do not change this section
 ## Set compile flags

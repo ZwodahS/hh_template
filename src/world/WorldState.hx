@@ -23,4 +23,17 @@ class WorldState {
 		this.r = new hxd.Rand(seed);
 		this.entities = new zf.engine2.Entities<Entity>();
 	}
+
+	public function addEntity(e: Entity) {
+		this.entities.add(e);
+	}
+
+	public function removeEntity(e: Entity) {
+		this.entities.remove(e);
+	}
+
+	public static function newGame(rules: Rules): WorldState {
+		final state = new WorldState(Random.int(0, zf.Constants.SeedMax));
+		return state;
+	}
 }

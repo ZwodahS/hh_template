@@ -38,6 +38,9 @@ class World extends zf.engine2.World {
 	public function set_worldState(s: WorldState): WorldState {
 		this.worldState = s;
 		this.dispatcher.dispatch(new MOnWorldStateSet());
+		for (e in this.worldState.entities) {
+			this.registerEntity(e);
+		}
 		return this.worldState;
 	}
 
@@ -65,4 +68,6 @@ class World extends zf.engine2.World {
 		this.addSystem(this.renderSystem = new RenderSystem());
 		this.addSystem(this.echoSystem = new EchoSystem());
 	}
+
+	public function startGame() {}
 }

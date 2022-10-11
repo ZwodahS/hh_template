@@ -166,7 +166,10 @@ class Game extends zf.Game {
 
 		final screen = new screens.SplashScreen();
 		screen.onFinish = function() {
-			this.switchScreen(new screens.MenuScreen());
+			final world = new World(Globals.rules, Globals.currentProfile);
+			world.worldState = WorldState.newGame(Globals.rules);
+			world.startGame();
+			this.switchScreen(new screens.GameScreen(world));
 		}
 		this.switchScreen(screen);
 	}
