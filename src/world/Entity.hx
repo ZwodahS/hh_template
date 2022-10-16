@@ -64,7 +64,7 @@ class Entity extends zf.engine2.Entity {
 		return r;
 	}
 
-	public var kind: EntityKind = Empty;
+	public var kind(default, null): EntityKind = Unknown;
 
 	// ---- Game Specific code ---- //
 	public function new(id: Int = -1, typeId: String) {
@@ -96,4 +96,25 @@ class Entity extends zf.engine2.Entity {
 
 	As much as possible, we will have as little entity hierachy as possible.
 	This will then allow me to have a single save method for all entity in the game.
+
+	Wed 13:41:33 12 Oct 2022
+	Another thought is that why everything needs to be in component even if the data is only specific
+	to that kind of entity. Having them in component makes it easier to understand.
+	This also allow me to group data that makes sense into one and also allow for reusability.
+
+	For example, let's use a board game as an example.
+	In a board game, there are dice/card.
+
+	In that case, we will have a card component that allow me to store all the card specific data.
+	I might even have a Card class as a child class of Entity. The main reason for inheritance is to
+	provide specific logic related to the card.
+
+	Systems that works with child class and their components can then work with the child class, while
+	the other systems that just need to work with Entity parent class can continue to work with the
+	parent class. For example, a Interactive component can then be used to handle clicking for all type
+	entities.
+
+	In this architecture, each instance of card should *NOT* extends the Card entity.
+	Instead, the logic for different card should be somehow put into card component and not via
+	inheritance. Instead it should be done via dynamic function.
 **/
