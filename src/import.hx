@@ -39,10 +39,20 @@ using zf.up.animations.WrappedObject;
 using zf.echo.BodyExtensions;
 using zf.echo.ShapeExtensions;
 
+using StringTools;
+
+import zf.SerialiseContext;
+import zf.StructSerialisable;
+import zf.SerialiseOption;
+
 import world.World;
 import world.WorldState;
 import world.Rules;
 
+import zf.userdata.UserData;
+
 import userdata.Profile;
+
+import haxe.DynamicAccess;
 
 import zf.MessageDispatcher;

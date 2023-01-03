@@ -1,6 +1,8 @@
 package world;
 
-class WorldState {
+typedef WorldStateSF = {}
+
+class WorldState implements StructSerialisable implements Identifiable {
 	public var r: hxd.Rand;
 
 	// ---- Id generation ---- //
@@ -16,24 +18,31 @@ class WorldState {
 		return this.intCounter.getNextInt();
 	}
 
-	public var entities: zf.engine2.Entities<Entity>;
+	/**
+		identifier
+	**/
+	public function identifier() {
+		return "WorldState";
+	}
 
-	public function new(seed: Int = 0) {
+	var rules: Rules;
+
+	public var entities: Entities<Entity>;
+
+	public function new(rules: Rules, seed: Int = 0) {
+		this.rules = rules;
 		this.intCounter = new zf.IntCounter.SimpleIntCounter();
 		this.r = new hxd.Rand(seed);
-		this.entities = new zf.engine2.Entities<Entity>();
+		this.entities = new Entities<Entity>();
 	}
 
-	public function addEntity(e: Entity) {
-		this.entities.add(e);
+	// ---- Save / Load ---- //
+	public function toStruct(context: SerialiseContext, option: SerialiseOption): WorldStateSF {
+		return this.rules.toStruct(context, option, this);
 	}
 
-	public function removeEntity(e: Entity) {
-		this.entities.remove(e);
-	}
-
-	public static function newGame(rules: Rules): WorldState {
-		final state = new WorldState(Random.int(0, zf.Constants.SeedMax));
-		return state;
+	public function loadStruct(context: SerialiseContext, option: SerialiseOption, data: Dynamic): WorldState {
+		this.rules.loadStruct(context, option, this, data);
+		return this;
 	}
 }

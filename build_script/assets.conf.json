@@ -1,0 +1,21 @@
+{
+  "pack": [
+    {
+      "output": {
+        "conf": "res/graphics/packed.json",
+        "image": "res/graphics/packed.png"
+      },
+      "inputs": [
+        {
+          "conf": "raw/spritesheet.json",
+          "image": "raw/spritesheet.png"
+        },
+        {
+          "conf": "raw/links.json",
+          "image": "raw/links.png",
+          "add_tag": "links"
+        }
+      ]
+    }
+  ]
+}

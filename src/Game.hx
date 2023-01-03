@@ -2,7 +2,7 @@ class Game extends zf.Game {
 	var version: h2d.HtmlText;
 
 	override function new() {
-		super([320, 180], true, true);
+		super([640, 360], true, true);
 	}
 
 	override function init() {
@@ -19,6 +19,8 @@ class Game extends zf.Game {
 
 		Assets.load();
 		Strings.strings = new StringTable();
+		Strings.strings.load("en", "strings/en/strings.json");
+		Strings.initTemplateVariables();
 		Globals.uiBuilder = new zf.ui.builder.Builder();
 
 		CompileTime.importPackage("ui.components");
@@ -27,7 +29,7 @@ class Game extends zf.Game {
 			Globals.uiBuilder.registerComponent(Type.createInstance(c, []));
 		}
 
-		this.version = new h2d.HtmlText(Assets.defaultFont);
+		this.version = new h2d.HtmlText(Assets.displayFonts[2]);
 		this.version.text = '${Constants.Version}.${Constants.GitBuild.substr(0, 8)}';
 		this.s2d.add(this.version, 200);
 		updateVersionPosition();
@@ -166,10 +168,7 @@ class Game extends zf.Game {
 
 		final screen = new screens.SplashScreen();
 		screen.onFinish = function() {
-			final world = new World(Globals.rules, Globals.currentProfile);
-			world.worldState = WorldState.newGame(Globals.rules);
-			world.startGame();
-			this.switchScreen(new screens.GameScreen(world));
+			this.switchScreen(new screens.MenuScreen());
 		}
 		this.switchScreen(screen);
 	}
