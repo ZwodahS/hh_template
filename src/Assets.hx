@@ -11,6 +11,9 @@ class Assets {
 	public static var bodyFont: hxd.res.BitmapFont;
 	public static var bodyFonts: Array<h2d.Font>;
 
+	public static var debugFont: hxd.res.BitmapFont;
+	public static var debugFonts: Array<h2d.Font>;
+
 	public static var defaultFont: h2d.Font;
 
 	public static var res: ResourceManager;
@@ -20,6 +23,15 @@ class Assets {
 		Assets.res.addSpritesheet(zf.Assets.loadAseSpritesheetConfig('graphics/packed.json'));
 
 		final gluten = hxd.Res.load("fonts/gluten-medium.fnt").to(hxd.res.BitmapFont);
+
+		Assets.debugFont = gluten;
+		Assets.debugFonts = [
+			gluten.toSdfFont(6, MultiChannel),
+			gluten.toSdfFont(8, MultiChannel),
+			gluten.toSdfFont(10, MultiChannel),
+			gluten.toSdfFont(12, MultiChannel),
+			gluten.toSdfFont(14, MultiChannel),
+		];
 
 		Assets.displayFont = gluten;
 		Assets.displayFonts = [

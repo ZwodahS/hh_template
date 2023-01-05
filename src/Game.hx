@@ -48,6 +48,13 @@ class Game extends zf.Game {
 			return;
 		}
 
+#if debug
+		DebugCommands.setupDebugCommands(this);
+		final testNames = TestSetup.getTestNames();
+		zf.tests.TestCommands.makeScreen = TestSetup.makeTestScreen;
+		zf.tests.TestCommands.setupCommands(this, Globals.console, testNames);
+#end
+
 		var args = [];
 #if sys
 		args = Sys.args();
@@ -161,7 +168,10 @@ class Game extends zf.Game {
 	function parseAndRun(args: Array<String>) {
 		if (args.length != 0) {
 			switch (args[0]) {
-				// handle command line args if any
+				case "rt", "runtest":
+					args.shift();
+					runtest(args);
+					return;
 				default:
 			}
 		}
@@ -171,6 +181,14 @@ class Game extends zf.Game {
 			this.switchScreen(new screens.MenuScreen());
 		}
 		this.switchScreen(screen);
+	}
+
+	function runtest(args: Array<String>) {
+		// open the first item
+		if (args.length == 0) return;
+		final screen = TestSetup.makeTestScreen();
+		switchScreen(screen);
+		screen.runCommand(args);
 	}
 
 	function updateVersionPosition() {
