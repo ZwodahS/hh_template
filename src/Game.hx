@@ -7,6 +7,7 @@ class Game extends zf.Game {
 
 	override function init() {
 		Globals.game = this;
+		Assets.load();
 		super.init();
 
 #if debug
@@ -17,7 +18,6 @@ class Game extends zf.Game {
 		// from exiting, hence by adding this, we allow the sound to run
 		@:privateAccess haxe.MainLoop.add(() -> {});
 
-		Assets.load();
 		Strings.strings = new StringTable();
 		Strings.strings.load("en", "strings/en/strings.json");
 		Strings.initTemplateVariables();
@@ -61,6 +61,12 @@ class Game extends zf.Game {
 #end
 		parseAndRun(args);
 	}
+
+#if debug
+	override function getDebugFont(): h2d.Font {
+		return Assets.debugFonts[1];
+	}
+#end
 
 	static function main() {
 #if steamapi
