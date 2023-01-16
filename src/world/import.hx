@@ -5,6 +5,7 @@ import world.components.*;
 import world.systems.*;
 import world.messages.*;
 import world.rules.*;
+import world.rules.confs.*;
 import world.factories.*;
 import world.Entity.EntitySF;
 

@@ -2,6 +2,7 @@
 --library hxrandom
 --library compiletime
 --library zf
+--library hscript
 -D heaps_emit_tile_buffering
 -D echo
 --library echo
