@@ -14,12 +14,34 @@ class EntityFactory {
 	}
 
 	public function toStruct(context: SerialiseContext, option: SerialiseOption, entity: Entity): Dynamic {
-		throw new zf.exceptions.NotImplemented();
+		final components: DynamicAccess<Dynamic> = {};
+		@:privateAccess for (component in entity.__components__) {
+			final c: Component = cast component;
+			final sf = c.toStruct(context, option);
+			if (sf == null) continue;
+			components.set(component.typeId, c.toStruct(context, option));
+		}
+		final data: EntitySF = {
+			id: entity.id,
+			typeId: this.typeId,
+			components: components,
+		};
+		if (context != null) {
+			context.add(entity);
+		}
+		return data;
 	}
 
 	public function loadStruct(context: SerialiseContext, option: SerialiseOption, entity: Entity,
 			data: Dynamic): Entity {
-		throw new zf.exceptions.NotImplemented();
+		final sf: EntitySF = cast data;
+		final components: DynamicAccess<Dynamic> = sf.components;
+		@:privateAccess for (component in entity.__components__) {
+			final componentSF = components.get(component.typeId);
+			final c: Component = cast component;
+			c.loadStruct(context, option, componentSF);
+		}
+		return entity;
 	}
 
 	public function load(context: SerialiseContext, option: SerialiseOption, data: Dynamic): Entity {

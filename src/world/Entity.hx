@@ -73,4 +73,8 @@ class Entity extends zf.engine2.Entity implements StructSerialisable {
 	public function loadStruct(context: SerialiseContext, option: SerialiseOption, data: Dynamic) {
 		return this.factory.loadStruct(context, option, this, data);
 	}
+
+	public function collectEntities(entities: Entities<Entity>) {
+		entities.add(this);
+	}
 }

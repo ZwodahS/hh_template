@@ -1,6 +1,9 @@
 package world;
 
-typedef WorldStateSF = {}
+typedef WorldStateSF = {
+	public var ?intCounter: Int;
+	public var ?entities: Array<EntitySF>;
+}
 
 class WorldState implements StructSerialisable implements Identifiable {
 	public var r: hxd.Rand;

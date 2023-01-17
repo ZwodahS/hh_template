@@ -102,14 +102,48 @@ class Rules {
 	**/
 	public function loadStruct(context: SerialiseContext, option: SerialiseOption, state: WorldState,
 			data: Dynamic): WorldState {
+		final stateSF: WorldStateSF = cast data;
+		final entitiesSF: Array<EntitySF> = stateSF.entities;
+		final entities: Entities<Entity> = new Entities<Entity>();
+		context.add(entities);
+
+		for (sf in entitiesSF) {
+			final factory = this.entities[sf.typeId];
+			if (factory == null) {
+				Logger.warn('Fail to load entity, Type: ${sf.typeId}, Id: ${sf.id}');
+				continue;
+			}
+			final entity = factory.load(context, option, sf);
+			entities.add(entity);
+		}
+
+		// for each of the entities, now we can load the entity proper
+		for (sf in entitiesSF) {
+			final entity = entities.get(sf.id);
+			if (entity == null) continue;
+			entity.loadStruct(context, option, sf);
+		}
+
+		@:privateAccess state.intCounter.counter = stateSF.intCounter;
 		return state;
 	}
 
 	/**
 		Call by worldState to convert WorldState to struct
 	**/
-	public function toStruct(context: SerialiseContext, option: SerialiseOption,
-			worldState: WorldState): WorldStateSF {
-		return {};
+	public function toStruct(context: SerialiseContext, option: SerialiseOption, state: WorldState): WorldStateSF {
+		final entities: Entities<Entity> = new Entities<Entity>();
+		context.add(entities);
+
+		final stateSF: WorldStateSF = {};
+
+		// store the id generators
+		@:privateAccess stateSF.intCounter = state.intCounter.counter;
+
+		// collect all the entities before this is called
+		final entitiesSF = [for (entity in entities) entity.toStruct(context, option)];
+		stateSF.entities = entitiesSF;
+
+		return stateSF;
 	}
 }
