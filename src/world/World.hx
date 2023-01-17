@@ -70,4 +70,15 @@ class World extends zf.engine2.World {
 	}
 
 	public function startGame() {}
+
+	public function save() {
+		final fullpath = this.profile.profile.path("world");
+		this.rules.saveToPath(Globals.savefile.userdata, this.worldState, fullpath);
+	}
+
+	public function load() {
+		final fullPath = this.profile.profile.path("world");
+		final worldState = this.rules.loadFromPath(Globals.savefile.userdata, fullPath);
+		this.worldState = worldState;
+	}
 }

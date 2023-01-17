@@ -50,6 +50,7 @@ class Game extends zf.Game {
 
 #if debug
 		DebugCommands.setupDebugCommands(this);
+		commands.StateCommands.setupCommands(this);
 		final testNames = TestSetup.getTestNames();
 		zf.tests.TestCommands.makeScreen = TestSetup.makeTestScreen;
 		zf.tests.TestCommands.setupCommands(this, Globals.console, testNames);
