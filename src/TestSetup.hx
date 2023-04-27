@@ -4,10 +4,12 @@ import zf.tests.TestScreen;
 class TestSetup {
 	public static function makeTestScreen() {
 		final screen = new TestScreen();
-		screen.fonts = Assets.debugFonts;
+		screen.fonts = Assets.res.getFonts("default", "debug").fonts;
 		final tests = getAllTests();
 		for (name => test in tests) {
-			screen.addTestCase(name, test);
+			screen.addTestCase(name, (testId: String) -> {
+				return Type.createInstance(test, [testId]);
+			});
 		}
 		screen.game = Globals.game;
 		screen.finalise();

@@ -1,6 +1,6 @@
 package world;
 
-import world.factories.EntityFactory;
+import world.entities.factories.EntityFactory;
 
 typedef EntitySF = {
 	public var id: Int;
@@ -9,7 +9,13 @@ typedef EntitySF = {
 };
 
 class Entity extends zf.engine2.Entity implements StructSerialisable {
-	public var factory: EntityFactory;
+	/**
+		Assign the factory to the entity
+
+		Thu 16:30:01 27 Apr 2023
+		Perhaps we should move this to zf ?
+	**/
+	public var factory(default, null): EntityFactory;
 
 	/**
 		When entity is created, we always assign the rules to it.
@@ -18,6 +24,9 @@ class Entity extends zf.engine2.Entity implements StructSerialisable {
 
 	// ---- Aliases ---- //
 	public var world(get, never): World;
+
+	inline function get_world()
+		return cast this.__world__;
 
 	// ---- Components ---- //
 	public var render(default, set): RenderComponent;
@@ -29,41 +38,14 @@ class Entity extends zf.engine2.Entity implements StructSerialisable {
 		return this.render;
 	}
 
-	/**
-		@configure
-		Remove echo if echo system is no longer necessary
-	**/
-	public var echo(default, set): EchoComponent;
-
-	public function set_echo(component: EchoComponent): EchoComponent {
-		final prev = this.echo;
-		this.echo = component;
-		onComponentChanged(prev, this.echo);
-		return this.echo;
-	}
-
-	/**
-		@configure
-		Remove interactive if we don't need the interactive
-	**/
-	public var interactive(default, set): InteractiveComponent;
-
-	public function set_interactive(component: InteractiveComponent): InteractiveComponent {
-		final prev = this.interactive;
-		this.interactive = component;
-		onComponentChanged(prev, this.interactive);
-		return this.interactive;
-	}
-
-	inline function get_world()
-		return cast this.__world__;
-
 	public var kind(default, null): EntityKind = Unknown;
 
 	// ---- Game Specific code ---- //
-	public function new(id: Int = -1, typeId: String) {
+	public function new(id: Int = -1, factory: EntityFactory) {
 		super(id);
-		this.typeId = typeId;
+		this.factory = factory;
+		this.rules = factory.rules;
+		this.typeId = factory.typeId;
 	}
 
 	public function toStruct(context: SerialiseContext, option: SerialiseOption): Dynamic {

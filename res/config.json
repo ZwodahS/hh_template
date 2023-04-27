@@ -1,0 +1,8 @@
+{
+  "spritesheets": [
+    { "path": "graphics/packed.json" }
+  ],
+  "fonts": [
+    { "path": "fonts/fonts.json" }
+  ]
+}

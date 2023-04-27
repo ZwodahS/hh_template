@@ -6,7 +6,7 @@ private class ExternalButton extends zf.ui.UIElement {
 		this.render = new h2d.Object();
 		this.render.addChild(icon);
 
-		final t = new h2d.HtmlText(Assets.displayFonts[2]);
+		final t = new h2d.HtmlText(Assets.getFont("display", 2));
 		t.text = text;
 		t.textColor = Colors.Whites[2];
 		t.dropShadow = {
@@ -24,7 +24,7 @@ private class ExternalButton extends zf.ui.UIElement {
 		this.render.addChild(interactive);
 
 		this.addOnOverListener("Links", (e) -> {
-			t.textColor = Colors.HighlightGreen;
+			t.textColor = 0xff44f720;
 		});
 
 		this.addOnOutListener("Links", (e) -> {

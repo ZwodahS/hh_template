@@ -1,4 +1,4 @@
-package world.factories;
+package world.entities.factories;
 
 class EntityFactory {
 	public var rules: Rules;

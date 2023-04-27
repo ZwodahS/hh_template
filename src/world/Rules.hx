@@ -1,8 +1,15 @@
 package world;
 
-import world.factories.EntityFactory;
+import world.entities.factories.EntityFactory;
 
-class Rules {
+class Rules implements Identifiable {
+	public function identifier(): String {
+		return "Rules";
+	}
+
+	/**
+		Store all the entity factories
+	**/
 	public var entities: Map<String, EntityFactory>;
 
 	public var structLoader: zf.StructLoader;
@@ -29,14 +36,22 @@ class Rules {
 		final defaultConf: RulesConf = this.interp.execute(ast);
 	}
 
+	// ---- HScript ---- //
 	function exec(path: String): Dynamic {
 		try {
 			final expr = this.structLoader.loadFile(path);
-			final ast = this.parser.parseString(expr);
-			return this.interp.execute(ast);
+			return executeScript(expr);
 		} catch (e) {
 			Logger.exception(e);
 			Logger.warn('Fail to parse: ${path}');
+			return null;
+		}
+	}
+
+	inline public function executeScript(str: String): Dynamic {
+		try {
+			return this.interp.execute(this.parser.parseString(str));
+		} catch (e) {
 			return null;
 		}
 	}
@@ -95,55 +110,5 @@ class Rules {
 			default:
 				Logger.warn('Fail to save');
 		}
-	}
-
-	/**
-		Call by worldState to loadStruct
-	**/
-	public function loadStruct(context: SerialiseContext, option: SerialiseOption, state: WorldState,
-			data: Dynamic): WorldState {
-		final stateSF: WorldStateSF = cast data;
-		final entitiesSF: Array<EntitySF> = stateSF.entities;
-		final entities: Entities<Entity> = new Entities<Entity>();
-		context.add(entities);
-
-		for (sf in entitiesSF) {
-			final factory = this.entities[sf.typeId];
-			if (factory == null) {
-				Logger.warn('Fail to load entity, Type: ${sf.typeId}, Id: ${sf.id}');
-				continue;
-			}
-			final entity = factory.load(context, option, sf);
-			entities.add(entity);
-		}
-
-		// for each of the entities, now we can load the entity proper
-		for (sf in entitiesSF) {
-			final entity = entities.get(sf.id);
-			if (entity == null) continue;
-			entity.loadStruct(context, option, sf);
-		}
-
-		@:privateAccess state.intCounter.counter = stateSF.intCounter;
-		return state;
-	}
-
-	/**
-		Call by worldState to convert WorldState to struct
-	**/
-	public function toStruct(context: SerialiseContext, option: SerialiseOption, state: WorldState): WorldStateSF {
-		final entities: Entities<Entity> = new Entities<Entity>();
-		context.add(entities);
-
-		final stateSF: WorldStateSF = {};
-
-		// store the id generators
-		@:privateAccess stateSF.intCounter = state.intCounter.counter;
-
-		// collect all the entities before this is called
-		final entitiesSF = [for (entity in entities) entity.toStruct(context, option)];
-		stateSF.entities = entitiesSF;
-
-		return stateSF;
 	}
 }

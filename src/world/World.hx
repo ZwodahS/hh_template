@@ -14,23 +14,6 @@ class World extends zf.engine2.World {
 	public var renderSystem: RenderSystem;
 
 	/**
-		Collision System / Physics System
-
-		@configure
-		We use echo for collision test or we can use the full echo world.
-		If we are just using it for collision:
-			- Remove EchoSystem
-			- Set Echo Component's simulate to false by default or just remove it since it is not used anywhere else.
-
-		If we are not using echo at all:
-			- Remove EchoComponent
-			- Remove Entity echo component
-			- Remove Entity override xy
-			- Remove echo from common.hxml
-	**/
-	public var echoSystem: EchoSystem;
-
-	/**
 		World State
 	**/
 	public var worldState(default, set): WorldState = null;
@@ -66,7 +49,6 @@ class World extends zf.engine2.World {
 		this.profile = profile;
 
 		this.addSystem(this.renderSystem = new RenderSystem());
-		this.addSystem(this.echoSystem = new EchoSystem());
 	}
 
 	public function startGame() {}

@@ -5,13 +5,41 @@ class Colors {
 	public static final Blacks: Array<Color> = [0xff111012, 0, 0];
 	public static final Whites: Array<Color> = [0, 0, 0xfffffbe5];
 
-	public static final Greens: Array<Color> = [0, 0xff6cbf60, 0];
-	public static final Reds: Array<Color> = [0xffe67a73, 0xffff5e5e, 0];
+	public static final TextColors: Map<String, Map<String, Color>> = [
+		"" => [
+			// these will be mapped as .XXX
+			"white" => 0xfffffbe5,
+			"black" => 0xff111012,
+		],
+		"dark" => ["white" => 0xfffffbe5, "black" => 0xff111012,],
+		"light" => ["white" => 0xfffffbe5, "black" => 0xff111012,],
+	];
 
-	public static final HighlightRed: Color = 0xffff5252;
-	public static final HighlightGreen: Color = 0xff44f720;
-	public static final HighlightBlue: Color = 0xff68f7fa;
-	public static final HighlightYellow: Color = 0xfffff703;
-	public static final HighlightOrange: Color = 0xffff9a2e;
-	public static final HighlightMagneta: Color = 0xfffe70ff;
+	public static var FlattenColors: Map<String, Color>;
+
+	public static function init() {
+		FlattenColors = flattenColors();
+	}
+
+	public static function getColorKey(key: String, colorId: String): Color {
+		final colors: Map<String, Color> = TextColors.get(key);
+		if (colors == null) return 0xffffffff;
+		return colors.exists(colorId) ? colors.get(colorId) : 0xffffffff;
+	}
+
+	public static function getColor(colorId): Color {
+		return FlattenColors.exists(colorId) ? FlattenColors.get(colorId) : 0xFFFFFFFF;
+	}
+
+	public static function flattenColors(): Map<String, Color> {
+		final colors: Map<String, Color> = [];
+		for (key => tcs in TextColors) {
+			final c: Map<String, Color> = cast tcs;
+			for (cId => cv in c) {
+				if (key == "") colors['${cId}'] = cv; // Also mapped .white to white
+				colors['${key}.${cId}'] = cv;
+			}
+		}
+		return colors;
+	}
 }

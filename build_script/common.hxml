@@ -4,8 +4,5 @@
 --library zf
 --library hscript
 -D heaps_emit_tile_buffering
--D echo
---library echo
---macro echo.Macros.add_data("entity", "world.Entity")
 --class-path src
 --class-path lib

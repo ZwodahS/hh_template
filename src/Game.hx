@@ -7,29 +7,60 @@ class Game extends zf.Game {
 
 	override function init() {
 		Globals.game = this;
+		// load assets first before init
 		Assets.load();
 		super.init();
 
+		// set up the debug overlay
 #if debug
-		Globals.console = this.console;
+		// set up the overlay
+		this.debugOverlay = new zf.debug.DebugOverlay(this);
+		this.debugOverlay.fonts = Assets.res.getFonts("default", "debug").fonts;
+		this.debugOverlay.init();
+		this.debugOverlay.inspector.getManagedObjects = () -> {
+			var objects: Array<{name: String, object: Dynamic}> = [];
+			final world = Globals.currentWorld();
+			if (world != null) objects.push({name: "world", object: world});
+
+			objects.push({name: "game", object: this});
+			objects.push({name: "Globals", object: Globals.Globals});
+			return objects;
+		}
+		Globals.debugger = this.debugOverlay;
 #end
+
+		// set up the Logger
+		zf.Logger.init();
+#if debug
+		zf.Logger.addConsoleLogger();
+		zf.Logger.addFileLogger('logs/debug.log', null, 0);
+#end
+		zf.Logger.addFileLogger('logs/log.log', 10, null);
 
 		// @fixme this is a weird fix. On pak + mac, the main loop lacks something that blocks the main loop
 		// from exiting, hence by adding this, we allow the sound to run
 		@:privateAccess haxe.MainLoop.add(() -> {});
 
+		// load string tables
 		Strings.strings = new StringTable();
 		Strings.strings.load("en", "strings/en/strings.json");
 		Strings.initTemplateVariables();
-		Globals.uiBuilder = new zf.ui.builder.Builder();
+		Globals.ui = new zf.ui.builder.Builder();
 
+		// setup ui builder
 		CompileTime.importPackage("ui.components");
 		final classes = CompileTime.getAllClasses("ui.components", true, zf.ui.builder.Component);
-		for (c in classes) {
-			Globals.uiBuilder.registerComponent(Type.createInstance(c, []));
+		for (c in classes) Globals.ui.registerComponent(Type.createInstance(c, []));
+		Globals.ui.getFont = (name: String) -> {
+			try {
+				final splits = name.split(".");
+				Assets.getFont(splits[0], Std.parseInt(splits[1]));
+			} catch (e) {
+				return hxd.res.DefaultFont.get().clone();
+			}
 		}
 
-		this.version = new h2d.HtmlText(Assets.displayFonts[2]);
+		this.version = new h2d.HtmlText(Assets.res.getFont("default", "debug", 2));
 		this.version.text = '${Constants.Version}.${Constants.GitBuild.substr(0, 8)}';
 		this.s2d.add(this.version, 200);
 		updateVersionPosition();
@@ -49,11 +80,12 @@ class Game extends zf.Game {
 		}
 
 #if debug
-		DebugCommands.setupDebugCommands(this);
 		commands.StateCommands.setupCommands(this);
+		commands.DebugCommands.setupCommands(this);
 		final testNames = TestSetup.getTestNames();
 		zf.tests.TestCommands.makeScreen = TestSetup.makeTestScreen;
-		zf.tests.TestCommands.setupCommands(this, Globals.console, testNames);
+		zf.tests.TestCommands.setupCommands(this, Globals.debugger.console, testNames);
+		commands.GameCommands.setupCommands(this);
 #end
 
 		var args = [];
@@ -65,7 +97,7 @@ class Game extends zf.Game {
 
 #if debug
 	override function getDebugFont(): h2d.Font {
-		return Assets.debugFonts[1];
+		return Assets.getFont("debug", 0);
 	}
 #end
 

@@ -24,11 +24,14 @@ class RenderSystem extends System {
 	public final worldLayers: h2d.Layers;
 
 	/**
+		Tooltip layer
+	**/
+	public final tooltipLayers: h2d.Layers;
+
+	/**
 		Debug layers.
 	**/
 	public final worldDebugLayers: h2d.Layers;
-
-	public static final LDebug = 100;
 
 	/**
 		A non blocking animator.
@@ -41,6 +44,11 @@ class RenderSystem extends System {
 		WindowRenderSystem, a sub system for rendering windows
 	**/
 	public final windowRenderSystem: zf.ui.WindowRenderSystem;
+
+	/**
+		TooltipRenderSystem, a sub system for rendering tooltips
+	**/
+	public final tooltipRenderSystem: zf.ui.WindowRenderSystem;
 
 	/**
 		Tooltip Helper to attach tooltip to any h2d.Object.
@@ -58,8 +66,8 @@ class RenderSystem extends System {
 		this.drawLayers.add(this.bgLayers = new h2d.Layers(), 0);
 		this.drawLayers.add(this.worldLayers = new h2d.Layers(), 50);
 		this.drawLayers.add(this.windowLayers = new h2d.Layers(), 100);
-
-		this.worldLayers.add(this.worldDebugLayers = new h2d.Layers(), LDebug);
+		this.drawLayers.add(this.tooltipLayers = new h2d.Layers(), 105);
+		this.worldLayers.add(this.worldDebugLayers = new h2d.Layers(), 200);
 
 		// ---- Setup WindowRenderSystem ---- //
 		final windowBounds = new h2d.col.Bounds();
@@ -71,7 +79,11 @@ class RenderSystem extends System {
 		this.windowRenderSystem.defaultRenderDirection = [Down, Right, Left, Up];
 		this.windowRenderSystem.defaultSpacing = 5;
 
-		this.tooltipHelper = new zf.ui.TooltipHelper(this.windowRenderSystem);
+		this.tooltipRenderSystem = new zf.ui.WindowRenderSystem(windowBounds, this.tooltipLayers);
+		this.tooltipRenderSystem.defaultRenderDirection = [Down, Up, Right, Left];
+		this.tooltipRenderSystem.defaultSpacing = 2;
+
+		this.tooltipHelper = new zf.ui.TooltipHelper(this.tooltipRenderSystem);
 	}
 
 	override public function init(world: zf.engine2.World) {
@@ -79,11 +91,11 @@ class RenderSystem extends System {
 
 		// @:listen RenderSystem MOnWorldStateSet 50
 		dispatcher.listen(MOnWorldStateSet.MessageType, (message: zf.Message) -> {
-			for (entity in this.world.worldState.entities) {
-				onEntityAdded(entity);
-			}
+			onLoad();
 		}, 50);
 	}
+
+	function onLoad() {}
 
 	override public function reset() {
 		this.animator.clear();
@@ -94,18 +106,5 @@ class RenderSystem extends System {
 	override public function update(dt: Float) {
 		super.update(dt);
 		this.animator.update(dt);
-	}
-
-	override public function onEntityAdded(e: zf.engine2.Entity) {
-		final entity: Entity = cast e;
-		if (entity.render == null) return;
-		entity.render.sync();
-		this.worldLayers.add(entity.render.object, 0);
-	}
-
-	override public function onEntityRemoved(e: zf.engine2.Entity) {
-		final entity: Entity = cast e;
-		if (entity.render == null) return;
-		this.worldLayers.removeChild(entity.render.object);
 	}
 }

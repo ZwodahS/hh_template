@@ -1,4 +1,4 @@
-package world.components;
+package world.entities.components;
 
 class Component extends zf.engine2.Component implements StructSerialisable {
 	public var entity(get, never): Entity;

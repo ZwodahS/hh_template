@@ -2,13 +2,23 @@ package commands;
 
 import screens.GameScreen;
 
+import zf.debug.OverlayConsole.ConsoleArg;
+
 class StateCommands {
 	public static function setupCommands(game: Game) {
+		final stateNames = [];
+#if sys
+		try {
+			for (path in sys.FileSystem.readDirectory("teststate")) {
+				stateNames.push(path);
+			}
+		} catch (e) {}
+#end
 		{ // save the state
-			Globals.console.addCommand("state.save", "Save the current world state", [
+			Globals.debugger.console.addCommand("state.save", "Save the current world state", [
 				{
 					"name": "path",
-					"t": zf.Console.ConsoleArg.AString,
+					"t": ConsoleArg.AString,
 					"opt": true,
 				}
 			], function(path: String) {
@@ -30,11 +40,14 @@ class StateCommands {
 		}
 
 		{ // load the state
-			Globals.console.addCommand("state.load", "", [
+			Globals.debugger.console.addCommand("state.load", "", [
 				{
 					"name": "path",
-					"t": zf.Console.ConsoleArg.AString,
+					"t": ConsoleArg.AString,
 					"opt": true,
+					"argSuggestions": function(tokenized: Array<String>, arg: String) {
+						return zf.StringUtils.findClosestMatch(stateNames, arg);
+					}
 				}
 			], function(path: String) {
 				final world = new World(Globals.rules, Globals.currentProfile);
@@ -57,31 +70,31 @@ class StateCommands {
 		}
 
 		{ // delete a state
-			Globals.console.addCommand("state.delete", "", [
+			Globals.debugger.console.addCommand("state.delete", "", [
 				{
 					"name": "path",
-					"t": zf.Console.ConsoleArg.AString,
+					"t": ConsoleArg.AString,
 				}
 			], function(path: String) {
 				final userdata = new zf.userdata.UserData("test", "teststate");
 				if (userdata.exists(path) == false) {
-					Globals.console.log('State not found.');
+					Globals.debugger.console.log('State not found.');
 					return;
 				}
 				userdata.deleteDirectory(path, true);
-				Globals.console.log('State ${path} deleted');
+				Globals.debugger.console.log('State ${path} deleted');
 			});
 		}
 
 		{ // copy a state from one to another
-			Globals.console.addCommand("state.copy", "Copy a state from one to another via Rules", [
+			Globals.debugger.console.addCommand("state.copy", "Copy a state from one to another via Rules", [
 				{
 					"name": "loadPath",
-					"t": zf.Console.ConsoleArg.AString,
+					"t": ConsoleArg.AString,
 				},
 				{
 					"name": "savePath",
-					"t": zf.Console.ConsoleArg.AString,
+					"t": ConsoleArg.AString,
 				}
 			], function(loadPath: String, savePath: String) {
 				final userdata = new zf.userdata.UserData("test", "teststate");

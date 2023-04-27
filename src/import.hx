@@ -5,6 +5,7 @@ import haxe.ds.ReadOnlyArray;
 import zf.Assert;
 import zf.Logger;
 import zf.Debug;
+import zf.debug.D;
 // data types and data structures
 import zf.Direction;
 import zf.Point2i;
@@ -14,14 +15,23 @@ import zf.Rectf;
 import zf.Color;
 import zf.Identifiable;
 import zf.Pair;
+import zf.ds.ArrayMap;
 // update loop and animations
 import zf.up.*;
 import zf.up.animations.*;
 // overrides
 import zf.h2d.Interactive; // override the Interactive from h2d.Interactive
+import zf.h2d.HtmlText; // override the HtmlText
 import zf.h2d.ScaleGrid;
-import zf.ResourceManager;
+import zf.resources.ResourceManager;
 import zf.StringTable;
+import zf.h2d.ScaleGrid;
+import zf.ui.ScaleGridFactory;
+import zf.ui.UIElement;
+import zf.ui.builder.BuilderContext;
+import zf.ui.layout.*;
+import zf.filters.FilterFactory;
+import zf.MessageDispatcher;
 
 // extensions
 using zf.math.FloatExtensions;
@@ -35,11 +45,9 @@ using zf.HtmlUtils;
 using zf.h2d.ObjectExtensions;
 using zf.h2d.col.BoundsExtensions;
 using zf.up.animations.WrappedObject;
-// @configure can be removed but not necessary since the 2 extensions are behind a flag
-using zf.echo.BodyExtensions;
-using zf.echo.ShapeExtensions;
 
 using StringTools;
+using Lambda;
 
 import zf.SerialiseContext;
 import zf.StructSerialisable;
@@ -55,4 +63,10 @@ import userdata.Profile;
 
 import haxe.DynamicAccess;
 
-import zf.MessageDispatcher;
+import Strings as S;
+import Globals as G;
+import Constants as C;
+
+#if debug
+using zf.debug.D;
+#end

@@ -41,11 +41,45 @@ class WorldState implements StructSerialisable implements Identifiable {
 
 	// ---- Save / Load ---- //
 	public function toStruct(context: SerialiseContext, option: SerialiseOption): WorldStateSF {
-		return this.rules.toStruct(context, option, this);
+		final entities: Entities<Entity> = new Entities<Entity>();
+		context.add(entities);
+
+		final stateSF: WorldStateSF = {};
+
+		// store the id generators
+		@:privateAccess stateSF.intCounter = this.intCounter.counter;
+
+		// collect all the entities before this is called
+		final entitiesSF = [for (entity in entities) entity.toStruct(context, option)];
+		stateSF.entities = entitiesSF;
+
+		return stateSF;
 	}
 
 	public function loadStruct(context: SerialiseContext, option: SerialiseOption, data: Dynamic): WorldState {
-		this.rules.loadStruct(context, option, this, data);
+		final stateSF: WorldStateSF = cast data;
+		final entitiesSF: Array<EntitySF> = stateSF.entities;
+		final entities: Entities<Entity> = new Entities<Entity>();
+		context.add(entities);
+
+		for (sf in entitiesSF) {
+			final factory = this.rules.entities[sf.typeId];
+			if (factory == null) {
+				Logger.warn('Fail to load entity, Type: ${sf.typeId}, Id: ${sf.id}');
+				continue;
+			}
+			final entity = factory.load(context, option, sf);
+			entities.add(entity);
+		}
+
+		// for each of the entities, now we can load the entity proper
+		for (sf in entitiesSF) {
+			final entity = entities.get(sf.id);
+			if (entity == null) continue;
+			entity.loadStruct(context, option, sf);
+		}
+
+		@:privateAccess this.intCounter.counter = stateSF.intCounter;
 		return this;
 	}
 }
