@@ -1,4 +1,4 @@
-package world;
+package world.entities;
 
 import world.entities.factories.EntityFactory;
 
