@@ -22,4 +22,9 @@ class Assets {
 		bm.color.setColor(color);
 		return bm;
 	}
+
+	public static function loadImage(url: String): h2d.Tile {
+		final t = Assets.res.getTile(url);
+		return t;
+	}
 }

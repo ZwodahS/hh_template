@@ -17,8 +17,17 @@ class Colors {
 
 	public static var FlattenColors: Map<String, Color>;
 
+	public static var TemplateColors: Dynamic;
+
 	public static function init() {
 		FlattenColors = flattenColors();
+		TemplateColors = {
+			end: "</font>",
+		};
+		final dy: DynamicAccess<Dynamic> = TemplateColors;
+		for (k => v in FlattenColors) {
+			dy.set(k, v);
+		}
 	}
 
 	public static function getColorKey(key: String, colorId: String): Color {
@@ -27,7 +36,11 @@ class Colors {
 		return colors.exists(colorId) ? colors.get(colorId) : 0xffffffff;
 	}
 
-	public static function getColor(colorId): Color {
+	inline public static function getColor(colorId): Color {
+		return FlattenColors.exists(colorId) ? FlattenColors.get(colorId) : 0xFFFFFFFF;
+	}
+
+	inline public static function get(colorId: String): Color {
 		return FlattenColors.exists(colorId) ? FlattenColors.get(colorId) : 0xFFFFFFFF;
 	}
 
@@ -41,5 +54,21 @@ class Colors {
 			}
 		}
 		return colors;
+	}
+
+	static function parseColor(color: Int, colorId: String = null): String {
+		if (colorId == null) {
+			return '<font color="#${StringTools.hex(color & 0xFFFFFF, 6)}">';
+		} else {
+			return '<font colorId="${colorId}" color="#${StringTools.hex(color & 0xFFFFFF, 6)}">';
+		}
+	}
+
+	static function colorToDynamic(colors: Array<Color>): Dynamic {
+		final d: DynamicAccess<Dynamic> = {};
+		for (i => c in colors) {
+			d.set('${i}', parseColor(c));
+		}
+		return d;
 	}
 }

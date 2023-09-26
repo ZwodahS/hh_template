@@ -9,7 +9,7 @@ class TestSetup {
 		for (name => test in tests) {
 			screen.addTestCase(name, (testId: String) -> {
 				return Type.createInstance(test, [testId]);
-			});
+			}, true);
 		}
 		screen.game = Globals.game;
 		screen.finalise();

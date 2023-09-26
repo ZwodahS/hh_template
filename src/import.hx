@@ -16,6 +16,7 @@ import zf.Color;
 import zf.Identifiable;
 import zf.Pair;
 import zf.ds.ArrayMap;
+import zf.UpdateElements;
 // update loop and animations
 import zf.up.*;
 import zf.up.animations.*;
@@ -31,7 +32,6 @@ import zf.ui.UIElement;
 import zf.ui.builder.BuilderContext;
 import zf.ui.layout.*;
 import zf.filters.FilterFactory;
-import zf.MessageDispatcher;
 
 // extensions
 using zf.math.FloatExtensions;
@@ -45,6 +45,9 @@ using zf.HtmlUtils;
 using zf.h2d.ObjectExtensions;
 using zf.h2d.col.BoundsExtensions;
 using zf.up.animations.WrappedObject;
+// @configure can be removed but not necessary since the 2 extensions are behind a flag
+using zf.echo.BodyExtensions;
+using zf.echo.ShapeExtensions;
 
 using StringTools;
 using Lambda;
@@ -63,9 +66,13 @@ import userdata.Profile;
 
 import haxe.DynamicAccess;
 
+import zf.MessageDispatcher;
+
 import Strings as S;
 import Globals as G;
 import Constants as C;
+import Utils as U;
+import Colors as O;
 
 #if debug
 using zf.debug.D;

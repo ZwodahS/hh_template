@@ -39,14 +39,20 @@ STEAM_DEMO_MAC_DEPOT_ID=# @configure
 STEAM_DEMO_LINUX_DEPOT_ID=# @configure
 ########################################################################################################################
 # Compilation & Build configuration - Do not change this section
+PAK_FLAGS=
 ## Set compile flags
 COMPILE_FLAGS=
 ifeq (${RELEASE},1)
 COMPILE_FLAGS += --no-traces
+# Note: add other pak to excludes here if necessary
+PAK_FLAGS += -exclude-path tests
 else
 COMPILE_FLAGS += -D debug -D loggingLevel=30
 endif
 
+ifeq (${FORCE_DEMO},1)
+COMPILE_FLAGS += -D demo
+endif
 # If SteamSDK is enabled.
 STEAMAPI_CFLAGS=
 ifeq ($(STEAMAPI),1)
@@ -56,6 +62,7 @@ endif
 ## Set Build path
 ### JS
 JS_BUILD_PATH=build/js
+FULL_JS_BUILD_PATH=build/full-js
 ### MAC
 MAC_BUILD_PATH=build/mac
 MAC_APP_PATH=${MAC_BUILD_PATH}/${MACAPP}
@@ -87,7 +94,7 @@ BINARY_FLAGS= --library hlsdl
 #
 # Local build
 game.hl: buildinfo strings assets
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Game
 
 # Local build with pak
 pakgame: buildinfo strings assets pak
@@ -135,16 +142,16 @@ help:
 
 # build js
 js: buildinfo strings assets pak
-	${HAXEPATH}/haxe build_script/common.hxml --js ${JS_BUILD_PATH}/game.js -D pak ${COMPILE_FLAGS} --main Game
-	cp build_script/index.html ${JS_BUILD_PATH}/.
-	cp build/res.pak ${JS_BUILD_PATH}/.
-	cp res/favicon.png ${JS_BUILD_PATH}/favicon.ico
-	cp -r build_script/licenses ${JS_BUILD_PATH}/licenses
+	${HAXEPATH}/haxe build_script/common.hxml -lib stb_ogg_sound --js ${FULL_JS_BUILD_PATH}/game.js -D pak ${COMPILE_FLAGS} --main Game
+	cp build_script/index.html ${FULL_JS_BUILD_PATH}/.
+	cp build/res.pak ${FULL_JS_BUILD_PATH}/.
+	cp res/favicon.png ${FULL_JS_BUILD_PATH}/favicon.ico
+	cp -r build_script/licenses ${FULL_JS_BUILD_PATH}/licenses
 
-demo-js: buildinfo strings assets pak
-	${HAXEPATH}/haxe build_script/common.hxml --js ${JS_BUILD_PATH}/game.js -D pak -D demo ${COMPILE_FLAGS} --main Game
+demo-js: buildinfo strings assets pak-demo
+	${HAXEPATH}/haxe build_script/common.hxml -lib stb_ogg_sound --js ${JS_BUILD_PATH}/game.js -D pak -D demo ${COMPILE_FLAGS} --main Game
 	cp build_script/index.html ${JS_BUILD_PATH}/.
-	cp build/res.pak ${JS_BUILD_PATH}/.
+	cp build/res-demo.pak ${JS_BUILD_PATH}/res.pak
 	cp res/favicon.png ${JS_BUILD_PATH}/favicon.ico
 	cp -r build_script/licenses ${JS_BUILD_PATH}/licenses
 
@@ -159,6 +166,7 @@ mac: buildinfo strings assets pak
 	mkdir -p ${MAC_APP_PATH}/Contents/MacOS
 	mkdir -p ${MAC_APP_PATH}/Contents/Resources
 	mkdir -p ${MAC_APP_PATH}/Contents/Frameworks
+	mkdir -p ${MAC_APP_PATH}/Contents/MacOS/logs
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D pak --hl build/mac/hlboot.dat --main Game
 	cat build_script/mac/Info.plist | sed 's/__VERSION__/${VERSION}/g' > ${MAC_APP_PATH}/Contents/Info.plist
 	cp res/favicon.png ${MAC_APP_PATH}/Contents/Resources/icon.png
@@ -235,6 +243,9 @@ steam-pre-build: strings assets pak
 
 steam-windows:
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hldx -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootdx.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootnosteam.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hldx -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootdxnosteam.dat --main Game
 	cp build/res.pak ${STEAM_WINDOWS_BUILD_PATH}/.
 	cp build_script/windows-sdl/hl.exe ${STEAM_WINDOWS_BUILD_PATH}/${GAME}.exe
 	cp build_script/windows-sdl/*.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
@@ -244,7 +255,8 @@ steam-windows:
 
 steam-mac:
 	mkdir -p ${STEAM_MAC_BUILD_PATH}/licenses
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D pak --hl ${STEAM_MAC_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D pak --hl ${STEAM_MAC_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D pak --hl ${STEAM_MAC_BUILD_PATH}/hlbootnosteam.dat --main Game
 	cp build_script/mac/hl ${STEAM_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.hdll ${STEAM_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.dylib ${STEAM_MAC_BUILD_PATH}/.
@@ -254,7 +266,7 @@ steam-mac:
 
 steam-linux:
 	mkdir -p ${STEAM_DEMO_LINUX_BUILD_PATH}/
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D linux -D steam -D pak --hl ${STEAM_LINUX_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D linux -D steam -D pak --hl ${STEAM_LINUX_BUILD_PATH}/hlboot.dat --main Game
 	cp build_script/linux/hl ${STEAM_LINUX_BUILD_PATH}/.
 	cp build_script/linux/*.hdll ${STEAM_LINUX_BUILD_PATH}/.
 	cp build_script/linux/*.so* ${STEAM_LINUX_BUILD_PATH}/.
@@ -296,7 +308,7 @@ steam-demo: buildinfo steam-demo-pre-build steam-demo-windows steam-demo-mac ste
 		| sed 's/__LINUX_DEPOT_ID__/${STEAM_DEMO_LINUX_DEPOT_ID}/g' \
 		> ${STEAM_DEMO_BUILD_PATH}/depot_linux.vdf
 
-steam-demo-pre-build: strings assets pak
+steam-demo-pre-build: strings assets pak-demo
 	rm -rf ${STEAM_DEMO_BUILD_PATH}
 	mkdir -p ${STEAM_DEMO_BUILD_PATH}
 	mkdir -p ${STEAM_DEMO_WINDOWS_BUILD_PATH}
@@ -305,8 +317,9 @@ steam-demo-pre-build: strings assets pak
 	mkdir -p ${STEAM_DEMO_BUILD_PATH}/build
 
 steam-demo-windows:
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
-	cp build/res.pak ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlbootdx.dat --main Game
+	cp build/res-demo.pak ${STEAM_DEMO_WINDOWS_BUILD_PATH}/res.pak
 	cp build_script/windows-sdl/hl.exe ${STEAM_DEMO_WINDOWS_BUILD_PATH}/${GAME}Demo.exe
 	cp build_script/windows-sdl/*.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
 	cp build_script/windows-sdl/*.dll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
@@ -318,7 +331,7 @@ steam-demo-mac:
 	cp build_script/mac/hl ${STEAM_DEMO_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.hdll ${STEAM_DEMO_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.dylib ${STEAM_DEMO_MAC_BUILD_PATH}/.
-	cp build/res.pak ${STEAM_DEMO_MAC_BUILD_PATH}/.
+	cp build/res-demo.pak ${STEAM_DEMO_MAC_BUILD_PATH}/res.pak
 	cp -r build_script/licenses ${STEAM_DEMO_MAC_BUILD_PATH}/licenses
 
 steam-demo-linux:
@@ -328,7 +341,7 @@ steam-demo-linux:
 	cp build_script/linux/*.hdll ${STEAM_DEMO_LINUX_BUILD_PATH}/.
 	cp build_script/linux/*.so* ${STEAM_DEMO_LINUX_BUILD_PATH}/.
 	cp build_script/linux/run.sh ${STEAM_DEMO_LINUX_BUILD_PATH}/.
-	cp build/res.pak ${STEAM_DEMO_LINUX_BUILD_PATH}/.
+	cp build/res-demo.pak ${STEAM_DEMO_LINUX_BUILD_PATH}/res.pak
 	cp -r build_script/licenses ${STEAM_DEMO_LINUX_BUILD_PATH}/licenses
 
 ##############################
@@ -338,8 +351,14 @@ lint:
 pak:
 	mkdir -p build
 	${HAXEPATH}/haxe -hl hxd.fmt.pak.Build.hl -lib heaps -lib hlsdl -main hxd.fmt.pak.Build
-	${HASHLINKPATH}/hl hxd.fmt.pak.Build.hl
-	-cp res.pak build/.
+	${HASHLINKPATH}/hl hxd.fmt.pak.Build.hl ${PAK_FLAGS}
+	-mv res.pak build/res.pak
+
+pak-demo:
+	mkdir -p build
+	${HAXEPATH}/haxe -hl hxd.fmt.pak.Build.hl -lib heaps -lib hlsdl -main hxd.fmt.pak.Build
+	${HASHLINKPATH}/hl hxd.fmt.pak.Build.hl ${PAK_FLAGS} -exclude-path rules/rulesets/ext
+	-mv res.pak build/res-demo.pak
 
 ########################################## PARSE STRINGS FOR I8N #######################################################
 strings_path = res/strings
@@ -369,9 +388,13 @@ assetsmove:
 # uncomment when necessary
 dist: dist-web # dist-mac dist-windows dist-steam dist-steam-demo
 
-dist-web: js
+dist-web: demo-js
 	mkdir -p build/web
 	cd ${JS_BUILD_PATH}; zip ../web/web.zip *
+
+dist-full-web: js
+	mkdir -p build/full-web
+	cd ${FULL_JS_BUILD_PATH}; zip ../full-web/web.zip *
 
 dist-mac: mac
 	mkdir -p build/mac/${FOLDERNAME}
@@ -393,7 +416,7 @@ push-web:
 	butler push build/web/web.zip ${ITCH_URL}:web --userversion ${VERSION}
 
 push-web-private:
-	butler push build/web/web.zip ${PRIVATE_ITCH_URL}:web --userversion ${VERSION}
+	butler push build/full-web/web.zip ${PRIVATE_ITCH_URL}:web --userversion ${VERSION}
 
 push-mac:
 	butler push build/mac/${MAC_DIST} ${ITCH_URL}:mac --userversion ${VERSION}
@@ -408,13 +431,10 @@ push-steam-demo:
 	steamcmd +login ${STEAM_USER} +run_app_build ${PWD}/build/steam-demo/${STEAM_DEMO_BUILD_FILE} +quit
 ########################################################################################################################
 # archive build
-# we will not archive the steam build for now
+# archive only the actual debug build in case I can't build them in the future
 archive:
 	mkdir -p releases
 	mkdir -p ${BUILDSTRING}
-	cp build/web/web.zip ${BUILDSTRING}/.
-	cp build/mac/${MAC_DIST} ${BUILDSTRING}/.
-	cp build/windows/${WINDOWS_DIST} ${BUILDSTRING}/.
 	mkdir -p ${BUILDSTRING}/working
 	cp -r res ${BUILDSTRING}/working/res
 	cp game.hl ${BUILDSTRING}/working/.

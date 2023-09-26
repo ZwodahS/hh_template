@@ -4,5 +4,9 @@
   ],
   "fonts": [
     { "path": "fonts/fonts.json" }
+  ],
+  "sounds": [
+    { "path": "sfx/sfx.json"},
+    { "path": "bgm/bgm.json"}
   ]
 }

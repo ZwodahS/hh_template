@@ -6,15 +6,24 @@ class TemplateContext {
 
 	var icons: Dynamic;
 	var keywords: Dynamic;
+	var escape: Dynamic;
 
 	public function new() {
 		this.icons = {};
 		this.keywords = {};
+		this.escape = {
+			lt: '&lt;',
+			lte: '&lt;=',
+			gt: '&gt;',
+			gte: '&gt;=',
+		};
 
 		this.context = {
 			eol: "<br/>",
 			i: icons,
 			keywords: this.keywords,
+			escape: this.escape,
+			colors: Colors.TemplateColors,
 		};
 	}
 
