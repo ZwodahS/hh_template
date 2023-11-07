@@ -1,10 +1,5 @@
 {
-  "external": {
-    "discord": "Discord",
-    "mastodon": "Mastodon",
-    "twitter": "Twitter"
-  },
-  "templates": {
-    "keywords": {}
+  "constants": {
+    "gamename": "Game Name"
   }
 }

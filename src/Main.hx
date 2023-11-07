@@ -1,8 +1,6 @@
 class Main {
-
 	// ---- Main Method ---- //
 	static function main() {
-
 #if steamapi
 		trace('Initialising Steam Api....');
 		// init steam
@@ -22,6 +20,7 @@ class Main {
 			Set up loggers
 		**/
 		zf.Logger.init();
+
 #if debug
 		zf.Logger.addConsoleLogger();
 		zf.Logger.addFileLogger('logs/debug.log', null, 0);

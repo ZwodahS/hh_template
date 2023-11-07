@@ -1,6 +1,6 @@
 class Game extends zf.Game {
-
 	public var sound: Sounds;
+
 	override public function new() {
 		super([640, 360], true, true);
 
@@ -14,7 +14,7 @@ class Game extends zf.Game {
 		super.init();
 
 		// @:privateAccess s2d.events.defaultCursor = Assets.cursors["default"];
-		UIElement.defaultHoverDelay = UI.HoverDelay;
+		UIElement.defaultHoverDelay = C.HoverDelay;
 		final interactive = new Interactive(Globals.game.gameWidth, Globals.game.gameHeight, this.s2d);
 		interactive.propagateEvents = true;
 		interactive.onFocus = (e) -> {
@@ -90,7 +90,6 @@ class Game extends zf.Game {
 	}
 #end
 
-
 #if !js
 	public function staticReload() {
 		hxd.Res.initLocal();
@@ -118,7 +117,7 @@ class Game extends zf.Game {
 			return S.get(id, context);
 		}
 		G.ui.res = A.res;
-		G.ui.getColor = O.getColor;
+		G.ui.getColor = K.getColor;
 		G.ui.formatString = (str, context) -> {
 			final t = new haxe.Template(str);
 			return t.execute(context.data);
@@ -203,7 +202,7 @@ class Game extends zf.Game {
 		logs.push('--------------------------------');
 		logs.push('Build: ${Constants.Version}-${Constants.GitBuild}');
 		for (s in stackItems) {
-			logs.push(Utils.stackItemToString(s));
+			logs.push(zf.Debug.stackItemToString(s));
 		}
 		logs.push('--------------------------------');
 		logs.push(e.details());

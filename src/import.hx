@@ -62,8 +62,7 @@ import userdata.Profile;
 import Strings as S;
 import Globals as G;
 import Constants as C;
-import Utils as U;
-import Colors as R;
+import Colors as K;
 import Sounds as O;
 import Assets as A;
 

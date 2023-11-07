@@ -1,2 +1,5 @@
-<group>
+<group id="constants">
+  <text id="gamename">
+    <en>Game Name</en>
+  </text>
 </group>
