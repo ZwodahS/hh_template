@@ -1,3 +1,6 @@
+import world.Rules;
+import world.World;
+
 /**
 	Globals is used to store all the global variables in the game.
 	This is usually for stuffs that are loaded on start, or configured on start.

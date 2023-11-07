@@ -1,5 +1,8 @@
 package commands;
 
+import world.World;
+import world.WorldState;
+
 import screens.GameScreen;
 
 import zf.debug.OverlayConsole.ConsoleArg;

@@ -139,6 +139,10 @@ class Game extends zf.Game {
 		}
 		Globals.settings.init = true;
 
+		if (Globals.settings.language == null) {
+			Globals.settings.language = "en";
+		}
+
 		try {
 #if (js && pak)
 			var b = new hxd.net.BinaryLoader("res.pak");
@@ -204,8 +208,6 @@ class Game extends zf.Game {
 	}
 
 	function initStringTables() {
-		Strings.strings = new StringTable();
-		Strings.strings.load("en", "strings/en/strings.json");
 		Strings.initTemplateVariables();
 	}
 
@@ -238,7 +240,7 @@ class Game extends zf.Game {
 	function initRules() {
 		try {
 			// in case the rules loading failed
-			Globals.rules = new Rules();
+			Globals.rules = new world.Rules();
 		} catch (e) {
 			onException(e, haxe.CallStack.exceptionStack());
 			return;

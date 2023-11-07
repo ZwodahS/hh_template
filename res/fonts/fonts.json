@@ -1,26 +1,30 @@
 {
-  "language": "default",
-  "fonts": {
-    "debug": {
-      "type": "msdf",
-      "conf": {
-        "file": "fonts/gluten-medium.fnt",
-        "size": [6, 8, 10, 12, 14, 16]
-      }
-    },
-    "display": {
-      "type": "msdf",
-      "conf": {
-        "file": "fonts/gluten-medium.fnt",
-        "size": [5, 7, 8, 10, 12, 14, 18, 24]
-      }
-    },
-    "body": {
-      "type": "msdf",
-      "conf": {
-        "file": "fonts/gluten-medium.fnt",
-        "size": [5, 7, 10, 12, 14, 16]
+  "fonts": [
+    {
+      "id": "default",
+      "fonts": {
+        "debug": {
+          "type": "msdf",
+          "conf": {
+            "file": "fonts/gluten-medium.fnt",
+            "size": [6, 8, 10, 12, 14, 16]
+          }
+        },
+        "display": {
+          "type": "msdf",
+          "conf": {
+            "file": "fonts/gluten-medium.fnt",
+            "size": [6, 7, 8, 10, 12, 14, 18, 24, 48]
+          }
+        },
+        "body": {
+          "type": "msdf",
+          "conf": {
+            "file": "fonts/gluten-medium.fnt",
+            "size": [6, 7, 10, 12, 14, 16]
+          }
+        }
       }
     }
-  }
+  ]
 }

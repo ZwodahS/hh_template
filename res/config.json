@@ -8,5 +8,8 @@
   "sounds": [
     { "path": "sfx/sfx.json"},
     { "path": "bgm/bgm.json"}
+  ],
+  "languages": [
+    { "path": "strings/en" }
   ]
 }

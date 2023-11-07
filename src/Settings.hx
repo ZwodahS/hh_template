@@ -1,6 +1,7 @@
 typedef SettingsSF = {
 	public var ?pixelPerfect: Bool;
 	public var ?fullScreen: Bool;
+	public var ?language: String;
 
 	public var ?masterVolume: Float;
 	public var ?sfxVolume: Float;
@@ -14,6 +15,8 @@ class Settings {
 	public var fullScreen: Bool = false;
 
 	public var masterVolume(default, set): Float = 0.5;
+
+	public var language: String = null;
 
 	public function set_masterVolume(v: Float): Float {
 		this.masterVolume = Math.clampF(v, 0, 1);
@@ -56,6 +59,7 @@ class Settings {
 		if (sf.musicVolume != null) settings.musicVolume = sf.musicVolume;
 		if (sf.sfxVolume != null) settings.sfxVolume = sf.sfxVolume;
 		if (sf.pauseMusicOnLoseFocus != null) settings.pauseMusicOnLoseFocus = sf.pauseMusicOnLoseFocus;
+		if (sf.language != null) settings.language = sf.language;
 		settings.init = true;
 		return settings;
 	}
@@ -66,6 +70,7 @@ class Settings {
 			fullScreen: this.fullScreen,
 			masterVolume: this.masterVolume,
 			musicVolume: this.musicVolume,
+			language: this.language,
 			pauseMusicOnLoseFocus: this.pauseMusicOnLoseFocus,
 			sfxVolume: this.sfxVolume,
 		}

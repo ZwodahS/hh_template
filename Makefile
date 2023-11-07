@@ -91,7 +91,29 @@ STEAM_DEMO_BUILD_FILE=app_build_${STEAM_DEMO_APP_ID}.vdf
 # Binary flags for local compile flags during debugging
 BINARY_FLAGS= --library hlsdl
 ########################################################################################################################
-#
+
+default: game.hl
+
+########################################################################################################################
+# Strings exporting
+
+# combine the string utility
+stringutil: bin/stringman
+
+bin/stringman: tools/StringsManagement.hx
+	${HAXEPATH}/haxe --class-path tools build_script/common.hxml --hl bin/stringman --main StringsManagement
+
+exportstring: stringutil
+	mkdir -p export
+	${HASHLINKPATH}/hl bin/stringman writekeys
+	python3 bin/jsontocsv.py export/en
+
+verifystring: stringutil
+	${HASHLINKPATH}/hl bin/stringman verify
+
+########################################################################################################################
+# Builds
+
 # Local build
 game.hl: buildinfo strings assets
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Game
@@ -99,10 +121,6 @@ game.hl: buildinfo strings assets
 # Local build with pak
 pakgame: buildinfo strings assets pak
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} ${BINARY_FLAGS} -D pak --hl game.hl --main Game
-
-# combine the string utility
-stringutil:
-	${HAXEPATH}/haxe --class-path tools --library zf --hl bin/combinestrings --main CombineStringTable
 
 # print build information
 buildinfo:
@@ -347,6 +365,7 @@ steam-demo-linux:
 ##############################
 lint:
 	haxelib run formatter -s src
+	haxelib run formatter -s tools
 
 pak:
 	mkdir -p build
@@ -363,11 +382,11 @@ pak-demo:
 ########################################## PARSE STRINGS FOR I8N #######################################################
 strings_path = res/strings
 # parse strings
-strings: res/strings/en/strings.json
+strings: stringutil res/strings/en/strings.json
 
 en_strings_files = $(shell find data -name '*.xml')
-res/strings/en/strings.json: bin/combinestrings ${en_strings_files}
-	hl bin/combinestrings en
+res/strings/en/strings.json: bin/stringman ${en_strings_files}
+	hl bin/stringman write
 ########################################################################################################################
 
 # set the graphics path
@@ -410,10 +429,13 @@ dist-steam: steam
 dist-steam-demo: steam-demo
 ########################################################################################################################
 # Push
-push-all: push-web push-mac push-windows push-steam push-steam-demo
+push-all: push-web push-steam push-steam-demo push-mac push-windows
 
 push-web:
 	butler push build/web/web.zip ${ITCH_URL}:web --userversion ${VERSION}
+
+push-web-private-demo:
+	butler push build/web/web.zip ${PRIVATE_ITCH_URL}:web --userversion ${VERSION}
 
 push-web-private:
 	butler push build/full-web/web.zip ${PRIVATE_ITCH_URL}:web --userversion ${VERSION}

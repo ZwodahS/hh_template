@@ -1,0 +1,10 @@
+{
+  "font": {
+    "name": "default"
+  },
+  "displayName": "English",
+  "key": "en",
+  "strings": [
+    "strings.json"
+  ]
+}

@@ -1,4 +1,5 @@
 // haxe core
+import haxe.DynamicAccess;
 import haxe.ds.ReadOnlyArray;
 
 // core
@@ -7,6 +8,7 @@ import zf.Logger;
 import zf.Debug;
 import zf.debug.D;
 // data types and data structures
+import zf.Sort;
 import zf.Direction;
 import zf.Point2i;
 import zf.Point2f;
@@ -32,6 +34,7 @@ import zf.ui.UIElement;
 import zf.ui.builder.BuilderContext;
 import zf.ui.layout.*;
 import zf.filters.FilterFactory;
+import zf.MessageDispatcher;
 
 // extensions
 using zf.math.FloatExtensions;
@@ -45,9 +48,6 @@ using zf.HtmlUtils;
 using zf.h2d.ObjectExtensions;
 using zf.h2d.col.BoundsExtensions;
 using zf.up.animations.WrappedObject;
-// @configure can be removed but not necessary since the 2 extensions are behind a flag
-using zf.echo.BodyExtensions;
-using zf.echo.ShapeExtensions;
 
 using StringTools;
 using Lambda;
@@ -55,24 +55,16 @@ using Lambda;
 import zf.SerialiseContext;
 import zf.StructSerialisable;
 import zf.SerialiseOption;
-
-import world.World;
-import world.WorldState;
-import world.Rules;
-
 import zf.userdata.UserData;
 
 import userdata.Profile;
-
-import haxe.DynamicAccess;
-
-import zf.MessageDispatcher;
 
 import Strings as S;
 import Globals as G;
 import Constants as C;
 import Utils as U;
 import Colors as O;
+import Assets as A;
 
 #if debug
 using zf.debug.D;

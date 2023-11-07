@@ -1,5 +1,7 @@
 package screens;
 
+import world.World;
+
 class GameScreen extends zf.Screen {
 	public var world: World;
 

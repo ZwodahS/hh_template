@@ -2,3 +2,4 @@ build
 *.hl
 .tmp/
 logs/
+crash.log
