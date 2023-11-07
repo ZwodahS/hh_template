@@ -1,17 +1,10 @@
 class Game extends zf.Game {
-	public var musicSoundGroup: hxd.snd.SoundGroup;
-	public var sfxSoundGroup: hxd.snd.SoundGroup;
-	public var soundManager: hxd.snd.Manager;
 
+	public var sound: Sounds;
 	override public function new() {
 		super([640, 360], true, true);
 
-		this.musicSoundGroup = new hxd.snd.SoundGroup("music");
-		this.musicSoundGroup.volume = Math.clampF(Globals.settings.musicVolume, 0, 1.0);
-		this.sfxSoundGroup = new hxd.snd.SoundGroup("sfx");
-		this.sfxSoundGroup.volume = Math.clampF(Globals.settings.sfxVolume, 0, 1.0);
-		this.soundManager = hxd.snd.Manager.get();
-		this.soundManager.masterVolume = Math.clampF(Globals.settings.masterVolume, 0, 1.0);
+		this.sound = new Sounds();
 	}
 
 	override function init() {
@@ -25,10 +18,10 @@ class Game extends zf.Game {
 		final interactive = new Interactive(Globals.game.gameWidth, Globals.game.gameHeight, this.s2d);
 		interactive.propagateEvents = true;
 		interactive.onFocus = (e) -> {
-			this.soundManager.suspended = false;
+			this.sound.soundManager.suspended = false;
 		};
 		interactive.onFocusLost = (e) -> {
-			if (Globals.settings.pauseMusicOnLoseFocus == true) this.soundManager.suspended = true;
+			if (Globals.settings.pauseMusicOnLoseFocus == true) this.sound.soundManager.suspended = true;
 		}
 
 		// set up the debug overlay
@@ -225,28 +218,8 @@ class Game extends zf.Game {
 #end
 	}
 
-	// ---- Music and SFX ---- //
-	public function playMusic(name: String, loop: Bool = true): hxd.snd.Channel {
-		final s = Assets.res.getSound(name);
-		if (s == null) return null;
-		return s.play(loop, null, this.musicSoundGroup);
-	}
-
 	override public function update(dt: Float) {
 		super.update(dt);
-		this.sfx.clear();
-	}
-
-	public var sfx: Map<String, Bool> = [];
-
-	public function playSfx(name: String, volume: Float = 1.0): hxd.snd.Channel {
-		final s = Assets.res.getSound(name);
-		if (s == null) return null;
-		// if the sfx has been played this frame, we don't play it again
-		if (this.sfx.exists(name) == true) return null;
-		final channel = s.play(false, null, this.sfxSoundGroup);
-		this.sfx[name] = true;
-
-		return channel;
+		this.sound.update(dt);
 	}
 }

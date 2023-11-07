@@ -28,7 +28,7 @@ class Settings {
 
 	public function set_sfxVolume(v: Float): Float {
 		this.sfxVolume = Math.clampF(v, 0, 1);
-		if (this.init == true) Globals.game.sfxSoundGroup.volume = this.sfxVolume;
+		if (this.init == true) Globals.game.sound.sfxSoundGroup.volume = this.sfxVolume;
 		return this.sfxVolume;
 	}
 
@@ -36,7 +36,7 @@ class Settings {
 
 	public function set_musicVolume(v: Float): Float {
 		this.musicVolume = Math.clampF(v, 0, 1);
-		if (this.init == true) Globals.game.musicSoundGroup.volume = this.musicVolume;
+		if (this.init == true) Globals.game.sound.musicSoundGroup.volume = this.musicVolume;
 		return this.musicVolume;
 	}
 
