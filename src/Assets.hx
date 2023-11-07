@@ -11,8 +11,12 @@ class Assets {
 		Assets.res.load("config.json");
 	}
 
-	public static function getFont(id: String, sizeIndex: Int): h2d.Font {
-		return Assets.res.getFont(Assets.lang, id, sizeIndex);
+	inline public static function getFont(id: String, sizeIndex: Int): h2d.Font {
+		return Assets.res.getFont(G.settings.language, id, sizeIndex);
+	}
+
+	inline public static function getFonts(id: String): Array<h2d.Font> {
+		return Assets.res.getFonts(G.settings.language, id).fonts;
 	}
 
 	public static function fromColor(color: Color, width: Float, height: Float): h2d.Bitmap {
@@ -23,8 +27,7 @@ class Assets {
 		return bm;
 	}
 
-	public static function loadImage(url: String): h2d.Tile {
-		final t = Assets.res.getTile(url);
-		return t;
+	inline public static function loadImage(url: String): h2d.Tile {
+		return Assets.res.getTile(url);
 	}
 }

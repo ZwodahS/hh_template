@@ -116,11 +116,11 @@ verifystring: stringutil
 
 # Local build
 game.hl: buildinfo strings assets
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Main
 
 # Local build with pak
 pakgame: buildinfo strings assets pak
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} ${BINARY_FLAGS} -D pak --hl game.hl --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} ${BINARY_FLAGS} -D pak --hl game.hl --main Main
 
 # print build information
 buildinfo:
@@ -160,14 +160,14 @@ help:
 
 # build js
 js: buildinfo strings assets pak
-	${HAXEPATH}/haxe build_script/common.hxml -lib stb_ogg_sound --js ${FULL_JS_BUILD_PATH}/game.js -D pak ${COMPILE_FLAGS} --main Game
+	${HAXEPATH}/haxe build_script/common.hxml -lib stb_ogg_sound --js ${FULL_JS_BUILD_PATH}/game.js -D pak ${COMPILE_FLAGS} --main Main
 	cp build_script/index.html ${FULL_JS_BUILD_PATH}/.
 	cp build/res.pak ${FULL_JS_BUILD_PATH}/.
 	cp res/favicon.png ${FULL_JS_BUILD_PATH}/favicon.ico
 	cp -r build_script/licenses ${FULL_JS_BUILD_PATH}/licenses
 
 demo-js: buildinfo strings assets pak-demo
-	${HAXEPATH}/haxe build_script/common.hxml -lib stb_ogg_sound --js ${JS_BUILD_PATH}/game.js -D pak -D demo ${COMPILE_FLAGS} --main Game
+	${HAXEPATH}/haxe build_script/common.hxml -lib stb_ogg_sound --js ${JS_BUILD_PATH}/game.js -D pak -D demo ${COMPILE_FLAGS} --main Main
 	cp build_script/index.html ${JS_BUILD_PATH}/.
 	cp build/res-demo.pak ${JS_BUILD_PATH}/res.pak
 	cp res/favicon.png ${JS_BUILD_PATH}/favicon.ico
@@ -185,7 +185,7 @@ mac: buildinfo strings assets pak
 	mkdir -p ${MAC_APP_PATH}/Contents/Resources
 	mkdir -p ${MAC_APP_PATH}/Contents/Frameworks
 	mkdir -p ${MAC_APP_PATH}/Contents/MacOS/logs
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D pak --hl build/mac/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D pak --hl build/mac/hlboot.dat --main Main
 	cat build_script/mac/Info.plist | sed 's/__VERSION__/${VERSION}/g' > ${MAC_APP_PATH}/Contents/Info.plist
 	cp res/favicon.png ${MAC_APP_PATH}/Contents/Resources/icon.png
 	mv build/mac/hlboot.dat ${MAC_APP_PATH}/Contents/MacOS/.
@@ -201,7 +201,7 @@ linux: buildinfo strings assets pak
 	rm -rf ${LINUX_BUILD_PATH}
 	mkdir -p ${LINUX_BUILD_PATH}
 	mkdir -p ${LINUX_APP_PATH}
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D linux -D pak --hl build/linux/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D linux -D pak --hl build/linux/hlboot.dat --main Main
 	cp build/res.pak ${LINUX_APP_PATH}/.
 	cp build_script/linux/hl ${LINUX_APP_PATH}/${GAME}
 	cp build_script/linux/*.hdll ${LINUX_APP_PATH}/.
@@ -214,7 +214,7 @@ windows: buildinfo strings assets pak
 	rm -rf ${WINDOWS_BUILD_PATH}
 	mkdir -p ${WINDOWS_BUILD_PATH}
 	mkdir -p ${WINDOWS_APP_PATH}
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows-sdl -D pak --hl ${WINDOWS_APP_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows-sdl -D pak --hl ${WINDOWS_APP_PATH}/hlboot.dat --main Main
 	cp build/res.pak ${WINDOWS_APP_PATH}/.
 	cp build_script/windows-sdl/hl.exe ${WINDOWS_APP_PATH}/${GAME}.exe
 	cp build_script/windows-sdl/*.hdll ${WINDOWS_APP_PATH}/.
@@ -260,10 +260,10 @@ steam-pre-build: strings assets pak
 	mkdir -p ${STEAM_BUILD_PATH}/build
 
 steam-windows:
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hldx -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootdx.dat --main Game
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootnosteam.dat --main Game
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hldx -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootdxnosteam.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlboot.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hldx -D windows -D steam -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootdx.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootnosteam.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hldx -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootdxnosteam.dat --main Main
 	cp build/res.pak ${STEAM_WINDOWS_BUILD_PATH}/.
 	cp build_script/windows-sdl/hl.exe ${STEAM_WINDOWS_BUILD_PATH}/${GAME}.exe
 	cp build_script/windows-sdl/*.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
@@ -273,8 +273,8 @@ steam-windows:
 
 steam-mac:
 	mkdir -p ${STEAM_MAC_BUILD_PATH}/licenses
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D pak --hl ${STEAM_MAC_BUILD_PATH}/hlboot.dat --main Game
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D pak --hl ${STEAM_MAC_BUILD_PATH}/hlbootnosteam.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D pak --hl ${STEAM_MAC_BUILD_PATH}/hlboot.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D pak --hl ${STEAM_MAC_BUILD_PATH}/hlbootnosteam.dat --main Main
 	cp build_script/mac/hl ${STEAM_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.hdll ${STEAM_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.dylib ${STEAM_MAC_BUILD_PATH}/.
@@ -284,7 +284,7 @@ steam-mac:
 
 steam-linux:
 	mkdir -p ${STEAM_DEMO_LINUX_BUILD_PATH}/
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D linux -D steam -D pak --hl ${STEAM_LINUX_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D linux -D steam -D pak --hl ${STEAM_LINUX_BUILD_PATH}/hlboot.dat --main Main
 	cp build_script/linux/hl ${STEAM_LINUX_BUILD_PATH}/.
 	cp build_script/linux/*.hdll ${STEAM_LINUX_BUILD_PATH}/.
 	cp build_script/linux/*.so* ${STEAM_LINUX_BUILD_PATH}/.
@@ -335,8 +335,8 @@ steam-demo-pre-build: strings assets pak-demo
 	mkdir -p ${STEAM_DEMO_BUILD_PATH}/build
 
 steam-demo-windows:
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlboot.dat --main Game
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlbootdx.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlboot.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlbootdx.dat --main Main
 	cp build/res-demo.pak ${STEAM_DEMO_WINDOWS_BUILD_PATH}/res.pak
 	cp build_script/windows-sdl/hl.exe ${STEAM_DEMO_WINDOWS_BUILD_PATH}/${GAME}Demo.exe
 	cp build_script/windows-sdl/*.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
@@ -345,7 +345,7 @@ steam-demo-windows:
 
 steam-demo-mac:
 	mkdir -p ${STEAM_DEMO_MAC_BUILD_PATH}/licenses
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D demo -D pak --hl ${STEAM_DEMO_MAC_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D mac -D steam -D demo -D pak --hl ${STEAM_DEMO_MAC_BUILD_PATH}/hlboot.dat --main Main
 	cp build_script/mac/hl ${STEAM_DEMO_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.hdll ${STEAM_DEMO_MAC_BUILD_PATH}/.
 	cp build_script/mac/*.dylib ${STEAM_DEMO_MAC_BUILD_PATH}/.
@@ -354,7 +354,7 @@ steam-demo-mac:
 
 steam-demo-linux:
 	mkdir -p ${STEAM_DEMO_LINUX_BUILD_PATH}/
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D linux -D steam -D demo -D pak --hl ${STEAM_DEMO_LINUX_BUILD_PATH}/hlboot.dat --main Game
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D linux -D steam -D demo -D pak --hl ${STEAM_DEMO_LINUX_BUILD_PATH}/hlboot.dat --main Main
 	cp build_script/linux/hl ${STEAM_DEMO_LINUX_BUILD_PATH}/.
 	cp build_script/linux/*.hdll ${STEAM_DEMO_LINUX_BUILD_PATH}/.
 	cp build_script/linux/*.so* ${STEAM_DEMO_LINUX_BUILD_PATH}/.

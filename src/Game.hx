@@ -1,11 +1,9 @@
 class Game extends zf.Game {
-	var version: h2d.HtmlText;
-
 	public var musicSoundGroup: hxd.snd.SoundGroup;
 	public var sfxSoundGroup: hxd.snd.SoundGroup;
 	public var soundManager: hxd.snd.Manager;
 
-	override function new() {
+	override public function new() {
 		super([640, 360], true, true);
 
 		this.musicSoundGroup = new hxd.snd.SoundGroup("music");
@@ -37,7 +35,7 @@ class Game extends zf.Game {
 #if debug
 		// set up the overlay
 		this.debugOverlay = new zf.debug.DebugOverlay(this);
-		this.debugOverlay.fonts = Assets.res.getFonts("default", "debug").fonts;
+		this.debugOverlay.fonts = A.getFonts("debug");
 		this.debugOverlay.init();
 		this.debugOverlay.inspector.getManagedObjects = () -> {
 			var objects: Array<{name: String, object: Dynamic}> = [];
@@ -55,14 +53,14 @@ class Game extends zf.Game {
 		// from exiting, hence by adding this, we allow the sound to run
 		@:privateAccess haxe.MainLoop.add(() -> {});
 
+		if (Globals.settings.language == null) {
+			Globals.settings.language = "en";
+		}
 		initStringTables();
 		initBuilder();
 		initH2d();
 
-		this.version = new h2d.HtmlText(Assets.res.getFont("default", "debug", 2));
-		this.version.text = '${Constants.Version}.${Constants.GitBuild.substr(0, 8)}';
-		this.s2d.add(this.version, 200);
-		updateVersionPosition();
+		this.engine.backgroundColor = 0xff111012;
 
 		this.toggleFullScreen(Globals.settings.fullScreen);
 
@@ -95,101 +93,10 @@ class Game extends zf.Game {
 
 #if debug
 	override function getDebugFont(): h2d.Font {
-		return Assets.getFont("debug", 0);
+		return A.getFont("debug", 0);
 	}
 #end
 
-	static function main() {
-#if steamapi
-		trace('Initialising Steam API....');
-		// init steam
-		Globals.isSteamInit = steam.Api.init(Constants.SteamAppId);
-		trace('Steam API: ${GLobals.isSteamInit}');
-#end
-
-#if (!debug && hl)
-		hl.UI.closeConsole();
-#end
-
-		// set up the Logger
-		zf.Logger.init();
-#if debug
-		zf.Logger.addConsoleLogger();
-		zf.Logger.addFileLogger('logs/debug.log', null, 0);
-#end
-		zf.Logger.addFileLogger('logs/log.log', 10, null);
-		zf.Logger.addFileLogger('crash.log', 100, null);
-
-		Globals.savefile = new zf.userdata.Savefile("Game", "userdata");
-		Globals.savefile.init();
-
-		Globals.settings = new Settings();
-		if (Globals.savefile.userdata.exists('settings.json')) {
-			final result = Globals.savefile.userdata.loadFromPath('settings.json');
-			final data = switch (result) {
-				case SuccessContent(d): d;
-				default: null;
-			};
-			if (data == null) {
-				Logger.warn("fail to load settings", "[Init]");
-			} else {
-				final sf = haxe.Json.parse(data);
-				Globals.settings = Settings.fromStruct(sf);
-			}
-		}
-		Globals.settings.init = true;
-
-		if (Globals.settings.language == null) {
-			Globals.settings.language = "en";
-		}
-
-		try {
-#if (js && pak)
-			var b = new hxd.net.BinaryLoader("res.pak");
-			b.onLoaded = function(bytes) {
-				var pak = new hxd.fmt.pak.FileSystem();
-				pak.addPak(new hxd.fmt.pak.FileSystem.FileInput(bytes));
-				hxd.Res.loader = new hxd.res.Loader(pak);
-				new Game();
-			}
-			b.load();
-#elseif (pak && mac && steam)
-			var pak = new hxd.fmt.pak.FileSystem();
-			pak.loadPak('res.pak');
-			hxd.Res.loader = new hxd.res.Loader(pak);
-			new Game();
-#elseif (pak && mac)
-			var path = haxe.io.Path.directory(Sys.programPath()) + "/../Resources";
-			var pak = new hxd.fmt.pak.FileSystem();
-			pak.loadPak('${path}/res.pak');
-			hxd.Res.loader = new hxd.res.Loader(pak);
-			new Game();
-#elseif pak
-			// this kind of handle ios for now until we specialise it.
-			var pak = new hxd.fmt.pak.FileSystem();
-			pak.loadPak('res.pak');
-			hxd.Res.loader = new hxd.res.Loader(pak);
-			new Game();
-#elseif hl
-			hxd.res.Resource.LIVE_UPDATE = true;
-			hxd.Res.initLocal();
-			new Game();
-#else
-			hxd.Res.initLocal();
-			new Game();
-#end
-		} catch (e) {
-			Logger.error('${e.stack}');
-#if !js
-			var logs = [];
-			logs.push('${e.stack}');
-			logs.push('${e}');
-			try {
-				sys.io.File.saveContent('crash.log', logs.join("\n"));
-			} catch (e) {}
-#end
-		}
-	}
 
 #if !js
 	public function staticReload() {
@@ -212,7 +119,19 @@ class Game extends zf.Game {
 	}
 
 	function initBuilder() {
-		Globals.ui = new zf.ui.builder.Builder();
+		G.ui = new zf.ui.builder.Builder();
+		G.ui.getStringTemplate = S.getTemplate;
+		G.ui.getString = (id, context) -> {
+			return S.get(id, context);
+		}
+		G.ui.res = A.res;
+		G.ui.getColor = O.getColor;
+		G.ui.formatString = (str, context) -> {
+			final t = new haxe.Template(str);
+			return t.execute(context.data);
+		}
+
+		zf.ui.builder.XmlComponent.Builder = G.ui;
 
 		// setup ui builder
 		CompileTime.importPackage("ui.components");
@@ -273,16 +192,6 @@ class Game extends zf.Game {
 		screen.runCommand(args);
 	}
 
-	function updateVersionPosition() {
-		this.version.setX(this.gameWidth, AnchorRight, 2);
-		this.version.setY(this.gameHeight, AnchorBottom, 2);
-	}
-
-	override public function update(dt: Float) {
-		super.update(dt);
-		this.sfx.clear();
-	}
-
 	// ---- Handles Exceptions ---- //
 	override function onException(e: haxe.Exception, s: Array<haxe.CallStack.StackItem>) {
 		if (Std.isOfType(e, zf.exceptions.AssertionFail)) {
@@ -317,15 +226,15 @@ class Game extends zf.Game {
 	}
 
 	// ---- Music and SFX ---- //
-
-	/**
-		Wed 11:38:38 27 Sep 2023
-		This is probably still quite raw but works so far.
-	**/
 	public function playMusic(name: String, loop: Bool = true): hxd.snd.Channel {
 		final s = Assets.res.getSound(name);
 		if (s == null) return null;
 		return s.play(loop, null, this.musicSoundGroup);
+	}
+
+	override public function update(dt: Float) {
+		super.update(dt);
+		this.sfx.clear();
 	}
 
 	public var sfx: Map<String, Bool> = [];

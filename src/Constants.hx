@@ -6,6 +6,10 @@
 	For the function counterpart, see Utils.hx
 **/
 class Constants {
+	/**
+		Used by savefile
+	**/
+	public static final GameName: String = "Game";
 	public static final Version: zf.Version = zf.Version.fromString("0.0.1");
 	public static final GitBuild: String = '${zf.Build.getGitCommitHash()}';
 
