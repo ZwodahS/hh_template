@@ -1,4 +1,4 @@
-package tests;
+package g.tests;
 
 class WorldTestCase extends zf.engine2.tests.WorldTestCase {
 	public var world(get, never): World;
@@ -18,7 +18,7 @@ class WorldTestCase extends zf.engine2.tests.WorldTestCase {
 		// create world
 		final p = Globals.savefile.userProfiles.getProfile('test-${testId}');
 		this.profile = new userdata.Profile(p);
-		final world = new World(Globals.rules, profile);
+		final world = new World(W.rules, profile);
 		this.initWorld(world);
 	}
 }

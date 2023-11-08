@@ -1,6 +1,4 @@
-package world.entities;
-
-import world.entities.factories.EntityFactory;
+package g.entities;
 
 typedef EntitySF = {
 	public var id: Int;

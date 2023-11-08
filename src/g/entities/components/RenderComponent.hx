@@ -1,4 +1,4 @@
-package world.entities.components;
+package g.entities.components;
 
 /**
 	The main render component for all entities

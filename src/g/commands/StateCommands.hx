@@ -1,12 +1,12 @@
-package commands;
-
-import world.World;
-import world.WorldState;
-
-import screens.GameScreen;
+package g.commands;
 
 import zf.debug.OverlayConsole.ConsoleArg;
 
+/**
+	Note to self:
+
+	If we do have different game with different world in the same repo, we should namespace the state command
+**/
 class StateCommands {
 	public static function setupCommands(game: Game) {
 		final stateNames = [];
@@ -18,7 +18,7 @@ class StateCommands {
 		} catch (e) {}
 #end
 		{ // save the state
-			Globals.debugger.console.addCommand("state.save", "Save the current world state", [
+			G.debugger.console.addCommand("state.save", "Save the current world state", [
 				{
 					"name": "path",
 					"t": ConsoleArg.AString,
@@ -38,12 +38,12 @@ class StateCommands {
 
 				final worldState = world.worldState;
 				final userdata = new zf.userdata.UserData("test", "teststate");
-				Globals.rules.saveToPath(userdata, worldState, path);
+				W.rules.saveToPath(userdata, worldState, path);
 			});
 		}
 
 		{ // load the state
-			Globals.debugger.console.addCommand("state.load", "", [
+			G.debugger.console.addCommand("state.load", "", [
 				{
 					"name": "path",
 					"t": ConsoleArg.AString,
@@ -53,13 +53,13 @@ class StateCommands {
 					}
 				}
 			], function(path: String) {
-				final world = new World(Globals.rules, Globals.currentProfile);
+				final world = new World(W.rules, G.currentProfile);
 				if (path == null) {
 					world.load();
 				} else {
 					final userdata = new zf.userdata.UserData("test", "teststate");
 					try {
-						final worldState = Globals.rules.loadFromPath(userdata, path);
+						final worldState = W.rules.loadFromPath(userdata, path);
 						world.worldState = worldState;
 					} catch (e) {
 						Logger.exception(e);
@@ -73,7 +73,7 @@ class StateCommands {
 		}
 
 		{ // delete a state
-			Globals.debugger.console.addCommand("state.delete", "", [
+			G.debugger.console.addCommand("state.delete", "", [
 				{
 					"name": "path",
 					"t": ConsoleArg.AString,
@@ -81,16 +81,16 @@ class StateCommands {
 			], function(path: String) {
 				final userdata = new zf.userdata.UserData("test", "teststate");
 				if (userdata.exists(path) == false) {
-					Globals.debugger.console.log('State not found.');
+					G.debugger.console.log('State not found.');
 					return;
 				}
 				userdata.deleteDirectory(path, true);
-				Globals.debugger.console.log('State ${path} deleted');
+				G.debugger.console.log('State ${path} deleted');
 			});
 		}
 
 		{ // copy a state from one to another
-			Globals.debugger.console.addCommand("state.copy", "Copy a state from one to another via Rules", [
+			G.debugger.console.addCommand("state.copy", "Copy a state from one to another via Rules", [
 				{
 					"name": "loadPath",
 					"t": ConsoleArg.AString,
@@ -103,14 +103,14 @@ class StateCommands {
 				final userdata = new zf.userdata.UserData("test", "teststate");
 				var worldState: WorldState = null;
 				try {
-					worldState = Globals.rules.loadFromPath(userdata, loadPath);
+					worldState = W.rules.loadFromPath(userdata, loadPath);
 				} catch (e) {
 					Logger.exception(e);
 					return;
 				}
 
 				final userdata = new zf.userdata.UserData("test", "teststate");
-				Globals.rules.saveToPath(userdata, worldState, savePath);
+				W.rules.saveToPath(userdata, worldState, savePath);
 			});
 		}
 	}

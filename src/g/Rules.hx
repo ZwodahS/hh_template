@@ -1,6 +1,4 @@
-package world;
-
-import world.entities.factories.EntityFactory;
+package g;
 
 class Rules implements Identifiable {
 	public function identifier(): String {

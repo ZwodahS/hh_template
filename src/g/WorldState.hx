@@ -1,4 +1,4 @@
-package world;
+package g;
 
 typedef WorldStateSF = {
 	public var ?intCounter: Int;

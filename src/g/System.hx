@@ -1,4 +1,4 @@
-package world;
+package g;
 
 class System extends zf.engine2.System {
 	// ---- Aliases ---- //

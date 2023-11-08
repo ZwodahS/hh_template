@@ -1,10 +1,10 @@
-package tests;
+package g.tests;
 
 /**
 	A template for test cases without World object
 **/
 class TestTemplate extends TestCase {
-	public static final Name = "template";
+	public static final Name = "g.template";
 
 	public function new(testId: String) {
 		super(testId, Name);

@@ -1,4 +1,4 @@
-package world.messages;
+package g.messages;
 
 #if !macro
 @:build(zf.macros.ObjectPool.addObjectPool())

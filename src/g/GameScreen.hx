@@ -1,6 +1,4 @@
-package screens;
-
-import world.World;
+package g;
 
 class GameScreen extends zf.Screen {
 	public var world: World;

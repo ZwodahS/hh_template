@@ -25,9 +25,12 @@ class Game extends zf.Game {
 		this.debugOverlay = new zf.debug.DebugOverlay(this);
 		this.debugOverlay.fonts = A.getFonts("debug");
 		this.debugOverlay.init();
+		/**
+			If we have more than one type of "game" in the same project, we will have to add them here
+		**/
 		this.debugOverlay.inspector.getManagedObjects = () -> {
 			var objects: Array<{name: String, object: Dynamic}> = [];
-			final world = Globals.currentWorld();
+			final world = g.WorldGlobals.currentWorld();
 			if (world != null) objects.push({name: "world", object: world});
 
 			objects.push({name: "game", object: this});
@@ -64,12 +67,12 @@ class Game extends zf.Game {
 		}
 
 #if debug
-		commands.StateCommands.setupCommands(this);
 		commands.DebugCommands.setupCommands(this);
 		final testNames = TestSetup.getTestNames();
 		zf.tests.TestCommands.makeScreen = TestSetup.makeTestScreen;
 		zf.tests.TestCommands.setupCommands(this, Globals.debugger.console, testNames);
-		commands.GameCommands.setupCommands(this);
+		g.commands.StateCommands.setupCommands(this);
+		g.commands.GameCommands.setupCommands(this);
 #end
 
 		var args = [];
@@ -146,7 +149,7 @@ class Game extends zf.Game {
 	function initRules() {
 		try {
 			// in case the rules loading failed
-			Globals.rules = new world.Rules();
+			g.WorldGlobals.rules = new g.Rules();
 		} catch (e) {
 			onException(e, haxe.CallStack.exceptionStack());
 			return;
