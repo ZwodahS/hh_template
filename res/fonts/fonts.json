@@ -6,21 +6,21 @@
         "debug": {
           "type": "msdf",
           "conf": {
-            "file": "fonts/gluten-medium.fnt",
-            "size": [6, 8, 10, 12, 14, 16]
+            "file": "fonts/wellfleet-42.fnt",
+            "size": [8, 10, 12, 14, 16]
           }
         },
         "display": {
           "type": "msdf",
           "conf": {
-            "file": "fonts/gluten-medium.fnt",
-            "size": [6, 7, 8, 10, 12, 14, 18, 24, 48]
+            "file": "fonts/wellfleet-42.fnt",
+            "size": [6, 7, 8, 10, 12, 14, 18, 48, 48]
           }
         },
         "body": {
           "type": "msdf",
           "conf": {
-            "file": "fonts/gluten-medium.fnt",
+            "file": "fonts/wellfleet-42.fnt",
             "size": [6, 7, 10, 12, 14, 16]
           }
         }

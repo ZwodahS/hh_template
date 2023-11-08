@@ -8,21 +8,16 @@ class Game extends zf.Game {
 	}
 
 	override function init() {
-		Globals.game = this;
+		G.game = this;
 		// load assets first before init
 		initAssets();
 		super.init();
 
+		/**
+			Set up various globals variable
+		**/
 		// @:privateAccess s2d.events.defaultCursor = Assets.cursors["default"];
 		UIElement.defaultHoverDelay = C.HoverDelay;
-		final interactive = new Interactive(Globals.game.gameWidth, Globals.game.gameHeight, this.s2d);
-		interactive.propagateEvents = true;
-		interactive.onFocus = (e) -> {
-			this.sound.soundManager.suspended = false;
-		};
-		interactive.onFocusLost = (e) -> {
-			if (Globals.settings.pauseMusicOnLoseFocus == true) this.sound.soundManager.suspended = true;
-		}
 
 		// set up the debug overlay
 #if debug
@@ -220,5 +215,16 @@ class Game extends zf.Game {
 	override public function update(dt: Float) {
 		super.update(dt);
 		this.sound.update(dt);
+	}
+
+	override function onEvent(e: hxd.Event) {
+		super.onEvent(e);
+		switch (e.kind) {
+			case EFocus:
+				this.sound.soundManager.suspended = false;
+			case EFocusLost:
+				if (Globals.settings.pauseMusicOnLoseFocus == true) this.sound.soundManager.suspended = true;
+			default:
+		}
 	}
 }
