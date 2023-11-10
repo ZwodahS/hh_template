@@ -35,16 +35,6 @@ class Entity extends zf.engine2.Entity implements Serialisable {
 	inline function get_world()
 		return cast this.__world__;
 
-	// ---- Components ---- //
-	public var render(default, set): RenderComponent;
-
-	public function set_render(component: RenderComponent): RenderComponent {
-		final prev = this.render;
-		this.render = component;
-		onComponentChanged(prev, this.render);
-		return this.render;
-	}
-
 	public var kind(default, null): EntityKind = Unknown;
 
 	// ---- Game Specific code ---- //
