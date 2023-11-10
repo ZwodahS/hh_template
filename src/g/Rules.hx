@@ -84,9 +84,8 @@ class Rules implements Identifiable {
 	**/
 	public function load(data: Dynamic): WorldState {
 		final context = new SerialiseContext();
-		final option: SerialiseOption = {};
 		final state = new WorldState(this, Random.int(0, zf.Constants.SeedMax));
-		state.loadStruct(context, option, data);
+		state.loadStruct(context, data);
 		return state;
 	}
 
@@ -95,7 +94,7 @@ class Rules implements Identifiable {
 	**/
 	public function saveToPath(userdata: UserData, worldState: WorldState, path: String) {
 		final context = new SerialiseContext();
-		final worldStateSF = worldState.toStruct(context, {});
+		final worldStateSF = worldState.toStruct(context);
 		final fullpath = haxe.io.Path.join([path, "world.json"]);
 #if sys
 		final jsonString = haxe.format.JsonPrinter.print(worldStateSF, "  ");

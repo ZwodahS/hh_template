@@ -52,9 +52,8 @@ using zf.up.animations.WrappedObject;
 using StringTools;
 using Lambda;
 
-import zf.SerialiseContext;
-import zf.StructSerialisable;
-import zf.SerialiseOption;
+import zf.serialise.SerialiseContext;
+import zf.serialise.Serialisable;
 import zf.userdata.UserData;
 
 import userdata.Profile;

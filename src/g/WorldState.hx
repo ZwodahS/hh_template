@@ -5,7 +5,7 @@ typedef WorldStateSF = {
 	public var ?entities: Array<EntitySF>;
 }
 
-class WorldState implements StructSerialisable implements Identifiable {
+class WorldState implements Serialisable implements Identifiable {
 	public var r: hxd.Rand;
 
 	// ---- Id generation ---- //
@@ -40,7 +40,7 @@ class WorldState implements StructSerialisable implements Identifiable {
 	}
 
 	// ---- Save / Load ---- //
-	public function toStruct(context: SerialiseContext, option: SerialiseOption): WorldStateSF {
+	public function toStruct(context: SerialiseContext): WorldStateSF {
 		final entities: Entities<Entity> = new Entities<Entity>();
 		context.add(entities);
 
@@ -50,13 +50,13 @@ class WorldState implements StructSerialisable implements Identifiable {
 		@:privateAccess stateSF.intCounter = this.intCounter.counter;
 
 		// collect all the entities before this is called
-		final entitiesSF = [for (entity in entities) entity.toStruct(context, option)];
+		final entitiesSF = [for (entity in entities) entity.toStruct(context)];
 		stateSF.entities = entitiesSF;
 
 		return stateSF;
 	}
 
-	public function loadStruct(context: SerialiseContext, option: SerialiseOption, data: Dynamic): WorldState {
+	public function loadStruct(context: SerialiseContext, data: Dynamic): WorldState {
 		final stateSF: WorldStateSF = cast data;
 		final entitiesSF: Array<EntitySF> = stateSF.entities;
 		final entities: Entities<Entity> = new Entities<Entity>();
@@ -68,7 +68,7 @@ class WorldState implements StructSerialisable implements Identifiable {
 				Logger.warn('Fail to load entity, Type: ${sf.typeId}, Id: ${sf.id}');
 				continue;
 			}
-			final entity = factory.load(context, option, sf);
+			final entity = factory.load(context, sf);
 			entities.add(entity);
 		}
 
@@ -76,7 +76,7 @@ class WorldState implements StructSerialisable implements Identifiable {
 		for (sf in entitiesSF) {
 			final entity = entities.get(sf.id);
 			if (entity == null) continue;
-			entity.loadStruct(context, option, sf);
+			entity.loadStruct(context, sf);
 		}
 
 		@:privateAccess this.intCounter.counter = stateSF.intCounter;

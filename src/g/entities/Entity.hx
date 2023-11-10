@@ -12,7 +12,7 @@ typedef EntitySF = {
 	This file do not need to be changed for each project, unless we have a common component that we want to add.
 	Instead, we should extend this with each type of entity.
 **/
-class Entity extends zf.engine2.Entity implements StructSerialisable {
+class Entity extends zf.engine2.Entity implements Serialisable {
 	/**
 		Assign the factory to the entity
 
@@ -55,12 +55,12 @@ class Entity extends zf.engine2.Entity implements StructSerialisable {
 		this.typeId = factory.typeId;
 	}
 
-	public function toStruct(context: SerialiseContext, option: SerialiseOption): Dynamic {
-		return this.factory.toStruct(context, option, this);
+	public function toStruct(context: SerialiseContext): Dynamic {
+		return this.factory.toStruct(context, this);
 	}
 
-	public function loadStruct(context: SerialiseContext, option: SerialiseOption, data: Dynamic) {
-		return this.factory.loadStruct(context, option, this, data);
+	public function loadStruct(context: SerialiseContext, data: Dynamic) {
+		return this.factory.loadStruct(context, this, data);
 	}
 
 	public function collectEntities(entities: Entities<Entity>) {
