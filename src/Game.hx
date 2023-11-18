@@ -138,8 +138,8 @@ class Game extends zf.Game {
 	}
 
 	function initH2d() {
-		h2d.HtmlText.defaultLoadImage = Assets.loadImage;
-		zf.h2d.HtmlText.defaultLoadImage = Assets.loadImage;
+		h2d.HtmlText.defaultLoadImage = (url) -> { return Assets.res.getTile(url); };
+		zf.h2d.HtmlText.defaultLoadImage = (url) -> { return Assets.res.getTile(url); };
 		zf.h2d.HtmlText.defaultFormatText = (text) -> {
 			return text.replace("\n", "<br/>");
 		}

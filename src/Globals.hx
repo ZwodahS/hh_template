@@ -6,7 +6,6 @@
 	Global variable are evil, but sometimes necessary.
 
 	For Constants, see Constants.hx
-	For functions, see Utils.hx
 **/
 class Globals {
 	public static var debugger: zf.debug.DebugOverlay;

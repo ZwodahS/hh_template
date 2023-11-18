@@ -4,8 +4,6 @@
 class Assets {
 	public static var res: ResourceManager;
 
-	public static var lang: String = "default";
-
 	public static function load() {
 		Assets.res = new ResourceManager();
 		Assets.res.load("config.json");
@@ -25,9 +23,5 @@ class Assets {
 		bm.height = height;
 		bm.color.setColor(color);
 		return bm;
-	}
-
-	inline public static function loadImage(url: String): h2d.Tile {
-		return Assets.res.getTile(url);
 	}
 }
