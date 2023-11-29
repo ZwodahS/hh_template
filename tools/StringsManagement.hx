@@ -36,6 +36,7 @@ class StringsManagement {
 		this.conf = conf;
 		// this stores all the denormalised strings
 		this.refs = new Map<String, String>();
+		// store keys => langMap
 		this.loaded = new Map<String, Map<String, String>>();
 		this.loadedFiles = new Map<String, LoadedFile>();
 		this.langsAvailable = new Map<String, Bool>();
@@ -146,9 +147,9 @@ class StringsManagement {
 				}
 			}
 			for (lang => string in langs) {
-				var br = replaceWithBrackets(string);
-				var bk = replaceWithColon(br);
-				if (bk != string) {
+				var bk = replaceWithColon(string);
+				var br = replaceWithBrackets(bk);
+				if (br != string) {
 					trace('- Bracket and Colon switching breaks for ${key}.${lang} -');
 					trace('- Original -');
 					trace(string);
@@ -164,8 +165,101 @@ class StringsManagement {
 				trace('ref "${ref}" not found for key "${key}"');
 			}
 		}
+		trace("---- Ensuring keyword and color closing ----");
 
+		for (key => langs in this.loaded) {
+			for (lang => s in langs) {
+				var start = s.indexOf("::", 0);
+				if (start == -1) continue;
+
+				var end = start;
+				var curr = null;
+				while (start != -1) {
+					end = s.indexOf("::", start + 2);
+					var word = s.substring(start + 2, end);
+					if (word.startsWith("c.")) {
+						if (curr != null && curr != "c") {
+							trace('Color tag not matching: ${key}.${lang}');
+							break;
+						}
+						if (curr == null && word == "c.end") {
+							trace('Color tag end without starting : ${key}.${lang}');
+							break;
+						}
+						if (curr == null) {
+							curr = "c";
+						} else {
+							curr = null;
+						}
+					} else if (word.startsWith("k.")) {
+						if (curr != null && curr != "k") {
+							trace('Keyword tag not matching: ${key}.${lang}');
+							break;
+						}
+						if (curr == null && word == "k.end") {
+							trace('Keyword tag end without starting : ${key}.${lang}');
+							break;
+						}
+						if (curr == "k" && word != "k.end") {
+							trace('Keyword tag start without ending : ${key}.${lang}');
+							break;
+						}
+						if (curr == null) {
+							curr = "k";
+						} else {
+							curr = null;
+						}
+					}
+					start = s.indexOf("::", end + 2);
+				}
+			}
+		}
 		trace("---- Done ----");
+	}
+
+	function fixStrings() {
+		function fixString(e: Xml, l: String) {
+			var text = e.firstChild().nodeValue;
+			final newText = replaceWithBrackets(text);
+			e.firstChild().nodeValue = newText;
+		}
+
+		traverseAllFiles(fixString);
+		saveFiles();
+	}
+
+	function saveFiles() {
+		for (_ => file in loadedFiles) {
+			sys.io.File.saveContent(file.fullPath, zf.xml.Printer.print(file.xml.firstElement(), {
+				pretty: true,
+				singleLinePCData: true,
+				useSpaceAsTab: 2,
+				alignPCData: true,
+			}));
+		}
+	}
+
+	function traverseAllFiles(onLanguage: (Xml, String) -> Void) {
+		for (_ => file in loadedFiles) {
+			traverseXml(file.xml.firstElement(), "", onLanguage);
+		}
+	}
+
+	function traverseXml(element: Xml, path: String, onLanguage: (Xml, String) -> Void) {
+		switch (element.nodeName) {
+			case "group":
+				final id = element.get("id");
+				final newPath = path + (id == null ? "" : ((path == "" ? "" : ".") + id));
+				for (child in element.elements()) {
+					traverseXml(child, newPath, onLanguage);
+				}
+			case "text":
+				if (element.get("ref") == null) {
+					for (lang in element) {
+						onLanguage(lang, lang.nodeName);
+					}
+				}
+		}
 	}
 
 	function write(rootPath: String) {
@@ -175,7 +269,7 @@ class StringsManagement {
 		}
 		for (key => langs in this.loaded) {
 			for (lang => str in langs) {
-				output[lang].push({key: key, str: trimXMLText(str)});
+				output[lang].push({key: key, str: trimXMLText(replaceWithColon(str))});
 			}
 			for (key => _ in this.emptyKeys) {
 				for (_ => arr in output) {
@@ -191,7 +285,7 @@ class StringsManagement {
 			}
 			final o = this.loaded[ref];
 			for (lang => str in o) {
-				output[lang].push({key: key, str: trimXMLText(str)});
+				output[lang].push({key: key, str: trimXMLText(replaceWithColon(str))});
 			}
 		}
 
@@ -213,24 +307,44 @@ class StringsManagement {
 	}
 
 	/**
-		This only output all the keys that need to be translated.
-		Only output en keys
+		Output keys to each lang
 	**/
-	function writeKeys(path: String) {
-		var strings: Array<Dynamic> = [];
+	function writeKeys(path: String, mode: String) {
+		var outputStrings: Map<String, Array<Dynamic>> = [];
+		for (lang => _ in this.langsAvailable) {
+			outputStrings[lang] = [];
+		}
+
 		for (key => langs in this.loaded) {
 			if (this.emptyKeys.exists(key)) continue;
-			final output: DynamicAccess<Dynamic> = {};
-			for (lang => str in langs) {
-				output.set(lang, replaceWithBrackets(trimXMLText(str)));
+			for (lang => _ in this.langsAvailable) {
+				var str = langs.exists(lang) ? langs[lang] : null;
+				final output: DynamicAccess<Dynamic> = {};
+				output.set("en", trimXMLText(langs["en"]));
+				if (lang == "en") continue;
+				output.set("key", key);
+				if (str == null) {
+					if (mode == "all" || mode == "missing") {
+						output.set(lang, "");
+					} else {
+						continue;
+					}
+				} else {
+					if (mode != "missing") {
+						output.set(lang, trimXMLText(str));
+					} else {
+						continue;
+					}
+				}
+				outputStrings[lang].push(output);
 			}
-			output.set("key", key);
-			strings.push(output);
 		}
-		strings.sort((s1, s2) -> {
-			return zf.Compare.string(true, 1, s1.key, s2.key);
-		});
-		sys.io.File.saveContent(path.toString(), haxe.Json.stringify(strings, "  "));
+		for (lang => strings in outputStrings) {
+			strings.sort((s1, s2) -> {
+				return zf.Compare.string(true, 1, s1.key, s2.key);
+			});
+			sys.io.File.saveContent('${path}/${lang}.json', haxe.Json.stringify(strings, "  "));
+		}
 	}
 
 	/**
@@ -297,10 +411,9 @@ class StringsManagement {
 				case "text":
 					if (element.get("ref") != null || element.get("empty") != null) return;
 					final fullPath = path + "." + element.get("id");
-					final id = element.get("id");
 					final translated = strings.get(fullPath);
 					if (translated == null || translated.trim() == "") return;
-					final parsed = trimXMLText(replaceWithColon(translated));
+					final parsed = trimXMLText(translated);
 					// check if we already have a children with the lang key
 					final existings = element.elementsNamed(langKey);
 					final existing = existings.hasNext() ? existings.next() : null;
@@ -320,14 +433,7 @@ class StringsManagement {
 		}
 
 		for (_ => file in loadedFiles) importFile(file);
-		for (_ => file in loadedFiles) {
-			sys.io.File.saveContent(file.fullPath, zf.xml.Printer.print(file.xml.firstElement(), {
-				pretty: true,
-				singleLinePCData: true,
-				useSpaceAsTab: 2,
-				alignPCData: true,
-			}));
-		}
+		saveFiles();
 	}
 
 	static function main() {
@@ -353,6 +459,10 @@ class StringsManagement {
 			} else if (args[0] == "import") {
 				command = "import";
 				args = args.slice(1);
+			} else if (args[0] == "fix") {
+				command = "fix";
+			} else if (args[0] == "help") {
+				command = "help";
 			}
 		}
 
@@ -362,16 +472,28 @@ class StringsManagement {
 			var path = "res/strings";
 			parser.write(path);
 		} else if (command == "writekeys") {
-			var path = "export/en.json";
-			parser.writeKeys(path);
+			var path = "export/";
+			parser.writeKeys(path, args.length > 0 ? args[0] : "all");
 		} else if (command == "import") {
 			var path = args[0];
 			var key = args[1];
 			// this should already be json
 			parser.importLang(path, key);
+		} else if (command == "fix") {
+			parser.fixStrings();
+		} else if (command == "help") {
+			printHelp();
 		} else {
 			trace('Unimplemented command ${command}');
 		}
+	}
+
+	static function printHelp() {
+		haxe.Log.trace("verify - verify strings.");
+		haxe.Log.trace("write - convert all strings to json.");
+		haxe.Log.trace("writekeys [all|missing] - export all strings to export/ ");
+		haxe.Log.trace("import [lang] - import string ");
+		haxe.Log.trace("fix - change :: to [].");
 	}
 
 	static function trimXMLText(t: String, eol = '\n') {
