@@ -4,6 +4,7 @@ HEAPS=$(haxelib libpath heaps)
 ECHO=$(haxelib libpath echo)
 COMPILETIME=$(haxelib libpath compiletime)
 HXRANDOM=$(haxelib libpath hxrandom)
+HSCRIPT=$(haxelib libpath hscript)
 
 function update() {
     pushd $ZF > /dev/null
@@ -28,6 +29,11 @@ function update() {
 
     pushd $HXRANDOM > /dev/null
     echo -n "hxrandom: "
+    git rev-parse HEAD
+    popd > /dev/null
+
+    pushd $HSCRIPT > /dev/null
+    echo -n "hscript: "
     git rev-parse HEAD
     popd > /dev/null
 }
