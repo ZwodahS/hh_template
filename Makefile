@@ -40,6 +40,10 @@ STEAM_DEMO_LINUX_DEPOT_ID=# @configure
 ########################################################################################################################
 # Compilation & Build configuration - Do not change this section
 PAK_FLAGS=
+# remove the warning flags once all the code from the libraries are fixed
+WARNING_REMOVE_FLAGS=
+WARNING_REMOVE_FLAGS += -w -WDeprecatedEnumAbstract
+
 ## Set compile flags
 COMPILE_FLAGS=
 ifeq (${RELEASE},1)
@@ -47,8 +51,9 @@ COMPILE_FLAGS += --no-traces
 # Note: add other pak to excludes here if necessary
 PAK_FLAGS += -exclude-path tests
 else
-COMPILE_FLAGS += -D debug -D loggingLevel=30
+COMPILE_FLAGS += -D debug -D loggingLevel=30 -D hot-reload
 endif
+COMPILE_FLAGS += ${WARNING_REMOVE_FLAGS}
 
 ifeq (${FORCE_DEMO},1)
 COMPILE_FLAGS += -D demo
@@ -106,7 +111,12 @@ bin/stringman: tools/StringsManagement.hx
 exportstring: stringutil
 	mkdir -p export
 	${HASHLINKPATH}/hl bin/stringman writekeys
-	python3 bin/jsontocsv.py export/en
+	cd export; python3 ../bin/jsontocsv.py 
+
+exportmissingstring: stringutil
+	mkdir -p export
+	${HASHLINKPATH}/hl bin/stringman writekeys missing
+	cd export; python3 ../bin/jsontocsv.py zh-cn
 
 verifystring: stringutil
 	${HASHLINKPATH}/hl bin/stringman verify
