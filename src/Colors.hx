@@ -2,9 +2,6 @@
 	All the color values
 **/
 class Colors {
-	public static final Blacks: Array<Color> = [0xff111012, 0, 0];
-	public static final Whites: Array<Color> = [0, 0, 0xfffffbe5];
-
 	public static final TextColors: Map<String, Map<String, Color>> = [
 		"" => [
 			// these will be mapped as .XXX
@@ -26,7 +23,7 @@ class Colors {
 		};
 		final dy: DynamicAccess<Dynamic> = TemplateColors;
 		for (k => v in FlattenColors) {
-			dy.set(k, v);
+			dy.set(k, parseColor(v, k));
 		}
 	}
 
