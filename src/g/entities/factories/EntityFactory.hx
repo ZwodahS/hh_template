@@ -31,8 +31,7 @@ class EntityFactory {
 		return data;
 	}
 
-	public function loadStruct(context: SerialiseContext, entity: Entity,
-			data: Dynamic): Entity {
+	public function loadStruct(context: SerialiseContext, entity: Entity, data: Dynamic): Entity {
 		final sf: EntitySF = cast data;
 		final components: DynamicAccess<Dynamic> = sf.components;
 		@:privateAccess for (component in entity.__components__) {
