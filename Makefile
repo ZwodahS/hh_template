@@ -226,9 +226,9 @@ windows: buildinfo strings assets pak
 	mkdir -p ${WINDOWS_APP_PATH}
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows-sdl -D pak --hl ${WINDOWS_APP_PATH}/hlboot.dat --main Main
 	cp build/res.pak ${WINDOWS_APP_PATH}/.
-	cp build_script/windows-sdl/hl.exe ${WINDOWS_APP_PATH}/${GAME}.exe
-	cp build_script/windows-sdl/*.hdll ${WINDOWS_APP_PATH}/.
-	cp build_script/windows-sdl/*.dll ${WINDOWS_APP_PATH}/.
+	cp build_script/windows/hl.exe ${WINDOWS_APP_PATH}/${GAME}.exe
+	cp build_script/windows/*.hdll ${WINDOWS_APP_PATH}/.
+	cp build_script/windows/*.dll ${WINDOWS_APP_PATH}/.
 	cp -r build_script/licenses ${WINDOWS_APP_PATH}/licenses
 
 #### steam ####
@@ -275,9 +275,9 @@ steam-windows:
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hlsdl -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootnosteam.dat --main Main
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} --library hldx -D windows -D pak --hl ${STEAM_WINDOWS_BUILD_PATH}/hlbootdxnosteam.dat --main Main
 	cp build/res.pak ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows-sdl/hl.exe ${STEAM_WINDOWS_BUILD_PATH}/${GAME}.exe
-	cp build_script/windows-sdl/*.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows-sdl/*.dll ${STEAM_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows/hl.exe ${STEAM_WINDOWS_BUILD_PATH}/${GAME}.exe
+	cp build_script/windows/*.hdll ${STEAM_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows/*.dll ${STEAM_WINDOWS_BUILD_PATH}/.
 	cp build_script/windows-steam/* ${STEAM_WINDOWS_BUILD_PATH}/.
 	cp -r build_script/licenses ${STEAM_WINDOWS_BUILD_PATH}/licenses
 
@@ -348,9 +348,9 @@ steam-demo-windows:
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlboot.dat --main Main
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D demo -D pak --hl ${STEAM_DEMO_WINDOWS_BUILD_PATH}/hlbootdx.dat --main Main
 	cp build/res-demo.pak ${STEAM_DEMO_WINDOWS_BUILD_PATH}/res.pak
-	cp build_script/windows-sdl/hl.exe ${STEAM_DEMO_WINDOWS_BUILD_PATH}/${GAME}Demo.exe
-	cp build_script/windows-sdl/*.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
-	cp build_script/windows-sdl/*.dll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows/hl.exe ${STEAM_DEMO_WINDOWS_BUILD_PATH}/${GAME}Demo.exe
+	cp build_script/windows/*.hdll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
+	cp build_script/windows/*.dll ${STEAM_DEMO_WINDOWS_BUILD_PATH}/.
 	cp -r build_script/licenses ${STEAM_DEMO_WINDOWS_BUILD_PATH}/licenses
 
 steam-demo-mac:
