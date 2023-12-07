@@ -3,10 +3,10 @@ import zf.engine2.Entities;
 import g.*;
 
 import g.ds.*;
-import g.entities.*;
-import g.entities.Entity.EntitySF;
-import g.entities.factories.*;
-import g.entities.components.*;
+import g.rules.entities.*;
+import g.rules.entities.Entity.EntitySF;
+import g.rules.entities.factories.*;
+import g.rules.entities.components.*;
 import g.systems.*;
 import g.systems.ui.*;
 import g.systems.renders.*;
