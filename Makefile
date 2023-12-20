@@ -108,19 +108,6 @@ stringutil: bin/stringman
 bin/stringman: tools/StringsManagement.hx
 	${HAXEPATH}/haxe --class-path tools build_script/common.hxml --hl bin/stringman --main StringsManagement
 
-exportstring: stringutil
-	mkdir -p export
-	${HASHLINKPATH}/hl bin/stringman writekeys
-	cd export; python3 ../bin/jsontocsv.py 
-
-exportmissingstring: stringutil
-	mkdir -p export
-	${HASHLINKPATH}/hl bin/stringman writekeys missing
-	cd export; python3 ../bin/jsontocsv.py zh-cn
-
-verifystring: stringutil
-	${HASHLINKPATH}/hl bin/stringman verify
-
 ########################################################################################################################
 # Builds
 

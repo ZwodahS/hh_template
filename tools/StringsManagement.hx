@@ -69,7 +69,7 @@ class StringsManagement {
 						this.loadedFiles[fullpath] = lf;
 						parseDataXml(document.firstElement(), keyPath);
 					} catch (e) {
-						trace('Fail to parse XML: ${path}');
+						haxe.Log.trace('Fail to parse XML: ${path}', null);
 						throw e;
 					}
 				}
@@ -128,7 +128,7 @@ class StringsManagement {
 							} else {
 								final nodeValue = trimXMLText(e.firstChild().nodeValue);
 								e.firstChild().nodeValue = nodeValue;
-								if (nodeValue == "") trace('Empty string found for ${fullPath}');
+								if (nodeValue == "") haxe.Log.trace('Empty string found for ${fullPath}', null);
 								langs[e.nodeName] = nodeValue;
 							}
 						}
@@ -138,34 +138,94 @@ class StringsManagement {
 		}
 	}
 
-	function verify() {
-		trace("---- Ensuring that all languages exist in all keys ---- ");
+	function verify(args: Array<String>) {
+		final verifyLang = args;
+		function extractVars(s: String) {
+			final m = new Map<String, Bool>();
+			var n = s.indexOf("[");
+			if (n == -1) return m;
+			var e = s.indexOf("]", n);
+			if (e == -1) return m;
+			var k = s.substr(n, e - n + 1);
+			while (k != null) {
+				if (k != "") m.set(k, true);
+				n = s.indexOf("[", e);
+				if (n == -1) break;
+				e = s.indexOf("]", n);
+				if (e == -1) break;
+				k = s.substr(n, e - n + 1);
+			}
+			return m;
+		}
+
+		inline function isWhitelistVar(k: String) {
+			return (k == "[else]" || k.startsWith("[if") || k == "[end]");
+		}
+
+		haxe.Log.trace("---- Ensuring that all languages exist in all keys ---- ", null);
 		for (key => langs in this.loaded) {
 			for (lang => _ in this.langsAvailable) {
+				if (verifyLang.length != 0 && verifyLang.contains(lang) == false) continue;
 				if (langs.exists(lang) == false) {
-					trace('string for "${key}.${lang}" not found.');
+					haxe.Log.trace('string for "${key}.${lang}" not found.', null);
 				}
 			}
+			final enVars = extractVars(langs["en"]);
 			for (lang => string in langs) {
-				var bk = replaceWithColon(string);
-				var br = replaceWithBrackets(bk);
-				if (br != string) {
-					trace('- Bracket and Colon switching breaks for ${key}.${lang} -');
-					trace('- Original -');
-					trace(string);
-					trace('- Brackets -');
-					trace(br);
-					trace('- Colon -');
-					trace(bk);
+				if (verifyLang.length != 0 && verifyLang.contains(lang) == false) continue;
+				if (lang != "en") {
+					final langVars = extractVars(string);
+					for (k => value in langVars) {
+						if (enVars.exists(k) == false || enVars.get(k) == false) {
+							if (isWhitelistVar(k) == false) {
+								haxe.Log.trace('[${key}] ERROR (en->${lang}): ${k} used in lang: (${lang}), not found in english for key "${key}".',
+									null);
+							}
+						}
+					}
+					for (k => value in enVars) {
+						if (langVars.exists(k) == false || langVars.get(k) == false) {
+							if (isWhitelistVar(k) == false) {
+								haxe.Log.trace('[${key}] ERROR (en->${lang}): ${k} used in english, not found in lang (${lang}) for key "${key}".',
+									null);
+							}
+						}
+					}
 				}
+				var bk = replaceWithColon(string);
+				try {
+					new haxe.Template(bk);
+				} catch (e) {
+					haxe.Log.trace('string for "${key}.${lang}" cannot be parsed to a template', null);
+					haxe.Log.trace(e, null);
+				}
+				/**
+					Sat 11:23:01 16 Dec 2023
+					Temporary disable this for now. There is no need to use this since we use [] in raw instead of ::.
+					Previously we needed to test double conversion because of how we export it and import them for translation.
+					However, we still need to test that after replacing it with colon we can still use them in Template.
+					This is tested above.
+				**/
+				/**
+					var br = replaceWithBrackets(bk);
+					if (br != string) {
+						haxe.Log.trace('- Bracket and Colon switching breaks for ${key}.${lang} -', null);
+						haxe.Log.trace('- Original -', null);
+						haxe.Log.trace(string, null);
+						haxe.Log.trace('- Brackets -', null);
+						haxe.Log.trace(br, null);
+						haxe.Log.trace('- Colon -', null);
+						haxe.Log.trace(bk, null);
+					}
+				**/
 			}
 		}
 		for (key => ref in this.refs) {
 			if (this.loaded.exists(ref) == false) {
-				trace('ref "${ref}" not found for key "${key}"');
+				haxe.Log.trace('ref "${ref}" not found for key "${key}"', null);
 			}
 		}
-		trace("---- Ensuring keyword and color closing ----");
+		haxe.Log.trace("---- Ensuring keyword and color closing ----", null);
 
 		for (key => langs in this.loaded) {
 			for (lang => s in langs) {
@@ -179,11 +239,11 @@ class StringsManagement {
 					var word = s.substring(start + 2, end);
 					if (word.startsWith("c.")) {
 						if (curr != null && curr != "c") {
-							trace('Color tag not matching: ${key}.${lang}');
+							haxe.Log.trace('Color tag not matching: ${key}.${lang}', null);
 							break;
 						}
 						if (curr == null && word == "c.end") {
-							trace('Color tag end without starting : ${key}.${lang}');
+							haxe.Log.trace('Color tag end without starting : ${key}.${lang}', null);
 							break;
 						}
 						if (curr == null) {
@@ -193,15 +253,15 @@ class StringsManagement {
 						}
 					} else if (word.startsWith("k.")) {
 						if (curr != null && curr != "k") {
-							trace('Keyword tag not matching: ${key}.${lang}');
+							haxe.Log.trace('Keyword tag not matching: ${key}.${lang}', null);
 							break;
 						}
 						if (curr == null && word == "k.end") {
-							trace('Keyword tag end without starting : ${key}.${lang}');
+							haxe.Log.trace('Keyword tag end without starting : ${key}.${lang}', null);
 							break;
 						}
 						if (curr == "k" && word != "k.end") {
-							trace('Keyword tag start without ending : ${key}.${lang}');
+							haxe.Log.trace('Keyword tag start without ending : ${key}.${lang}', null);
 							break;
 						}
 						if (curr == null) {
@@ -214,7 +274,7 @@ class StringsManagement {
 				}
 			}
 		}
-		trace("---- Done ----");
+		haxe.Log.trace("---- Done ----", null);
 	}
 
 	function fixStrings() {
@@ -280,7 +340,7 @@ class StringsManagement {
 
 		for (key => ref in this.refs) {
 			if (this.loaded.exists(ref) == false) {
-				trace('ref "${ref}" not found for key "${key}"');
+				haxe.Log.trace('ref "${ref}" not found for key "${key}"', null);
 				continue;
 			}
 			final o = this.loaded[ref];
@@ -467,7 +527,7 @@ class StringsManagement {
 		}
 
 		if (command == "verify") {
-			parser.verify();
+			parser.verify(args);
 		} else if (command == "write") {
 			var path = "res/strings";
 			parser.write(path);
@@ -484,16 +544,16 @@ class StringsManagement {
 		} else if (command == "help") {
 			printHelp();
 		} else {
-			trace('Unimplemented command ${command}');
+			haxe.Log.trace('Unimplemented command ${command}', null);
 		}
 	}
 
 	static function printHelp() {
-		haxe.Log.trace("verify - verify strings.");
-		haxe.Log.trace("write - convert all strings to json.");
-		haxe.Log.trace("writekeys [all|missing] - export all strings to export/ ");
-		haxe.Log.trace("import [lang] - import string ");
-		haxe.Log.trace("fix - change :: to [].");
+		haxe.Log.trace("verify - verify strings.", null);
+		haxe.Log.trace("write - convert all strings to json.", null);
+		haxe.Log.trace("writekeys [all|missing] - export all strings to export/ ", null);
+		haxe.Log.trace("import [lang] - import string ", null);
+		haxe.Log.trace("fix - change :: to [].", null);
 	}
 
 	static function trimXMLText(t: String, eol = '\n') {
