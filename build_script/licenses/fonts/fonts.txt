@@ -1,0 +1,17 @@
+# English / Italian / French / Spanish Font
+https://fonts.google.com/specimen/Nova+Square
+https://fonts.google.com/specimen/Wellfleet
+
+# Simplified Chinese Font
+https://www.zcool.com.cn/special/zcoolfonts/
+站酷仓耳渔阳体
+
+# Traditional Chinese Font
+https://github.com/lxgw/LxgwWenKai/releases
+
+# Korean Font
+https://www.imbc.com/mbc1961font/#4thPage
+
+# Japanese Font
+https://tanukifont.com/tanugo/
+
