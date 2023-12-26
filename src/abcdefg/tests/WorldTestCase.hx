@@ -1,4 +1,4 @@
-package g.tests;
+package abcdefg.tests;
 
 class WorldTestCase extends zf.engine2.tests.WorldTestCase {
 	public var world(get, never): World;

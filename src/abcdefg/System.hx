@@ -1,4 +1,4 @@
-package g;
+package abcdefg;
 
 class System extends zf.engine2.System {
 	// ---- Aliases ---- //

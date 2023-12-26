@@ -1,4 +1,4 @@
-package g;
+package abcdefg;
 
 class GameScreen extends zf.Screen {
 	public var world: World;

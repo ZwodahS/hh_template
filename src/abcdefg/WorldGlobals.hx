@@ -1,6 +1,6 @@
-package g;
+package abcdefg;
 
-import g.tests.*;
+import abcdefg.tests.*;
 
 /**
 	WorldGlobals is like Globals, but for this specific game.

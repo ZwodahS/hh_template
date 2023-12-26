@@ -1,4 +1,4 @@
-package g;
+package abcdefg;
 
 class Rules implements Identifiable {
 	public function identifier(): String {

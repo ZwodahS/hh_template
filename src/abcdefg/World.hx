@@ -1,4 +1,4 @@
-package g;
+package abcdefg;
 
 class World extends zf.engine2.World {
 	/**

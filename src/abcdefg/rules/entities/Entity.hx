@@ -1,4 +1,4 @@
-package g.rules.entities;
+package abcdefg.rules.entities;
 
 typedef EntitySF = {
 	public var id: Int;

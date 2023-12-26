@@ -1,4 +1,4 @@
-package g.tests;
+package abcdefg.tests;
 
 /**
 	A template for test cases without World object

@@ -1,4 +1,4 @@
-package g.rules.entities.components;
+package abcdefg.rules.entities.components;
 
 class Component extends zf.engine2.Component {
 	public var entity(get, never): Entity;

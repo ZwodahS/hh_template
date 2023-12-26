@@ -1,4 +1,4 @@
-package g.rules.entities.factories;
+package abcdefg.rules.entities.factories;
 
 class EntityFactory {
 	public var rules: Rules;

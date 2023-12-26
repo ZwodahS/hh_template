@@ -30,7 +30,7 @@ class Game extends zf.Game {
 		**/
 		this.debugOverlay.inspector.getManagedObjects = () -> {
 			var objects: Array<{name: String, object: Dynamic}> = [];
-			final world = g.WorldGlobals.currentWorld();
+			final world = abcdefg.WorldGlobals.currentWorld();
 			if (world != null) objects.push({name: "world", object: world});
 
 			objects.push({name: "game", object: this});
@@ -71,8 +71,8 @@ class Game extends zf.Game {
 		final testNames = TestSetup.getTestNames();
 		zf.tests.TestCommands.makeScreen = TestSetup.makeTestScreen;
 		zf.tests.TestCommands.setupCommands(this, Globals.debugger.console, testNames);
-		g.commands.StateCommands.setupCommands(this);
-		g.commands.GameCommands.setupCommands(this);
+		abcdefg.commands.StateCommands.setupCommands(this);
+		abcdefg.commands.GameCommands.setupCommands(this);
 #end
 
 		var args = [];
@@ -153,7 +153,7 @@ class Game extends zf.Game {
 	function initRules() {
 		try {
 			// in case the rules loading failed
-			g.WorldGlobals.rules = new g.Rules();
+			abcdefg.WorldGlobals.rules = new abcdefg.Rules();
 		} catch (e) {
 			onException(e, haxe.CallStack.exceptionStack());
 			return;

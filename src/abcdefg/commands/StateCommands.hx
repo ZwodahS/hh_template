@@ -1,4 +1,4 @@
-package g.commands;
+package abcdefg.commands;
 
 import zf.debug.OverlayConsole.ConsoleArg;
 
