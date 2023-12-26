@@ -10,35 +10,19 @@ class Rules implements Identifiable {
 	**/
 	public var entities: Map<String, EntityFactory>;
 
-	/**
-		Create a separate set of interp and parser because this might
-		have a different available context from the one in Assets.
-	**/
-	/**
-		hscript Interpreter
-	**/
-	public var interp: hscript.Interp;
-
-	/**
-		hscript Parser
-	**/
-	public var parser: hscript.Parser;
-
 	public function new() {
 		this.entities = new Map<String, EntityFactory>();
 
 		// ---- Set up hscript ---- //
-		this.parser = new hscript.Parser();
-		this.interp = new hscript.Interp();
 	}
 
 	// ---- Loader ---- //
 	public function loadConfig(path: String) {
-		final defaultConf: RulesConf = exec(path);
+		final defaultConf: RulesConf = executePath(path);
 	}
 
 	// ---- HScript ---- //
-	function exec(path: String): Dynamic {
+	function executePath(path: String): Dynamic {
 		try {
 			final expr = A.res.getStringFromPath(path);
 			return executeScript(expr);
@@ -51,10 +35,21 @@ class Rules implements Identifiable {
 
 	inline public function executeScript(str: String): Dynamic {
 		try {
-			return this.interp.execute(this.parser.parseString(str));
+			final parser = getParser();
+			final interp = getInterp();
+			return interp.execute(parser.parseString(str));
 		} catch (e) {
 			return null;
 		}
+	}
+
+	inline public function getParser(): hscript.Parser {
+		return new hscript.Parser();
+	}
+
+	inline public function getInterp(): hscript.Interp {
+		final interp = new hscript.Interp();
+		return interp;
 	}
 
 	// ---- Make / Save / Load ---- //

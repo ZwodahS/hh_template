@@ -6,7 +6,7 @@ class Assets {
 
 	public static function load() {
 		Assets.res = new ResourceManager();
-		Assets.res.load("config.json");
+		Assets.res.load("config.hs");
 	}
 
 	inline public static function getFont(id: String, sizeIndex: Int): h2d.Font {
