@@ -10,16 +10,22 @@ class Rules implements Identifiable {
 	**/
 	public var entities: Map<String, EntityFactory>;
 
-	public var structLoader: zf.StructLoader;
-
+	/**
+		Create a separate set of interp and parser because this might
+		have a different available context from the one in Assets.
+	**/
+	/**
+		hscript Interpreter
+	**/
 	public var interp: hscript.Interp;
+
+	/**
+		hscript Parser
+	**/
 	public var parser: hscript.Parser;
 
 	public function new() {
 		this.entities = new Map<String, EntityFactory>();
-
-		// ---- Set up struct loader ---- //
-		this.structLoader = new zf.StructLoader();
 
 		// ---- Set up hscript ---- //
 		this.parser = new hscript.Parser();
@@ -28,16 +34,13 @@ class Rules implements Identifiable {
 
 	// ---- Loader ---- //
 	public function loadConfig(path: String) {
-		final configPath = new haxe.io.Path(path);
-		final expr = this.structLoader.loadFile(path);
-		final ast = this.parser.parseString(expr);
-		final defaultConf: RulesConf = this.interp.execute(ast);
+		final defaultConf: RulesConf = exec(path);
 	}
 
 	// ---- HScript ---- //
 	function exec(path: String): Dynamic {
 		try {
-			final expr = this.structLoader.loadFile(path);
+			final expr = A.res.getStringFromPath(path);
 			return executeScript(expr);
 		} catch (e) {
 			Logger.exception(e);
