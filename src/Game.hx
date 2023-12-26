@@ -147,7 +147,7 @@ class Game extends zf.Game {
 		zf.h2d.HtmlText.defaultFormatText = (text) -> {
 			return text.replace("\n", "<br/>");
 		}
-		zf.h2d.HtmlText.defaultGetColor = Colors.getColorKey.bind("dark");
+		zf.h2d.HtmlText.defaultGetColor = Colors.getColor;
 	}
 
 	function initRules() {

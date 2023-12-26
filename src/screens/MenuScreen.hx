@@ -9,7 +9,7 @@ class MenuScreen extends zf.Screen {
 			width: 80,
 			height: 20,
 			text: "Start",
-			textColor: K.getColor(".black"),
+			textColor: K.getColor("black.0"),
 			font: A.getFont("display", 1),
 		});
 		this.addChild(button);
