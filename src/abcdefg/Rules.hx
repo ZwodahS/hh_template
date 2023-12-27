@@ -12,8 +12,6 @@ class Rules implements Identifiable {
 
 	public function new() {
 		this.entities = new Map<String, EntityFactory>();
-
-		// ---- Set up hscript ---- //
 	}
 
 	// ---- Loader ---- //
