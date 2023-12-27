@@ -135,6 +135,10 @@ class Game extends zf.Game {
 				return hxd.res.DefaultFont.get().clone();
 			}
 		}
+
+		final scaleGrid: zf.ui.builder.components.ScaleGrid = cast G.ui.components["scalegrid"];
+		scaleGrid.defaultFactory = Assets.res.gridFactories.get("white");
+		scaleGrid.factories = Assets.res.gridFactories;
 	}
 
 	function initH2d() {
