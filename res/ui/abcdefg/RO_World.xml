@@ -1,0 +1,10 @@
+<layout-dynamic width="640" height="360" id="mainLayer">
+  <layer-empty id="bgLayers" />
+
+  <layout-dynamic width="640" height="360" id="hudLayer">
+  </layout-dynamic>
+
+  <layer-empty id="blockInput" />
+  <layer-empty id="windowLayers" />
+  <layer-empty id="tooltipLayers" />
+</layout-dynamic>

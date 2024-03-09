@@ -1,37 +1,9 @@
 package abcdefg.systems;
 
+import uf.ui.*;
+
 class RenderSystem extends System {
 	// ---- All the various layers to draw into ---- //
-
-	/**
-		The main draw layer
-	**/
-	public final drawLayers: h2d.Layers;
-
-	/**
-		Background layers.
-	**/
-	public final bgLayers: h2d.Layers;
-
-	/**
-		Window layers, used by windowRenderSystem
-	**/
-	public final windowLayers: h2d.Layers;
-
-	/**
-		World rendering
-	**/
-	public final worldLayers: h2d.Layers;
-
-	/**
-		Tooltip layer
-	**/
-	public final tooltipLayers: h2d.Layers;
-
-	/**
-		Debug layers.
-	**/
-	public final worldDebugLayers: h2d.Layers;
 
 	/**
 		A non blocking animator.
@@ -57,17 +29,18 @@ class RenderSystem extends System {
 	**/
 	public final tooltipHelper: zf.ui.TooltipHelper;
 
+	public var drawLayers: RO_World;
+
+	var handler: UIElement;
+
 	public function new() {
 		super();
 		this.animator = new zf.up.Updater();
 
-		// ---- Setup all the various layers ---- //
-		this.drawLayers = new h2d.Layers();
-		this.drawLayers.add(this.bgLayers = new h2d.Layers(), 0);
-		this.drawLayers.add(this.worldLayers = new h2d.Layers(), 50);
-		this.drawLayers.add(this.windowLayers = new h2d.Layers(), 100);
-		this.drawLayers.add(this.tooltipLayers = new h2d.Layers(), 105);
-		this.worldLayers.add(this.worldDebugLayers = new h2d.Layers(), 200);
+		// ---- Setup the main layers ---- //
+		this.drawLayers = new RO_World(this);
+		this.drawLayers.bgLayers.addChild(Assets.fromColor(0xff5eb0ce, Globals.game.gameWidth,
+			Globals.game.gameHeight));
 
 		// ---- Setup WindowRenderSystem ---- //
 		final windowBounds = new h2d.col.Bounds();
@@ -75,11 +48,11 @@ class RenderSystem extends System {
 		windowBounds.yMin = 15;
 		windowBounds.xMax = Globals.game.gameWidth - 15;
 		windowBounds.yMax = Globals.game.gameHeight - 15;
-		this.windowRenderSystem = new zf.ui.WindowRenderSystem(windowBounds, this.windowLayers);
+		this.windowRenderSystem = new zf.ui.WindowRenderSystem(windowBounds, this.drawLayers.windowLayers);
 		this.windowRenderSystem.defaultRenderDirection = [Down, Right, Left, Up];
 		this.windowRenderSystem.defaultSpacing = 5;
 
-		this.tooltipRenderSystem = new zf.ui.WindowRenderSystem(windowBounds, this.tooltipLayers);
+		this.tooltipRenderSystem = new zf.ui.WindowRenderSystem(windowBounds, this.drawLayers.tooltipLayers);
 		this.tooltipRenderSystem.defaultRenderDirection = [Down, Up, Right, Left];
 		this.tooltipRenderSystem.defaultSpacing = 2;
 
@@ -89,18 +62,13 @@ class RenderSystem extends System {
 	override public function init(world: zf.engine2.World) {
 		super.init(world);
 
-		// @:listen RenderSystem MOnWorldStateSet 50
-		dispatcher.listen(MOnWorldStateSet.MessageType, (message: zf.Message) -> {
-			onLoad();
-		}, 50);
+		this.drawLayers.init(world);
 	}
 
 	function onLoad() {}
 
 	override public function reset() {
 		this.animator.clear();
-		this.windowLayers.removeChildren();
-		this.worldLayers.removeChildren();
 	}
 
 	override public function update(dt: Float) {
