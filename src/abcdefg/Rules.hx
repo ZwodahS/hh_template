@@ -16,7 +16,13 @@ class Rules implements Identifiable {
 
 	// ---- Loader ---- //
 	public function loadConfig(path: String) {
-		final defaultConf: RulesConf = executePath(path);
+		final configPath = haxe.io.Path.join([path, "config.hs"]);
+		final config: RulesConf = executePath(configPath);
+	}
+
+	// ---- Entity ---- //
+	inline function registerEntity(factory: EntityFactory) {
+		this.entities.set(factory.typeId, factory);
 	}
 
 	// ---- HScript ---- //

@@ -28,15 +28,19 @@ class WorldState implements Serialisable implements Identifiable {
 		return "WorldState";
 	}
 
-	var rules: Rules;
+	public var entities(get, never): Array<Entity>;
 
-	public var entities: Entities<Entity>;
+	public function get_entities(): Array<Entity> {
+		final entities: Array<Entity> = [];
+		return entities;
+	}
+
+	var rules: Rules;
 
 	public function new(rules: Rules, seed: Int = 0) {
 		this.rules = rules;
 		this.intCounter = new zf.IntCounter.SimpleIntCounter();
 		this.r = new hxd.Rand(seed);
-		this.entities = new Entities<Entity>();
 	}
 
 	// ---- Save / Load ---- //
