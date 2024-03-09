@@ -7,13 +7,8 @@
       },
       "inputs": [
         {
-          "conf": "raw/spritesheet.json",
-          "image": "raw/spritesheet.png"
-        },
-        {
-          "conf": "raw/links.json",
-          "image": "raw/links.png",
-          "add_tag": "links"
+          "conf": "raw/common.json",
+          "image": "raw/common.png"
         }
       ]
     }

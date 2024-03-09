@@ -1,20 +1,20 @@
 {
   "frames": [
     {
-      "filename": "ball0",
+      "filename": "noise00",
       "frame": {
-        "x": 81,
+        "x": 0,
         "y": 0,
-        "w": 16,
-        "h": 16
+        "w": 184,
+        "h": 184
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 16,
-        "h": 16
+        "w": 184,
+        "h": 184
       },
       "sourceSize": {
         "w": 1024,
@@ -23,20 +23,20 @@
       "duration": 100
     },
     {
-      "filename": "white0",
+      "filename": "paper:white:100",
       "frame": {
-        "x": 98,
+        "x": 320,
         "y": 0,
-        "w": 8,
-        "h": 8
+        "w": 30,
+        "h": 14
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 8,
-        "h": 8
+        "w": 30,
+        "h": 14
       },
       "sourceSize": {
         "w": 1024,
@@ -45,20 +45,20 @@
       "duration": 100
     },
     {
-      "filename": "external:mastodon00",
+      "filename": "paper:white:200",
       "frame": {
-        "x": 0,
+        "x": 185,
         "y": 0,
-        "w": 26,
-        "h": 26
+        "w": 30,
+        "h": 30
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 26,
-        "h": 26
+        "w": 30,
+        "h": 30
       },
       "sourceSize": {
         "w": 1024,
@@ -67,20 +67,20 @@
       "duration": 100
     },
     {
-      "filename": "external:twitter00",
+      "filename": "btn:generic00",
       "frame": {
-        "x": 27,
-        "y": 0,
-        "w": 26,
-        "h": 26
+        "x": 236,
+        "y": 26,
+        "w": 18,
+        "h": 18
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 26,
-        "h": 26
+        "w": 18,
+        "h": 18
       },
       "sourceSize": {
         "w": 1024,
@@ -89,20 +89,240 @@
       "duration": 100
     },
     {
-      "filename": "external:discord00",
+      "filename": "btn:generic01",
       "frame": {
-        "x": 54,
-        "y": 0,
-        "w": 26,
-        "h": 26
+        "x": 255,
+        "y": 26,
+        "w": 18,
+        "h": 18
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 26,
-        "h": 26
+        "w": 18,
+        "h": 18
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:generic02",
+      "frame": {
+        "x": 274,
+        "y": 26,
+        "w": 18,
+        "h": 18
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 18,
+        "h": 18
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:generic03",
+      "frame": {
+        "x": 293,
+        "y": 26,
+        "w": 18,
+        "h": 18
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 18,
+        "h": 18
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:hide00",
+      "frame": {
+        "x": 216,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:hide01",
+      "frame": {
+        "x": 242,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:hide02",
+      "frame": {
+        "x": 268,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:hide03",
+      "frame": {
+        "x": 294,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 25,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:close00",
+      "frame": {
+        "x": 351,
+        "y": 0,
+        "w": 19,
+        "h": 19
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 19,
+        "h": 19
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:close01",
+      "frame": {
+        "x": 320,
+        "y": 15,
+        "w": 19,
+        "h": 19
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 19,
+        "h": 19
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:close02",
+      "frame": {
+        "x": 216,
+        "y": 26,
+        "w": 19,
+        "h": 19
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 19,
+        "h": 19
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "duration": 100
+    },
+    {
+      "filename": "btn:close03",
+      "frame": {
+        "x": 185,
+        "y": 31,
+        "w": 19,
+        "h": 19
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 19,
+        "h": 19
       },
       "sourceSize": {
         "w": 1024,
@@ -121,33 +341,39 @@
     "scale": "1",
     "frameTags": [
       {
-        "name": "ball",
+        "name": "noise",
         "from": 0,
         "to": 0,
         "direction": "forward"
       },
       {
-        "name": "white",
+        "name": "paper:white:1",
         "from": 1,
         "to": 1,
         "direction": "forward"
       },
       {
-        "name": "links:external:mastodon",
+        "name": "paper:white:2",
         "from": 2,
         "to": 2,
         "direction": "forward"
       },
       {
-        "name": "links:external:twitter",
+        "name": "btn:generic",
         "from": 3,
-        "to": 3,
+        "to": 6,
         "direction": "forward"
       },
       {
-        "name": "links:external:discord",
-        "from": 4,
-        "to": 4,
+        "name": "btn:hide",
+        "from": 7,
+        "to": 10,
+        "direction": "forward"
+      },
+      {
+        "name": "btn:close",
+        "from": 11,
+        "to": 14,
         "direction": "forward"
       }
     ],
