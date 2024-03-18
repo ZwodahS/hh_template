@@ -16,8 +16,11 @@ import zf.Recti;
 import zf.Rectf;
 import zf.Color;
 import zf.Identifiable;
+import zf.Disposable;
 import zf.Pair;
 import zf.ds.ArrayMap;
+import zf.ds.Vector2D;
+import zf.ds.GridRange;
 import zf.UpdateElements;
 // update loop and animations
 import zf.up.*;
@@ -64,6 +67,7 @@ import Constants as C;
 import Colors as K;
 import Sounds as O;
 import Assets as A;
+import ui.*;
 
 #if debug
 using zf.debug.D;
