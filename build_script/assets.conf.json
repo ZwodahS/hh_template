@@ -7,6 +7,16 @@
       },
       "inputs": [
         {
+          "conf": "raw/numbers7.json",
+          "image": "raw/numbers7.png",
+          "add_tag": "n7"
+        },
+        {
+          "conf": "raw/numbers5.json",
+          "image": "raw/numbers5.png",
+          "add_tag": "n5"
+        },
+        {
           "conf": "raw/common.json",
           "image": "raw/common.png"
         }

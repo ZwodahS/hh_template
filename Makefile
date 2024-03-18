@@ -47,11 +47,11 @@ WARNING_REMOVE_FLAGS += -w -WDeprecatedEnumAbstract
 ## Set compile flags
 COMPILE_FLAGS=
 ifeq (${RELEASE},1)
-COMPILE_FLAGS += --no-traces
+COMPILE_FLAGS += -D no-traces
 # Note: add other pak to excludes here if necessary
 PAK_FLAGS += -exclude-path tests
 else
-COMPILE_FLAGS += -D debug -D loggingLevel=30 -D hot-reload
+COMPILE_FLAGS += -D debug -D loggingLevel=30 -D hot-reload -D hscriptPos
 endif
 COMPILE_FLAGS += ${WARNING_REMOVE_FLAGS}
 
@@ -198,9 +198,9 @@ linux: buildinfo strings assets pak
 	rm -rf ${LINUX_BUILD_PATH}
 	mkdir -p ${LINUX_BUILD_PATH}
 	mkdir -p ${LINUX_APP_PATH}
-	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D linux -D pak --hl build/linux/hlboot.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D linux -D pak --hl ${LINUX_APP_PATH}/hlboot.dat --main Main
 	cp build/res.pak ${LINUX_APP_PATH}/.
-	cp build_script/linux/hl ${LINUX_APP_PATH}/${GAME}
+	cp build_script/linux/hl ${LINUX_APP_PATH}/.
 	cp build_script/linux/*.hdll ${LINUX_APP_PATH}/.
 	cp build_script/linux/*.so* ${LINUX_APP_PATH}/.
 	cp build_script/linux/run.sh ${LINUX_APP_PATH}/.
@@ -421,12 +421,17 @@ dist-mac: mac
 dist-windows: windows
 	cd build/windows; zip -r ${WINDOWS_DIST} ${FOLDERNAME}
 
+dist-linux: linux
+	cd build/linux; zip -r ${LINUX_DIST} ${FOLDERNAME}
+
+dist-itch: dist-web dist-mac dist-windows dist-linux
+
 dist-steam: steam
 
 dist-steam-demo: steam-demo
 ########################################################################################################################
 # Push
-push-all: push-web push-steam push-steam-demo push-mac push-windows
+push-all: push-web push-steam push-steam-demo push-itch
 
 push-web:
 	butler push build/web/web.zip ${ITCH_URL}:web --userversion ${VERSION}
@@ -442,6 +447,11 @@ push-mac:
 
 push-windows:
 	butler push build/windows/${WINDOWS_DIST} ${ITCH_URL}:windows --userversion ${VERSION}
+
+push-linux:
+	butler push build/linux/${LINUX_DIST} ${ITCH_URL}:linux --userversion ${VERSION}
+
+push-itch: push-mac push-windows push-linux
 
 push-steam:
 	steamcmd +login ${STEAM_USER} +run_app_build ${PWD}/build/steam/${STEAM_BUILD_FILE} +quit

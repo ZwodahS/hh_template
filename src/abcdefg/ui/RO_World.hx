@@ -12,7 +12,7 @@ class RO_World extends zf.ui.builder.XmlComponent {
 	@exposeContext public var system: RenderSystem;
 
 	public function new(system: RenderSystem) {
-		super("ui/uf/RO_World.xml");
+		super("ui/abcdefg/RO_World.xml");
 
 		this.system = system;
 
