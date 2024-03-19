@@ -18,22 +18,30 @@ class Entity extends zf.engine2.Entity implements Serialisable {
 
 		Thu 16:30:01 27 Apr 2023
 		Perhaps we should move this to zf ?
-		Tue 22:42:49 26 Sep 2023
+		Tue 22:42:49 26 Sep 2023 After CR launched
 		To move this to zf, probably need to move EntityFactory to zf as well.
-		Probably do this later ?
+		To move this to zf means that we need Rules to be there too.
+		Tue 14:53:20 19 Mar 2024
+		Note to self, don't try to move this to zf
 	**/
 	public var factory(default, null): EntityFactory;
 
-	/**
-		When entity is created, we always assign the rules to it.
-	**/
-	public var rules: Rules;
-
 	// ---- Aliases ---- //
-	public var world(get, never): World;
+	public var world(get, set): World;
 
 	inline function get_world()
 		return cast this.__world__;
+
+	inline function set_world(w: World): World {
+		this.__world__ = w;
+		return w;
+	}
+
+	public var rules(get, never): Rules;
+
+	inline public function get_rules(): Rules {
+		return this.factory.rules;
+	}
 
 	public var kind(default, null): EntityKind = Unknown;
 
@@ -41,7 +49,6 @@ class Entity extends zf.engine2.Entity implements Serialisable {
 	public function new(id: Int = -1, factory: EntityFactory) {
 		super(id);
 		this.factory = factory;
-		this.rules = factory.rules;
 		this.typeId = factory.typeId;
 	}
 
