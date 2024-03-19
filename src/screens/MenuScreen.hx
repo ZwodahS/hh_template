@@ -14,6 +14,11 @@ class MenuScreen extends zf.Screen {
 		});
 		this.addChild(button);
 		button.setX(100).setY(50);
+		button.addOnClickListener("MenuScreen", (e) -> {
+			final world = new abcdefg.World(abcdefg.WorldGlobals.rules, Globals.currentProfile);
+			world.worldState = abcdefg.WorldGlobals.rules.newGame();
+			this.game.switchScreen(new abcdefg.GameScreen(world));
+		});
 	}
 
 	override public function update(dt: Float) {}

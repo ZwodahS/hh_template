@@ -1,7 +1,5 @@
 package abcdefg.systems;
 
-import uf.ui.*;
-
 class RenderSystem extends System {
 	// ---- All the various layers to draw into ---- //
 

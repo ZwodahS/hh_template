@@ -18,6 +18,13 @@ class Rules implements Identifiable {
 	public function loadConfig(path: String) {
 		final configPath = haxe.io.Path.join([path, "config.hs"]);
 		final config: RulesConf = executePath(configPath);
+
+		/**
+			Example:
+			if (config.tags != null) {
+				for (c in config.tags) loadTag(path, c);
+			}
+		**/
 	}
 
 	// ---- Entity ---- //
@@ -25,6 +32,17 @@ class Rules implements Identifiable {
 		this.entities.set(factory.typeId, factory);
 	}
 
+	// ---- Rule Object ---- //
+	/**
+		1. classRule
+		2. rules.loadRule
+	**/
+	// ---- Dynamic Type ---- //
+
+	/**
+		1. classDynamicType
+		2. rules.loadDynamicType
+	**/
 	// ---- HScript ---- //
 	function executePath(path: String): Dynamic {
 		try {
@@ -38,13 +56,9 @@ class Rules implements Identifiable {
 	}
 
 	inline public function executeScript(str: String): Dynamic {
-		try {
-			final parser = getParser();
-			final interp = getInterp();
-			return interp.execute(parser.parseString(str));
-		} catch (e) {
-			return null;
-		}
+		final parser = getParser();
+		final interp = getInterp();
+		return interp.execute(parser.parseString(str));
 	}
 
 	inline public function getParser(): hscript.Parser {
@@ -86,6 +100,7 @@ class Rules implements Identifiable {
 	**/
 	public function load(data: Dynamic): WorldState {
 		final context = new SerialiseContext();
+		context.add(this);
 		final state = new WorldState(this, Random.int(0, zf.Constants.SeedMax));
 		state.loadStruct(context, data);
 		return state;

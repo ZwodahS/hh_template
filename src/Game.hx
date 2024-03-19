@@ -158,6 +158,7 @@ class Game extends zf.Game {
 		try {
 			// in case the rules loading failed
 			abcdefg.WorldGlobals.rules = new abcdefg.Rules();
+			abcdefg.WorldGlobals.rules.loadConfig("abcdefg/rules/core");
 		} catch (e) {
 			onException(e, haxe.CallStack.exceptionStack());
 			return;

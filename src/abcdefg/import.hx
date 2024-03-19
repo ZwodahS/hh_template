@@ -8,6 +8,8 @@ import abcdefg.rules.entities.*;
 import abcdefg.rules.entities.Entity.EntitySF;
 import abcdefg.rules.entities.factories.*;
 import abcdefg.rules.entities.components.*;
+import abcdefg.rules.contexts.*;
+import abcdefg.rules.proxies.*;
 import abcdefg.systems.*;
 import abcdefg.messages.*;
 import abcdefg.rules.*;
