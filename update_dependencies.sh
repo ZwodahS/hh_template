@@ -1,7 +1,6 @@
 #!/bin/bash
 ZF=$(haxelib libpath zf)
 HEAPS=$(haxelib libpath heaps)
-ECHO=$(haxelib libpath echo)
 COMPILETIME=$(haxelib libpath compiletime)
 HXRANDOM=$(haxelib libpath hxrandom)
 HSCRIPT=$(haxelib libpath hscript)
@@ -14,7 +13,7 @@ function update() {
 
     pushd $HEAPS > /dev/null
     echo -n "heaps: "
-    git rev-parse heaps-stable
+    git rev-parse heaps
     popd > /dev/null
 
     pushd $ECHO > /dev/null
