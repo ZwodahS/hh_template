@@ -61,9 +61,14 @@ class RenderSystem extends System {
 		super.init(world);
 
 		this.drawLayers.init(world);
+
+		world.dispatcher.listen(MOnWorldStateSet.MessageType, (message: zf.Message) -> {
+			handleMOnWorldStateSet(cast message);
+		}, 0);
 	}
 
-	function onLoad() {}
+	function handleMOnWorldStateSet(m: MOnWorldStateSet) {
+	}
 
 	override public function reset() {
 		this.animator.clear();

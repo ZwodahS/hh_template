@@ -27,6 +27,8 @@ class World extends zf.engine2.World {
 		return this.worldState;
 	}
 
+	public var uiState: UIState;
+
 	public var nextId(get, never): Int;
 
 	inline function get_nextId(): Int {
@@ -47,6 +49,7 @@ class World extends zf.engine2.World {
 		super();
 		this.rules = rules;
 		this.profile = profile;
+		this.uiState = new UIState();
 
 		this.addSystem(this.renderSystem = new RenderSystem());
 	}

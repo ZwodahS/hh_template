@@ -19,4 +19,10 @@ class System extends zf.engine2.System {
 	public function get_worldState(): WorldState {
 		return this.world.worldState;
 	}
+
+	public var uiState(get, never): UIState;
+
+	inline public function get_uiState(): UIState {
+		return this.world.uiState;
+	}
 }
