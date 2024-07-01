@@ -67,8 +67,7 @@ class RenderSystem extends System {
 		}, 0);
 	}
 
-	function handleMOnWorldStateSet(m: MOnWorldStateSet) {
-	}
+	function handleMOnWorldStateSet(m: MOnWorldStateSet) {}
 
 	override public function reset() {
 		this.animator.clear();
