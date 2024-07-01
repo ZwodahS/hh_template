@@ -9,7 +9,9 @@ class Proxy {
 		return this.world.rules;
 	}
 
-	public function new(world: World) {
-		this.world = world;
+	function new() {}
+
+	public function reset() {
+		this.world = null;
 	}
 }

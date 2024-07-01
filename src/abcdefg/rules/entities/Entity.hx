@@ -11,6 +11,12 @@ typedef EntitySF = {
 
 	This file do not need to be changed for each project, unless we have a common component that we want to add.
 	Instead, we should extend this with each type of entity.
+
+	Mon 16:36:38 01 Jul 2024 Update after Crop Rotation 1.3.
+
+	Rework Entity and Components slightly to allow Object Pooling for entity and components.
+
+	Object Pool in this case is per entity type, not per entity typeid
 **/
 class Entity extends zf.engine2.Entity implements Serialisable {
 	/**
@@ -46,10 +52,16 @@ class Entity extends zf.engine2.Entity implements Serialisable {
 	public var kind(default, null): EntityKind = Unknown;
 
 	// ---- Game Specific code ---- //
-	public function new(id: Int = -1, factory: EntityFactory) {
+	function new(id: Int = -1) {
 		super(id);
-		this.factory = factory;
-		this.typeId = factory.typeId;
+	}
+
+	override public function dispose() {
+		super.dispose();
+
+		this.factory = null;
+		this.typeId = null;
+		this.kind = Unknown;
 	}
 
 	public function toStruct(context: SerialiseContext): Dynamic {
