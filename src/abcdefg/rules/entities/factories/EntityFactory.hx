@@ -1,8 +1,12 @@
 package abcdefg.rules.entities.factories;
 
-class EntityFactory {
+class EntityFactory implements Identifiable {
 	public var rules: Rules;
 	public var typeId: String;
+
+	public function identifier(): String {
+		return this.typeId;
+	}
 
 	public function new(typeId: String, rules: Rules) {
 		this.typeId = typeId;
