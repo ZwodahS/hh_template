@@ -1,37 +1,11 @@
 package abcdefg.rules.entities;
 
-typedef EntitySF = {
-	public var id: Int;
-	public var typeId: String;
-	public var components: Dynamic;
-};
-
 /**
-	Tue 22:42:20 26 Sep 2023 Update after Crop Rotation launched.
+	@stage:stable
 
-	This file do not need to be changed for each project, unless we have a common component that we want to add.
-	Instead, we should extend this with each type of entity.
-
-	Mon 16:36:38 01 Jul 2024 Update after Crop Rotation 1.3.
-
-	Rework Entity and Components slightly to allow Object Pooling for entity and components.
-
-	Object Pool in this case is per entity type, not per entity typeid
+	Define a common entity object for the game.
 **/
-class Entity extends zf.engine2.Entity implements Serialisable {
-	/**
-		Assign the factory to the entity
-
-		Thu 16:30:01 27 Apr 2023
-		Perhaps we should move this to zf ?
-		Tue 22:42:49 26 Sep 2023 After CR launched
-		To move this to zf, probably need to move EntityFactory to zf as well.
-		To move this to zf means that we need Rules to be there too.
-		Tue 14:53:20 19 Mar 2024
-		Note to self, don't try to move this to zf
-	**/
-	public var factory(default, null): EntityFactory;
-
+class Entity extends zf.engine2.Entity {
 	// ---- Aliases ---- //
 	public var world(get, set): World;
 
@@ -46,7 +20,7 @@ class Entity extends zf.engine2.Entity implements Serialisable {
 	public var rules(get, never): Rules;
 
 	inline public function get_rules(): Rules {
-		return this.factory.rules;
+		return cast(this.factory, EntityFactory).rules;
 	}
 
 	public var kind(default, null): EntityKind = Unknown;
@@ -59,20 +33,13 @@ class Entity extends zf.engine2.Entity implements Serialisable {
 	override public function dispose() {
 		super.dispose();
 
-		this.factory = null;
-		this.typeId = null;
 		this.kind = Unknown;
 	}
-
-	public function toStruct(context: SerialiseContext): Dynamic {
-		return this.factory.toStruct(context, this);
-	}
-
-	public function loadStruct(context: SerialiseContext, data: Dynamic) {
-		return this.factory.loadStruct(context, this, data);
-	}
-
-	public function collectEntities(entities: Entities<Entity>) {
-		entities.add(this);
-	}
 }
+
+/**
+	Mon 13:31:01 15 Jul 2024 Update before working on untitled third game
+	Removed the previous comment from here
+
+	A lot code is moved into zf so this can be cleaner.
+**/

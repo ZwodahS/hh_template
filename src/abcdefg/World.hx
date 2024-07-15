@@ -20,10 +20,10 @@ class World extends zf.engine2.World {
 
 	public function set_worldState(s: WorldState): WorldState {
 		this.worldState = s;
-		this.dispatcher.dispatch(MOnWorldStateSet.alloc()).dispose();
 		for (e in this.worldState.entities) {
 			this.registerEntity(e);
 		}
+		this.dispatcher.dispatch(MOnWorldStateSet.alloc()).dispose();
 		return this.worldState;
 	}
 

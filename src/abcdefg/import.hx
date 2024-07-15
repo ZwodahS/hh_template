@@ -5,7 +5,6 @@ import abcdefg.*;
 import abcdefg.ui.*;
 import abcdefg.ds.*;
 import abcdefg.rules.entities.*;
-import abcdefg.rules.entities.Entity.EntitySF;
 import abcdefg.rules.entities.factories.*;
 import abcdefg.rules.entities.components.*;
 import abcdefg.rules.contexts.*;
