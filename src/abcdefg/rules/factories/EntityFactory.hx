@@ -1,4 +1,4 @@
-package abcdefg.rules.entities.factories;
+package abcdefg.rules.factories;
 
 /**
 	Common EntityFactory for the project
