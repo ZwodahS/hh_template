@@ -212,6 +212,9 @@ windows: buildinfo strings assets pak
 	mkdir -p ${WINDOWS_BUILD_PATH}
 	mkdir -p ${WINDOWS_APP_PATH}
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows-sdl -D pak --hl ${WINDOWS_APP_PATH}/hlboot.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D steam -D pak --hl ${WINDOWS_APP_PATH}/hlbootdx.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hlsdl -D windows -D pak --hl ${WINDOWS_APP_PATH}/hlbootnosteam.dat --main Main
+	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${COMPILE_FLAGS} --library hldx -D windows -D pak --hl ${WINDOWS_APP_PATH}/hlbootdxnosteam.dat --main Main
 	cp build/res.pak ${WINDOWS_APP_PATH}/.
 	cp build_script/windows/hl.exe ${WINDOWS_APP_PATH}/${GAME}.exe
 	cp build_script/windows/*.hdll ${WINDOWS_APP_PATH}/.
