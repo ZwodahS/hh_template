@@ -1,3 +1,8 @@
+/**
+	Fri 12:38:39 04 Oct 2024
+	We need figure out a way to fix this file, i.e. this file should not be changed from game to game.
+	This way, we can copy this file whenever it changes.
+**/
 class Game extends zf.Game {
 	public var sound: Sounds;
 

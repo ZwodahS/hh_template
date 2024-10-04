@@ -1,7 +1,7 @@
 package abcdefg.messages;
 
 #if !macro
-@:build(zf.macros.ObjectPool.addObjectPool())
+@:build(zf.macros.ObjectPool.build())
 #end
 class MOnWorldStateSet extends zf.Message {
 	public static final MessageType = "MOnWorldStateSet";

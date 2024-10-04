@@ -5,7 +5,7 @@ import abcdefg.*;
 import abcdefg.ui.*;
 import abcdefg.ds.*;
 import abcdefg.rules.entities.*;
-import abcdefg.rules.entities.factories.*;
+import abcdefg.rules.factories.*;
 import abcdefg.rules.entities.components.*;
 import abcdefg.rules.contexts.*;
 import abcdefg.rules.proxies.*;
