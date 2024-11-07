@@ -59,13 +59,10 @@ class VisibleButton extends ObjectsButton {
 		}
 		this.tooltipWindow = window;
 
-		(new zf.effects.MoveEffect({
-			moveFunction: (dt: Float, pt: Point2f) -> {
-				pt.x = 0;
-				pt.y = Math.sin(dt / 0.5 + Math.PI) * 2;
-				return pt;
-			},
-			duration: -1,
-		})).applyTo(this);
+		E.moveByFunc((dt, pt) -> {
+			pt.x = 0;
+			pt.y = Math.sin(dt / 0.5 + Math.PI) * 2;
+			return pt;
+		}, -1, false, true).applyTo(this);
 	}
 }

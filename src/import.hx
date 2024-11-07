@@ -24,7 +24,6 @@ import zf.ds.GridRange;
 import zf.UpdateElements;
 // update loop and animations
 import zf.up.*;
-import zf.up.animations.*;
 // overrides
 import zf.h2d.Interactive; // override the Interactive from h2d.Interactive
 import zf.h2d.HtmlText; // override the HtmlText
@@ -60,6 +59,10 @@ import zf.serialise.Serialisable;
 import zf.userdata.UserData;
 
 import userdata.Profile;
+
+// import Effect as E
+import zf.Effect as E;
+import zf.ef.Effect;
 
 import Strings as S;
 import Globals as G;
