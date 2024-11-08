@@ -23,8 +23,6 @@ class Entity extends zf.engine2.Entity {
 		return cast(this.factory, EntityFactory).rules;
 	}
 
-	public var kind(default, null): EntityKind = Unknown;
-
 	// ---- Game Specific code ---- //
 	function new(id: Int = -1) {
 		super(id);
@@ -32,8 +30,6 @@ class Entity extends zf.engine2.Entity {
 
 	override public function dispose() {
 		super.dispose();
-
-		this.kind = Unknown;
 	}
 }
 
