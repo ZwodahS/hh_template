@@ -26,7 +26,7 @@ FOLDERNAME=GameName# @configure
 ## Deployment configuration
 ### Itch configuration
 ITCH_URL=zwodahs/?????# @configure
-PRIVATE_ITCH_URL=zwodahs/????# @configure
+PRIVATE_ITCH_URL=zwodahs/test-1# @configure
 ### Steam Configuration
 STEAM_APP_ID=# @configure
 STEAM_WINDOWS_DEPOT_ID=# @configure

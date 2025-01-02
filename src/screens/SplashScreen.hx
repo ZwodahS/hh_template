@@ -23,11 +23,11 @@ class SplashScreen extends zf.Screen {
 		this.bm = new h2d.Bitmap(tile);
 		bm.setX(Globals.game.gameWidth, AlignCenter).setY(Globals.game.gameHeight, AlignCenter);
 		this.addChild(bm);
-		updater.wait(WaitDuration)
-			.then(new AlphaTo(this.bm.wo(), 0, 1.0 / .5))
-			.wait(0.2)
-			.whenDone(() -> {
-				onFinish();
+		E.wait(WaitDuration)
+			.then(E.alphaTo(0, .5))
+			.then(E.wait(0.2))
+			.applyTo(this.bm, this.updater, () -> {
+				this.onFinish();
 			});
 	}
 

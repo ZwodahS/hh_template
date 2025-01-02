@@ -3,6 +3,7 @@ import zf.engine2.Entities;
 import abcdefg.*;
 
 import abcdefg.ui.*;
+import abcdefg.ui.ro.*;
 import abcdefg.ds.*;
 import abcdefg.rules.entities.*;
 import abcdefg.rules.factories.*;

@@ -1,5 +1,6 @@
 package abcdefg.systems;
 
+#if !macro @:build(zf.macros.Messages.build()) #end
 class RenderSystem extends System {
 	// ---- All the various layers to draw into ---- //
 
@@ -62,12 +63,11 @@ class RenderSystem extends System {
 
 		this.drawLayers.init(world);
 
-		world.dispatcher.listen(MOnWorldStateSet.MessageType, (message: zf.Message) -> {
-			handleMOnWorldStateSet(cast message);
-		}, 0);
+		setupMessages(world.dispatcher);
 	}
 
-	function handleMOnWorldStateSet(m: MOnWorldStateSet) {}
+	@:handleMessage("MOnWorldStateSet", 0)
+	function mRenderWorld(m: MOnWorldStateSet) {}
 
 	override public function reset() {
 		this.animator.clear();
