@@ -1,6 +1,6 @@
 package abcdefg.ui;
 
-class RO_World extends zf.ui.builder.XmlComponent {
+class RO_World extends zf.ui.builder.XmlContainer {
 	@:findChild public var bgLayers: h2d.Layers;
 	@:findChild public var windowLayers: h2d.Layers;
 	@:findChild public var tooltipLayers: h2d.Layers;

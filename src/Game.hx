@@ -22,7 +22,7 @@ class Game extends zf.Game {
 			Set up various globals variable
 		**/
 		// @:privateAccess s2d.events.defaultCursor = Assets.cursors["default"];
-		UIElement.defaultHoverDelay = C.HoverDelay;
+		Container.defaultHoverDelay = C.HoverDelay;
 
 		// set up the debug overlay
 #if debug
@@ -126,7 +126,7 @@ class Game extends zf.Game {
 			return t.execute(context.data);
 		}
 
-		zf.ui.builder.XmlComponent.Builder = G.ui;
+		zf.ui.builder.XmlContainer.Builder = G.ui;
 
 		// setup ui builder
 		CompileTime.importPackage("ui.components");

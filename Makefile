@@ -111,9 +111,13 @@ bin/stringman: tools/StringsManagement.hx
 ########################################################################################################################
 # Builds
 
+qfix:
+	@${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Main
+
 # Local build
 game.hl: buildinfo strings assets
 	${HAXEPATH}/haxe build_script/common.hxml build_script/hl.hxml ${STEAMAPI_CFLAGS} ${COMPILE_FLAGS} ${BINARY_FLAGS} --hl game.hl --main Main
+	@echo ""
 
 # Local build with pak
 pakgame: buildinfo strings assets pak
@@ -370,13 +374,13 @@ lint:
 pak:
 	mkdir -p build
 	${HAXEPATH}/haxe -hl hxd.fmt.pak.Build.hl -lib heaps -lib hlsdl -main hxd.fmt.pak.Build
-	${HASHLINKPATH}/hl hxd.fmt.pak.Build.hl ${PAK_FLAGS}
+	${HASHLINKPATH}/hl hxd.fmt.pak.Build.hl ${PAK_FLAGS} -exclude-path rules/rulesets/demo
 	-mv res.pak build/res.pak
 
 pak-demo:
 	mkdir -p build
 	${HAXEPATH}/haxe -hl hxd.fmt.pak.Build.hl -lib heaps -lib hlsdl -main hxd.fmt.pak.Build
-	${HASHLINKPATH}/hl hxd.fmt.pak.Build.hl ${PAK_FLAGS} -exclude-path rules/rulesets/ext
+	${HASHLINKPATH}/hl hxd.fmt.pak.Build.hl ${PAK_FLAGS} -exclude-path rules/rulesets/core
 	-mv res.pak build/res-demo.pak
 
 ########################################## PARSE STRINGS FOR I8N #######################################################
@@ -396,10 +400,12 @@ asset_pngs = $(shell ls raw/*.png)
 
 assets: assetsmove build_script/assets.conf.json ${GRAPHICS_PATH}/packed.json ${asset_json} ${asset_pngs}
 	./bin/asepriteutil.py pack build_script/assets.conf.json
+	@echo ""
 
 assetsmove:
 	-mv assets/game/*.json raw/. 2> /dev/null
 	-mv assets/game/*.png raw/. 2> /dev/null
+	@echo ""
 
 ########################################################################################################################
 # Build for Distributions

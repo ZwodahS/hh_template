@@ -5,15 +5,8 @@ class BitmapTextComponent extends zf.ui.builder.Component {
 		super("bitmap-text");
 	}
 
-	override public function makeFromStruct(s: Dynamic, context: BuilderContext): h2d.Object {
-		return make(zf.Access.struct(s), context);
-	}
-
-	override public function makeFromXML(element: Xml, context: BuilderContext): h2d.Object {
-		return make(zf.Access.xml(element), context);
-	}
-
-	function make(conf: zf.Access, context: BuilderContext): h2d.Object {
+	override public function build(element: Xml, context: BuilderContext): zf.ui.builder.ComponentObject {
+		final conf = zf.Access.xml(element);
 		final prefix = conf.getString("prefix");
 		// handles string id, useful for localisation
 
@@ -38,7 +31,7 @@ class BitmapTextComponent extends zf.ui.builder.Component {
 
 		final component = new BitmapText(prefix, textColor);
 
-		var spacing = conf.getInt("spacing");
+		final spacing = conf.getInt("spacing");
 		if (spacing != null) component.spacing = spacing;
 
 		var hasText = false;
@@ -60,6 +53,25 @@ class BitmapTextComponent extends zf.ui.builder.Component {
 		} else if (conf.get("text") != null) {
 			component.text = conf.getString("text");
 		}
-		return component;
+
+		final alignment = conf.getString("alignment");
+		if (alignment != null) {
+			switch (alignment) {
+				case "set":
+					component.alignment = Set;
+				case "anchorLeft":
+					component.alignment = AnchorLeft;
+				case "anchorRight":
+					component.alignment = AnchorRight;
+				case "anchorTop":
+					component.alignment = AnchorTop;
+				case "anchorDown":
+					component.alignment = AnchorBottom;
+				case "alignCenter":
+					component.alignment = AlignCenter;
+				default:
+			}
+		}
+		return {object: component};
 	}
 }

@@ -1,8 +1,10 @@
 // haxe core
+import haxe.ds.Either;
 import haxe.DynamicAccess;
 import haxe.ds.ReadOnlyArray;
 
 // core
+import zf.Hx;
 import zf.Assert;
 import zf.Logger;
 import zf.Debug;
@@ -22,21 +24,28 @@ import zf.ds.ArrayMap;
 import zf.ds.Vector2D;
 import zf.ds.GridRange;
 import zf.UpdateElements;
+import zf.ds.List;
 // update loop and animations
 import zf.up.*;
 // overrides
 import zf.h2d.Interactive; // override the Interactive from h2d.Interactive
 import zf.h2d.HtmlText; // override the HtmlText
 import zf.h2d.ScaleGrid;
+import zf.h2d.Object;
+import zf.h2d.Container;
 import zf.resources.ResourceManager;
 import zf.StringTable;
 import zf.h2d.ScaleGrid;
+import zf.hxd.Rand;
 import zf.ui.ScaleGridFactory;
 import zf.ui.UIElement;
 import zf.ui.builder.BuilderContext;
 import zf.ui.layout.*;
+import zf.ui.Window;
 import zf.filters.FilterFactory;
 import zf.MessageDispatcher;
+import zf.input.KeyboardInputMapping;
+import zf.input.PadInputMapping;
 
 // extensions
 using zf.math.FloatExtensions;
@@ -50,6 +59,7 @@ using zf.HtmlUtils;
 using zf.h2d.ObjectExtensions;
 using zf.h2d.col.BoundsExtensions;
 using zf.up.animations.WrappedObject;
+using zf.input.PadExtensions;
 
 using StringTools;
 using Lambda;
@@ -63,6 +73,7 @@ import userdata.Profile;
 // import Effect as E
 import zf.Effect as E;
 import zf.ef.Effect;
+import zf.filters.Filters as F;
 
 import Strings as S;
 import Globals as G;
